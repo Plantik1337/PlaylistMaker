@@ -2,4 +2,11 @@
     <string name="app_name" translatable="false">Playlist Maker</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
+    <string name="search">Поиск</string>
+    <string name="media_library">Медиатека</string>
+    <string name="settings">Настройки</string>
+    <string name="Dark_theme">Тёмная тема</string>
+    <string name="Share_App">Поделиться приложением</string>
+    <string name="Contact_Us">Написать в поддержку</string>
+    <string name="Terms_of_use">Пользовательское соглашение</string>
 </resources>

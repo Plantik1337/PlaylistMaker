@@ -16,14 +16,15 @@
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
             app:icon="@drawable/arrow_back"
-            app:iconTint="@color/black" />
+            app:iconTint="@color/black"
+            android:contentDescription="@string/no"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Настройки"
-            android:textColor="#1A1B22"
-            android:textSize="22sp"
+            android:text="@string/settings"
+            android:textColor="@color/DarkFun"
+            android:textSize="@dimen/standart_text"
             android:textStyle="bold" />
     </LinearLayout>
 
@@ -42,53 +43,56 @@
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="8"
+                android:layout_weight="10"
                 android:backgroundTint="@color/white"
-                android:text="Тёмная тема"
+                android:text="@string/Dark_theme"
                 android:textAlignment="textStart"
                 android:textAllCaps="false"
                 android:textColor="@color/black"></Button>
 
             <Switch
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_weight="0"
+                tools:ignore="UseSwitchCompatOrMaterialXml"
+                android:contentDescription="@string/no"/>
         </LinearLayout>
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
-            android:text="Поделиться приложением"
+            android:text="@string/Share_App"
             android:textAlignment="textStart"
             android:textAllCaps="false"
             android:textColor="@color/black"
             app:icon="@drawable/share_vector"
             app:iconGravity="end"
-            app:iconTint="#AEAFB4" />
+            app:iconTint="@color/grey" />
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
-            android:text="Написать в поддержку"
+            android:text="@string/Contact_Us"
             android:textAlignment="textStart"
             android:textAllCaps="false"
             android:textColor="@color/black"
             app:icon="@drawable/support_vector"
             app:iconGravity="end"
-            app:iconTint="#AEAFB4" />
+            app:iconTint="@color/grey" />
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
-            android:text="Пользовательское соглашение"
+            android:text="@string/Terms_of_use"
             android:textAlignment="textStart"
             android:textAllCaps="false"
             android:textColor="@color/black"
             app:icon="@drawable/arrow_forward"
             app:iconGravity="end"
-            app:iconTint="#AEAFB4" />
+            app:iconTint="@color/grey" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

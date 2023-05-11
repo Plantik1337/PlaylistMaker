@@ -4,7 +4,7 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#3772E7">
+    android:background="@color/blue">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,7 +20,7 @@
             android:paddingBottom="40dp"
             android:text="@string/app_name"
             android:textColor="@color/white"
-            android:textSize="22sp" />
+            android:textSize="@dimen/standart_text" />
 
         <Button
             android:layout_width="match_parent"
@@ -28,8 +28,8 @@
             android:layout_weight="1"
             android:backgroundTint="@color/white"
             android:textColor="@color/black"
-            android:textSize="22sp"
-            android:text="Поиск"
+            android:textSize="@dimen/standart_text"
+            android:text="@string/settings"
             android:paddingLeft="32dp"
             app:icon="@drawable/ic_vector"
             app:iconGravity="textStart"
@@ -44,8 +44,8 @@
             android:layout_weight="1"
             android:backgroundTint="@color/white"
             android:textColor="@color/black"
-            android:textSize="22sp"
-            android:text="Медиатека"
+            android:textSize="@dimen/standart_text"
+            android:text="@string/media_library"
             android:paddingLeft="32dp"
             app:icon="@drawable/media_vector"
             app:iconGravity="textStart"
@@ -60,8 +60,8 @@
             android:layout_weight="1"
             android:backgroundTint="@color/white"
             android:textColor="@color/black"
-            android:textSize="22sp"
-            android:text="Настройки"
+            android:textSize="@dimen/standart_text"
+            android:text="@string/settings"
             android:paddingLeft="32dp"
             app:icon="@drawable/settings_vector"
             app:iconGravity="textStart"
