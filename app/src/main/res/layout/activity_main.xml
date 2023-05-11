@@ -58,9 +58,10 @@
             android:layout_height="60dp"
             android:layout_marginEnd="10dp"
             android:layout_weight="1"
-            android:backgroundTint="#ffffff"
-            android:text="Нет"
-            android:textColor="#1A1B22" />
+            android:backgroundTint="@color/white"
+            android:text="@string/no"
+            android:textColor="#1A1B22"
+            android:textAllCaps="false"/>
 
         <Button
             android:layout_width="0dp"
@@ -68,8 +69,9 @@
             android:layout_marginStart="10dp"
             android:layout_weight="1"
             android:backgroundTint="#ffffff"
-            android:text="Да"
-            android:textColor="#1A1B22" />
+            android:text="@string/yes"
+            android:textColor="#1A1B22"
+            android:textAllCaps="false"/>
     </LinearLayout>
 
 </LinearLayout>
