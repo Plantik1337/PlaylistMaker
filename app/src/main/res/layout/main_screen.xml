@@ -29,14 +29,16 @@
             android:backgroundTint="@color/white"
             android:textColor="@color/black"
             android:textSize="@dimen/standart_text"
-            android:text="@string/settings"
+            android:text="@string/search"
             android:paddingLeft="32dp"
             app:icon="@drawable/ic_vector"
             app:iconGravity="textStart"
             app:iconTint="@color/black"
             app:iconPadding="10dp"
             app:cornerRadius="16dp"
-            android:textAllCaps="false"/>
+            android:textAllCaps="false"
+            android:id="@+id/search_button"
+            android:foreground="?attr/selectableItemBackground"/>
 
         <Button
             android:layout_width="match_parent"
@@ -52,8 +54,9 @@
             app:iconTint="@color/black"
             app:iconPadding="10dp"
             app:cornerRadius="16dp"
-            android:textAllCaps="false">
-        </Button>
+            android:textAllCaps="false"
+            android:id="@+id/mediateka_button"
+            android:foreground="?attr/selectableItemBackground"/>
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -68,7 +71,9 @@
             app:iconTint="@color/black"
             app:iconPadding="10dp"
             app:cornerRadius="16dp"
-            android:textAllCaps="false"/>
+            android:textAllCaps="false"
+            android:id="@+id/settings_button"
+            android:foreground="?attr/selectableItemBackground"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

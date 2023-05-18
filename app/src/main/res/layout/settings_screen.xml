@@ -15,9 +15,9 @@
             android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
+            android:contentDescription="@string/no"
             app:icon="@drawable/arrow_back"
-            app:iconTint="@color/black"
-            android:contentDescription="@string/no"/>
+            app:iconTint="@color/black" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -48,14 +48,14 @@
                 android:text="@string/Dark_theme"
                 android:textAlignment="textStart"
                 android:textAllCaps="false"
-                android:textColor="@color/black"></Button>
+                android:textColor="@color/black"/>
 
             <Switch
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_weight="0"
-                tools:ignore="UseSwitchCompatOrMaterialXml"
-                android:contentDescription="@string/no"/>
+                android:contentDescription="@string/no"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
         </LinearLayout>
 
         <Button
