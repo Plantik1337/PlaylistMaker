@@ -1,79 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1A1B22"
-    android:orientation="vertical"
-    android:padding="20dp">
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:text="Вопрос:"
-            android:textColor="#ffffff"
-            android:textSize="20sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:text="2/10"
-            android:textColor="#ffffff"
-            android:textSize="20sp" />
-    </FrameLayout>
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="20dp"
-        android:layout_weight="1"
-        android:scaleType="centerCrop"
-        android:src="@drawable/poster"
-        android:id="@+id/poster"
-        android:foreground="?attr/selectableItemBackground"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginHorizontal="63dp"
-        android:layout_marginTop="33dp"
-        android:gravity="center"
-        android:text="Рейтинг этого фильма больше, чем 9?:"
-        android:textColor="#ffffff"
-        android:textSize="23sp"
-        android:textStyle="bold" />
+    android:background="@color/blue">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="33dp"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="16dp"
+        tools:ignore="UselessParent">
 
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="60dp"
-            android:layout_marginEnd="10dp"
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:paddingBottom="40dp"
+            android:text="@string/app_name"
+            android:textColor="@color/white"
+            android:textSize="@dimen/standart_text" />
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/search_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:backgroundTint="@color/white"
-            android:text="@string/no"
-            android:textColor="#1A1B22"
-            android:textAllCaps="false"/>
+            android:foreground="?attr/selectableItemBackground"
+            android:paddingStart="32dp"
+            android:text="@string/search"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            android:textSize="@dimen/standart_text"
+            app:cornerRadius="16dp"
+            app:icon="@drawable/ic_vector"
+            app:iconGravity="textStart"
+            app:iconPadding="16dp"
+            app:iconTint="@color/black" />
 
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="10dp"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/mediateka_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:backgroundTint="#ffffff"
-            android:text="@string/yes"
-            android:textColor="#1A1B22"
-            android:textAllCaps="false"/>
+            android:backgroundTint="@color/white"
+            android:foreground="?attr/selectableItemBackground"
+            android:paddingStart="32dp"
+            android:text="@string/media_library"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            android:textSize="@dimen/standart_text"
+            app:cornerRadius="16dp"
+            app:icon="@drawable/media_vector"
+            app:iconGravity="textStart"
+            app:iconPadding="10dp"
+            app:iconTint="@color/black" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/settings_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="@color/white"
+            android:foreground="?attr/selectableItemBackground"
+            android:paddingStart="32dp"
+            android:text="@string/settings"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            android:textSize="@dimen/standart_text"
+            app:cornerRadius="16dp"
+            app:icon="@drawable/settings_vector"
+            app:iconGravity="textStart"
+            app:iconPadding="10dp"
+            app:iconTint="@color/black" />
     </LinearLayout>
 
 </LinearLayout>

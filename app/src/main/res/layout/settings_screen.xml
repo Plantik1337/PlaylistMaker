@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".SettingsActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -11,21 +12,26 @@
         android:orientation="horizontal"
         tools:ignore="MissingConstraints">
 
-        <Button
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
+        <ImageButton
+
+            android:layout_width="61dp"
+            android:layout_height="50dp"
             android:backgroundTint="@color/white"
             android:contentDescription="@string/no"
+            android:foreground="?attr/selectableItemBackground"
             app:icon="@drawable/arrow_back"
-            app:iconTint="@color/black" />
+            app:iconGravity="start"
+            app:iconPadding="10dp"
+            app:iconTint="@color/black"
+            android:src="@drawable/arrow_back"
+            android:id="@+id/backToMainActivity"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/settings"
             android:textColor="@color/DarkFun"
-            android:textSize="@dimen/standart_text"
-            android:textStyle="bold" />
+            android:textSize="@dimen/standart_text" />
     </LinearLayout>
 
     <LinearLayout
@@ -34,62 +40,61 @@
         android:layout_marginTop="60dp"
         android:orientation="vertical">
 
-        <LinearLayout
+        <androidx.appcompat.widget.SwitchCompat
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            android:orientation="horizontal">
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="10"
-                android:backgroundTint="@color/white"
-                android:text="@string/Dark_theme"
-                android:textAlignment="textStart"
-                android:textAllCaps="false"
-                android:textColor="@color/black"/>
-
-            <Switch
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_weight="0"
-                android:contentDescription="@string/no"
-                tools:ignore="UseSwitchCompatOrMaterialXml" />
-        </LinearLayout>
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/white"
-            android:text="@string/Share_App"
+            android:layout_height="61dp"
+            android:contentDescription="@string/no"
+            android:minHeight="48dp"
+            android:paddingStart="16dp"
+            android:text="@string/Dark_theme"
             android:textAlignment="textStart"
             android:textAllCaps="false"
             android:textColor="@color/black"
+            android:textSize="16sp"
+            android:paddingEnd="7dp"/>
+
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="match_parent"
+            android:layout_height="61dp"
+            android:backgroundTint="@color/white"
+            android:paddingStart="16dp"
+            android:text="@string/Share_App"
+            android:textAlignment="textStart"
+            android:textAllCaps="false"
+            android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle"
+            android:textColor="@color/black"
+            android:textSize="16sp"
             app:icon="@drawable/share_vector"
             app:iconGravity="end"
             app:iconTint="@color/grey" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="61dp"
             android:backgroundTint="@color/white"
+            android:paddingStart="16dp"
             android:text="@string/Contact_Us"
             android:textAlignment="textStart"
             android:textAllCaps="false"
+            android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle"
             android:textColor="@color/black"
+            android:textSize="16sp"
             app:icon="@drawable/support_vector"
             app:iconGravity="end"
             app:iconTint="@color/grey" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="61dp"
             android:backgroundTint="@color/white"
+            android:paddingStart="16dp"
             android:text="@string/Terms_of_use"
             android:textAlignment="textStart"
             android:textAllCaps="false"
+            android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle"
             android:textColor="@color/black"
+            android:textSize="16sp"
             app:icon="@drawable/arrow_forward"
             app:iconGravity="end"
             app:iconTint="@color/grey" />
