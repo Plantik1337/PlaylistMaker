@@ -14,52 +14,64 @@
 
         <ImageButton
 
+            android:id="@+id/backToMainActivity"
             android:layout_width="61dp"
             android:layout_height="50dp"
             android:backgroundTint="@color/white"
             android:contentDescription="@string/no"
             android:foreground="?attr/selectableItemBackground"
+            android:paddingStart="6dp"
+            android:src="@drawable/arrow_back"
             app:icon="@drawable/arrow_back"
             app:iconGravity="start"
             app:iconPadding="10dp"
             app:iconTint="@color/black"
-            android:src="@drawable/arrow_back"
-            android:id="@+id/backToMainActivity"/>
+            android:outlineProvider="none"
+            android:insetBottom="0dp"
+            android:insetTop="0dp" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:text="@string/settings"
             android:textColor="@color/DarkFun"
-            android:textSize="@dimen/standart_text"
-            android:layout_gravity="center"/>
+            android:textSize="@dimen/standart_text" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="74dp"
         android:orientation="vertical">
 
         <androidx.appcompat.widget.SwitchCompat
             android:layout_width="match_parent"
             android:layout_height="61dp"
             android:contentDescription="@string/no"
-            android:minHeight="48dp"
+            android:foreground="?attr/selectableItemBackground"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:outlineProvider="none"
             android:paddingStart="16dp"
+            android:paddingEnd="18dp"
             android:text="@string/Dark_theme"
             android:textAlignment="textStart"
             android:textAllCaps="false"
             android:textColor="@color/black"
-            android:textSize="16sp"
-            android:paddingEnd="7dp"/>
+            android:textSize="16sp" />
 
 
         <com.google.android.material.button.MaterialButton
             android:layout_width="match_parent"
             android:layout_height="61dp"
             android:backgroundTint="@color/white"
+            android:foreground="?attr/selectableItemBackground"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:outlineProvider="none"
             android:paddingStart="16dp"
+            android:paddingEnd="16dp"
             android:text="@string/Share_App"
             android:textAlignment="textStart"
             android:textAllCaps="false"
@@ -74,7 +86,12 @@
             android:layout_width="match_parent"
             android:layout_height="61dp"
             android:backgroundTint="@color/white"
+            android:foreground="?attr/selectableItemBackground"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:outlineProvider="none"
             android:paddingStart="16dp"
+            android:paddingEnd="16dp"
             android:text="@string/Contact_Us"
             android:textAlignment="textStart"
             android:textAllCaps="false"
@@ -89,7 +106,12 @@
             android:layout_width="match_parent"
             android:layout_height="61dp"
             android:backgroundTint="@color/white"
+            android:foreground="?attr/selectableItemBackground"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:outlineProvider="none"
             android:paddingStart="16dp"
+            android:paddingEnd="16dp"
             android:text="@string/Terms_of_use"
             android:textAlignment="textStart"
             android:textAllCaps="false"
@@ -101,4 +123,44 @@
             app:iconTint="@color/grey" />
 
     </LinearLayout>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="20dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="20dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="20dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="20dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="20dp" />
+
+    <androidx.constraintlayout.helper.widget.Flow
+        android:id="@+id/flow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </androidx.constraintlayout.widget.ConstraintLayout>
