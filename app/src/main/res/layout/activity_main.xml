@@ -9,21 +9,21 @@
     android:paddingVertical="16dp">
 
     <TextView
+        style="@style/MessageTextStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
         android:paddingBottom="40dp"
         android:text="@string/app_name"
-        android:textColor="@color/white"
         android:textSize="@dimen/standart_text" />
 
 
     <com.google.android.material.button.MaterialButton
+        style="@style/ButtonStyle"
         android:id="@+id/search_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:backgroundTint="@color/white"
         android:foreground="?attr/selectableItemBackground"
         android:insetTop="0dp"
         android:insetBottom="16dp"
@@ -31,20 +31,18 @@
         android:paddingStart="32dp"
         android:text="@string/search"
         android:textAllCaps="false"
-        android:textColor="@color/black"
         android:textSize="@dimen/standart_text"
         app:cornerRadius="16dp"
         app:icon="@drawable/ic_vector"
         app:iconGravity="textStart"
-        app:iconPadding="16dp"
-        app:iconTint="@color/black" />
+        app:iconPadding="16dp" />
 
     <com.google.android.material.button.MaterialButton
+        style="@style/ButtonStyle"
         android:id="@+id/mediateka_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:backgroundTint="@color/white"
         android:foreground="?attr/selectableItemBackground"
         android:insetTop="0dp"
         android:insetBottom="16dp"
@@ -52,20 +50,18 @@
         android:paddingStart="32dp"
         android:text="@string/media_library"
         android:textAllCaps="false"
-        android:textColor="@color/black"
         android:textSize="@dimen/standart_text"
         app:cornerRadius="16dp"
         app:icon="@drawable/media_vector"
         app:iconGravity="textStart"
-        app:iconPadding="10dp"
-        app:iconTint="@color/black" />
+        app:iconPadding="10dp" />
 
     <com.google.android.material.button.MaterialButton
+        style="@style/ButtonStyle"
         android:id="@+id/settings_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:backgroundTint="@color/white"
         android:foreground="?attr/selectableItemBackground"
         android:insetTop="0dp"
         android:insetBottom="0dp"
@@ -73,12 +69,10 @@
         android:paddingStart="32dp"
         android:text="@string/settings"
         android:textAllCaps="false"
-        android:textColor="@color/black"
         android:textSize="@dimen/standart_text"
         app:cornerRadius="16dp"
         app:icon="@drawable/settings_vector"
         app:iconGravity="textStart"
-        app:iconPadding="10dp"
-        app:iconTint="@color/black" />
+        app:iconPadding="10dp" />
 
 </LinearLayout>
