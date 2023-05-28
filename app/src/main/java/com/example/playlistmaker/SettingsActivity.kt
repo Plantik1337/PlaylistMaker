@@ -5,12 +5,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
+import com.google.android.material.button.MaterialButton
 
 class SettingsActivity : Activity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.settings_screen)
-        val back = findViewById<ImageButton>(R.id.backToMainActivity)
+        val back = findViewById<MaterialButton>(R.id.backToMainActivity)
         back.setOnClickListener {
             finish()
         }

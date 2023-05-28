@@ -6,12 +6,15 @@
         <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondary">@color/teal_200</item><!-- teal_200 -->
         <item name="colorSecondaryVariant">@color/teal_700</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
-        <item name="background">@color/teal_200</item>
+        <item name="android:background">@color/blue</item>
+    </style>
+    <style name="Theme.Settings" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:background">@color/white</item>
     </style>
 </resources>
