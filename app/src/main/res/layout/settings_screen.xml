@@ -34,7 +34,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/settings"
-            android:textSize="@dimen/standart_text" />
+            android:textSize="@dimen/standart_text"
+            style="@style/title"/>
     </LinearLayout>
 
     <LinearLayout
@@ -46,14 +47,10 @@
         <androidx.appcompat.widget.SwitchCompat
             style="@style/SettingsButton"
             android:layout_width="match_parent"
-            android:layout_height="61dp"
             android:contentDescription="@string/no"
-            android:foreground="?attr/selectableItemBackground"
             android:insetTop="0dp"
             android:insetBottom="0dp"
             android:outlineProvider="none"
-            android:paddingStart="16dp"
-            android:paddingEnd="18dp"
             android:text="@string/Dark_theme"
             android:textAlignment="textStart"
             android:textAllCaps="false"
@@ -63,55 +60,36 @@
         <com.google.android.material.button.MaterialButton
             style="@style/SettingsButton"
             android:layout_width="match_parent"
-            android:layout_height="61dp"
-            android:foreground="?attr/selectableItemBackground"
             android:insetTop="0dp"
             android:insetBottom="0dp"
             android:outlineProvider="none"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
             android:text="@string/Share_App"
             android:textAlignment="textStart"
-            android:textAllCaps="false"
             android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle"
-            android:textSize="16sp"
             app:icon="@drawable/share_vector"
-            app:iconGravity="end"
-            app:iconTint="@color/grey" />
+            app:iconGravity="end" />
 
         <com.google.android.material.button.MaterialButton
             style="@style/SettingsButton"
             android:layout_width="match_parent"
-            android:layout_height="61dp"
-            android:foreground="?attr/selectableItemBackground"
             android:insetTop="0dp"
             android:insetBottom="0dp"
             android:outlineProvider="none"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
             android:text="@string/Contact_Us"
             android:textAlignment="textStart"
-            android:textAllCaps="false"
             android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle"
-            android:textSize="16sp"
             app:icon="@drawable/support_vector"
             app:iconGravity="end" />
 
         <com.google.android.material.button.MaterialButton
             style="@style/SettingsButton"
             android:layout_width="match_parent"
-            android:layout_height="61dp"
-            android:foreground="?attr/selectableItemBackground"
             android:insetTop="0dp"
             android:insetBottom="0dp"
             android:outlineProvider="none"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
             android:text="@string/Terms_of_use"
             android:textAlignment="textStart"
-            android:textAllCaps="false"
             android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle"
-            android:textSize="16sp"
             app:icon="@drawable/arrow_forward"
             app:iconGravity="end"/>
 

@@ -1,70 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Theme.PlaylistMaker"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingHorizontal="16dp"
-    android:paddingVertical="16dp"
-    >
+    tools:context=".MainActivity">
 
-    <TextView
-        style="@style/MessageTextStyle"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:paddingBottom="40dp"
-        android:text="@string/app_name"
-        android:textSize="@dimen/standart_text" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="16dp">
+
+        <TextView
+            style="@style/MessageTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:paddingBottom="40dp"
+            android:text="@string/app_name"
+            android:textSize="@dimen/standart_text" />
 
 
-    <com.google.android.material.button.MaterialButton
-        style="@style/ButtonStyle"
-        android:id="@+id/search_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:foreground="?attr/selectableItemBackground"
-        android:insetTop="0dp"
-        android:insetBottom="16dp"
-        android:outlineProvider="none"
-        android:paddingStart="32dp"
-        android:text="@string/search"
-        app:cornerRadius="16dp"
-        app:icon="@drawable/ic_vector"
-        app:iconGravity="textStart"
-        app:iconPadding="16dp" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/search_button"
+            style="@style/ButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:foreground="?attr/selectableItemBackground"
+            android:insetTop="0dp"
+            android:insetBottom="16dp"
+            android:outlineProvider="none"
+            android:paddingStart="32dp"
+            android:text="@string/search"
+            app:cornerRadius="16dp"
+            app:icon="@drawable/ic_vector"
+            app:iconGravity="textStart"
+            app:iconPadding="16dp" />
 
-    <com.google.android.material.button.MaterialButton
-        style="@style/ButtonStyle"
-        android:id="@+id/mediateka_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:foreground="?attr/selectableItemBackground"
-        android:insetTop="0dp"
-        android:insetBottom="16dp"
-        android:outlineProvider="none"
-        android:paddingStart="32dp"
-        android:text="@string/media_library"
-        app:cornerRadius="16dp"
-        app:icon="@drawable/media_vector"
-        app:iconGravity="textStart"
-        app:iconPadding="10dp" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/mediateka_button"
+            style="@style/ButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:foreground="?attr/selectableItemBackground"
+            android:insetTop="0dp"
+            android:insetBottom="16dp"
+            android:outlineProvider="none"
+            android:paddingStart="32dp"
+            android:text="@string/media_library"
+            app:cornerRadius="16dp"
+            app:icon="@drawable/media_vector"
+            app:iconGravity="textStart"
+            app:iconPadding="10dp" />
 
-    <com.google.android.material.button.MaterialButton
-        style="@style/ButtonStyle"
-        android:id="@+id/settings_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:foreground="?attr/selectableItemBackground"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/settings_button"
+            style="@style/ButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:foreground="?attr/selectableItemBackground"
 
-        android:paddingStart="32dp"
-        android:text="@string/settings"
-        app:cornerRadius="16dp"
-        app:icon="@drawable/settings_vector"
-        app:iconGravity="textStart"
-        app:iconPadding="10dp" />
+            android:paddingStart="32dp"
+            android:text="@string/settings"
+            app:cornerRadius="16dp"
+            app:icon="@drawable/settings_vector"
+            app:iconGravity="textStart"
+            app:iconPadding="10dp" />
 
-</LinearLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
