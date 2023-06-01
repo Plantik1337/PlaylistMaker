@@ -30,12 +30,12 @@
             app:iconPadding="10dp" />
 
         <TextView
+            style="@style/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/settings"
-            android:textSize="@dimen/standart_text"
-            style="@style/title"/>
+            android:textSize="@dimen/standart_text" />
     </LinearLayout>
 
     <LinearLayout
@@ -58,6 +58,7 @@
 
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/shareButton"
             style="@style/SettingsButton"
             android:layout_width="match_parent"
             android:insetTop="0dp"
@@ -71,6 +72,7 @@
 
         <com.google.android.material.button.MaterialButton
             style="@style/SettingsButton"
+            android:id="@+id/contactUs"
             android:layout_width="match_parent"
             android:insetTop="0dp"
             android:insetBottom="0dp"
@@ -83,6 +85,7 @@
 
         <com.google.android.material.button.MaterialButton
             style="@style/SettingsButton"
+            android:id="@+id/termsOfUse"
             android:layout_width="match_parent"
             android:insetTop="0dp"
             android:insetBottom="0dp"
@@ -91,7 +94,7 @@
             android:textAlignment="textStart"
             android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle"
             app:icon="@drawable/arrow_forward"
-            app:iconGravity="end"/>
+            app:iconGravity="end" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
