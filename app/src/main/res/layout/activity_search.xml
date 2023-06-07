@@ -2,8 +2,89 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/SearchActivityTheme"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SearchActivity">
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="16dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.button.MaterialButton
+                style="@style/BackButtonSearchStyle"
+                android:layout_width="61dp"
+                android:layout_height="45dp"
+                android:contentDescription="@string/no"
+                android:foreground="?attr/selectableItemBackground"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:outlineProvider="none"
+                android:paddingStart="13dp"
+                android:paddingEnd="15dp"
+                app:icon="@drawable/arrow_back"
+                app:iconGravity="start" />
+
+            <TextView
+                style="@style/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:paddingStart="0dp"
+                android:paddingEnd="20dp"
+                android:text="@string/search"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/editText"
+                style="@style/searchTextEditStyle"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:autofillHints="textAutoCorrect"
+                android:background="@drawable/rounded_edittext"
+                android:drawableStart="@drawable/ic_vector"
+                android:drawablePadding="10dp"
+                android:hint="@string/search"
+                android:inputType="textAutoCorrect"
+                android:paddingStart="20dp"
+                android:paddingEnd="10dp"
+                android:textColor="@color/DarkFun"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/linearLayout" />
+
+            <ImageView
+                android:id="@+id/cancelInputSearchEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:paddingTop="8dp"
+                android:paddingEnd="10dp"
+                android:src="@drawable/ic_cancel"
+                android:visibility="gone"
+                app:tint="@color/grey" />
+        </FrameLayout>
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

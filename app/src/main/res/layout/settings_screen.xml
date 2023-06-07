@@ -24,7 +24,6 @@
             android:insetBottom="0dp"
             android:outlineProvider="none"
             android:paddingStart="15dp"
-            android:src="@drawable/arrow_back"
             app:icon="@drawable/arrow_back"
             app:iconGravity="start"
             app:iconPadding="10dp" />
