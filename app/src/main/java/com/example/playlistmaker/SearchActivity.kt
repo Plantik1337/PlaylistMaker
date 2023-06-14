@@ -10,6 +10,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.button.MaterialButton
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var editText: EditText
@@ -22,6 +23,10 @@ class SearchActivity : AppCompatActivity() {
         val editText = findViewById<EditText>(R.id.searchEditText)
         val imageViewButton = findViewById<ImageView>(R.id.cancelInputSearchEditText)
         val inputMethod = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+
+        findViewById<MaterialButton>(R.id.backToMainActivityFromSearchActivity).setOnClickListener() {
+            finish()
+        }
 
         editText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -44,8 +49,8 @@ class SearchActivity : AppCompatActivity() {
             editText.setText("")
             inputMethod.hideSoftInputFromWindow(editText.windowToken, 0)
         }
-        if (savedInstanceState != null){
-            savedTextSearch = savedInstanceState.getString("editText","")
+        if (savedInstanceState != null) {
+            savedTextSearch = savedInstanceState.getString("editText", "")
             editText.setText(savedTextSearch)
         }
     }

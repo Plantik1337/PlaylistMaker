@@ -25,6 +25,7 @@
             android:layout_height="wrap_content">
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/backToMainActivityFromSearchActivity"
                 style="@style/BackButtonSearchStyle"
                 android:layout_width="61dp"
                 android:layout_height="45dp"

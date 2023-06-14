@@ -9,4 +9,6 @@
     <string name="Share_App">Share App</string>
     <string name="Contact_Us">Contact Us</string>
     <string name="Terms_of_use">Terms of use</string>
+    <string name="MessageSbjectViaEmail">A message to the developers and developers of the Playlist Maker app</string>
+    <string name="MessageViaEmail">Thanks to the developers and developers for a cool app!</string>
 </resources>

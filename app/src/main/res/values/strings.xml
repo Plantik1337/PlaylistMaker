@@ -9,4 +9,9 @@
     <string name="Share_App">Поделиться приложением</string>
     <string name="Contact_Us">Написать в поддержку</string>
     <string name="Terms_of_use">Пользовательское соглашение</string>
+    <string name="practicum" translatable="false">https://praktikum.yandex.ru/android-developer/</string>
+    <string name="MessageSbjectViaEmail">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
+    <string name="MessageViaEmail">Спасибо разработчикам и разработчицам за крутое приложение!</string>
+    <string name="OfferLink" translatable="false">https://yandex.ru/legal/practicum_offer/</string>
+    <string name="MyEmail" translatable="false">Thesol590@yandex.ru</string>
 </resources>

@@ -70,8 +70,8 @@
             app:iconGravity="end" />
 
         <com.google.android.material.button.MaterialButton
-            style="@style/SettingsButton"
             android:id="@+id/contactUs"
+            style="@style/SettingsButton"
             android:layout_width="match_parent"
             android:insetTop="0dp"
             android:insetBottom="0dp"
@@ -83,8 +83,8 @@
             app:iconGravity="end" />
 
         <com.google.android.material.button.MaterialButton
-            style="@style/SettingsButton"
             android:id="@+id/termsOfUse"
+            style="@style/SettingsButton"
             android:layout_width="match_parent"
             android:insetTop="0dp"
             android:insetBottom="0dp"
