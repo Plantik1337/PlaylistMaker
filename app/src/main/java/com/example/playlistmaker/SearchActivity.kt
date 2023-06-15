@@ -16,6 +16,9 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var editText: EditText
     private var savedTextSearch: String? = ""
 
+    companion object{
+        const val EDIT_TEXT = "EDIT_TEXT"
+    }
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +53,7 @@ class SearchActivity : AppCompatActivity() {
             inputMethod.hideSoftInputFromWindow(editText.windowToken, 0)
         }
         if (savedInstanceState != null) {
-            savedTextSearch = savedInstanceState.getString("editText", "")
+            savedTextSearch = savedInstanceState.getString(EDIT_TEXT, "")
             editText.setText(savedTextSearch)
         }
     }
@@ -58,14 +61,14 @@ class SearchActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
         super.onSaveInstanceState(outState, outPersistentState)
         savedTextSearch = editText.text.toString()
-        outState.putString("editText", savedTextSearch)
+        outState.putString(EDIT_TEXT, savedTextSearch)
     }
 
     override fun onRestoreInstanceState(
         savedInstanceState: Bundle?, persistentState: PersistableBundle?
     ) {
         super.onRestoreInstanceState(savedInstanceState, persistentState)
-        savedTextSearch = savedInstanceState?.getString("editText", "")
+        savedTextSearch = savedInstanceState?.getString(EDIT_TEXT, "")
         editText.setText(savedTextSearch)
     }
 }

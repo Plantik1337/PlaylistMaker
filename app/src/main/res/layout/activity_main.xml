@@ -15,63 +15,47 @@
         android:paddingVertical="16dp">
 
         <TextView
-            style="@style/MessageTextStyle"
+            style="@style/messageTextStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:paddingBottom="40dp"
+            android:paddingBottom="32dp"
             android:text="@string/app_name"
             android:textSize="@dimen/standart_text" />
 
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/search_button"
-            style="@style/ButtonStyle"
+            style="@style/buttonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:foreground="?attr/selectableItemBackground"
             android:insetTop="0dp"
             android:insetBottom="16dp"
             android:outlineProvider="none"
-            android:paddingStart="32dp"
             android:text="@string/search"
-            app:cornerRadius="16dp"
-            app:icon="@drawable/ic_vector"
-            app:iconGravity="textStart"
-            app:iconPadding="16dp" />
+            app:icon="@drawable/ic_vector" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/mediateka_button"
-            style="@style/ButtonStyle"
+            style="@style/buttonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:foreground="?attr/selectableItemBackground"
             android:insetTop="0dp"
             android:insetBottom="16dp"
             android:outlineProvider="none"
-            android:paddingStart="32dp"
             android:text="@string/media_library"
-            app:cornerRadius="16dp"
-            app:icon="@drawable/media_vector"
-            app:iconGravity="textStart"
-            app:iconPadding="10dp" />
+            app:icon="@drawable/media_vector" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/settings_button"
-            style="@style/ButtonStyle"
+            style="@style/buttonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:foreground="?attr/selectableItemBackground"
-
-            android:paddingStart="32dp"
             android:text="@string/settings"
-            app:cornerRadius="16dp"
-            app:icon="@drawable/settings_vector"
-            app:iconGravity="textStart"
-            app:iconPadding="10dp" />
+            app:icon="@drawable/settings_vector" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
