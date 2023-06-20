@@ -16,9 +16,10 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var editText: EditText
     private var savedTextSearch: String? = ""
 
-    companion object{
+    companion object {
         const val EDIT_TEXT = "EDIT_TEXT"
     }
+
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

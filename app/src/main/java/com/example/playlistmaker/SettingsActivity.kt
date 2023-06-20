@@ -1,20 +1,21 @@
 package com.example.playlistmaker
 
-import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.button.MaterialButton
 
-class SettingsActivity : Activity() {
+class SettingsActivity : AppCompatActivity() {
 
-    private val shareButton = findViewById<MaterialButton>(R.id.shareButton)
-    private val backButton = findViewById<MaterialButton>(R.id.backToMainActivity)
-    private val contactUsButton = findViewById<MaterialButton>(R.id.contactUs)
-    private val termsOfUseButton = findViewById<MaterialButton>(R.id.termsOfUse)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.settings_screen)
+
+        val shareButton = findViewById<MaterialButton>(R.id.shareButton)
+        val backButton = findViewById<MaterialButton>(R.id.backToMainActivity)
+        val contactUsButton = findViewById<MaterialButton>(R.id.contactUs)
+        val termsOfUseButton = findViewById<MaterialButton>(R.id.termsOfUse)
 
         backButton.setOnClickListener {// Выход с экрана настроек
             finish()
