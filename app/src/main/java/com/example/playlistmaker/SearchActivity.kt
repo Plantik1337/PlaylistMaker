@@ -1,6 +1,8 @@
 package com.example.playlistmaker
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.Outline
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.text.Editable
@@ -8,6 +10,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewOutlineProvider
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
@@ -15,6 +18,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.google.android.material.button.MaterialButton
 
 class SearchActivity : AppCompatActivity() {
@@ -25,7 +29,6 @@ class SearchActivity : AppCompatActivity() {
         const val EDIT_TEXT = "EDIT_TEXT"
     }
 
-    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
@@ -38,7 +41,7 @@ class SearchActivity : AppCompatActivity() {
         val trackListView = findViewById<RecyclerView>(R.id.trackListRecyclerView)
         val trackList: ArrayList<Track> = arrayListOf(
             Track(
-                trackName = "Smells Like Teen Spirit",
+                trackName = "Smells Like Teen Spirit (REMASTERED 2011)",//дописал для проверки вывода
                 artistName = "Nirvana",
                 trackTime = "5:01",
                 artworkUrl100 = "https://is5-ssl.mzstatic.com/image/thumb/Music115/v4/7b/58/c2/7b58c21a-2b51-2bb2-e59a-9bb9b96ad8c3/00602567924166.rgb.jpg/100x100bb.jpg"
@@ -132,7 +135,7 @@ data class Track(
 class Adapter(
     private val track: ArrayList<Track>
 ): RecyclerView.Adapter<Adapter.TrackViewHolder>(){
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Adapter.TrackViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.v_track_line, parent, false)
         return TrackViewHolder(view)
     }
@@ -151,8 +154,20 @@ class Adapter(
         private val songDuration: TextView = itemView.findViewById(R.id.songDurationTextView)
 
         fun bind(track: Track){
-            //albumImage.setImageResource(track.artworkUrl100)
-            trackName.text = track.trackName
+            Glide.with(itemView).load(track.artworkUrl100).into(albumImage)
+            albumImage.clipToOutline = true
+            albumImage.outlineProvider = object : ViewOutlineProvider() {
+                override fun getOutline(view: View, outline: Outline) {
+                    val cornerRadius = 15
+                    outline.setRoundRect(0,0,view.width,view.height, cornerRadius.toFloat())
+                }
+            }
+            if (track.trackName.length > 30){
+                trackName.text = track.trackName.substring(0,30) + "..."
+            }
+            else{
+                trackName.text = track.trackName
+            }
             artistName.text = track.artistName
             songDuration.text = track.trackTime
 

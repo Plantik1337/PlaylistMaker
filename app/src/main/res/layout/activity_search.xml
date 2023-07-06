@@ -28,7 +28,7 @@
                 android:id="@+id/backToMainActivityFromSearchActivity"
                 style="@style/backButtonSearchStyle"
                 android:layout_width="61dp"
-                android:layout_height="45dp"
+                android:layout_height="@dimen/squareImage"
                 android:contentDescription="@string/no"
                 android:foreground="?attr/selectableItemBackground"
                 android:insetTop="0dp"
@@ -47,7 +47,7 @@
                 android:paddingStart="0dp"
                 android:paddingEnd="20dp"
                 android:text="@string/search"
-                android:textSize="22sp"
+                android:textSize="@dimen/standart_text"
                 android:textStyle="bold" />
         </LinearLayout>
 
