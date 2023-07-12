@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="standart_text">22sp</dimen>
+    <dimen name="squareImage">45dp</dimen>
+    <dimen name="trackBlockHeight">61dp</dimen>
+    <dimen name="trackNameTextSize">16sp</dimen>
+    <dimen name="songwriterTextSize">11sp</dimen>
+    <dimen name="arrowTrackListSize">24dp</dimen>
+    <dimen name="dotSize">13dp</dimen>
 </resources>

@@ -67,4 +67,19 @@
         <item name="android:background">@color/DarkFun</item>
     </style>
 
+    <style name="trackListStyle">
+        <item name="background">@color/DarkFun</item>
+    </style>
+    <style name="arrowTrackListStyle">
+        <item name="android:tint">@color/white</item>
+    </style>
+    <style name="songNameTrackListStyle">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textAppearance">@font/ys_display_regular</item>
+    </style>
+    <style name="littleTextStyle">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textAppearance">@font/ys_display_regular</item>
+    </style>
+
 </resources>
