@@ -1,24 +1,16 @@
 package com.example.playlistmaker
 
-import android.annotation.SuppressLint
-import android.content.Context
-import android.graphics.Outline
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.view.ViewOutlineProvider
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.google.android.material.button.MaterialButton
 
 class SearchActivity : AppCompatActivity() {
@@ -71,7 +63,7 @@ class SearchActivity : AppCompatActivity() {
                 artworkUrl100 = "https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/a0/4d/c4/a04dc484-03cc-02aa-fa82-5334fcb4bc16/18UMGIM24878.rgb.jpg/100x100bb.jpg"
             )
         )
-        findViewById<MaterialButton>(R.id.backToMainActivityFromSearchActivity).setOnClickListener() {
+        findViewById<MaterialButton>(R.id.backToMainActivityFromSearchActivity).setOnClickListener {
             finish()
         }
 
@@ -105,7 +97,7 @@ class SearchActivity : AppCompatActivity() {
         adapter = Adapter(trackList)
         trackListView.adapter = adapter
 
-    }//
+    }
 
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
         super.onSaveInstanceState(outState, outPersistentState)
@@ -123,56 +115,6 @@ class SearchActivity : AppCompatActivity() {
 
 
 
-}
-
-data class Track(
-    val trackName: String, // Название композиции
-    val artistName: String, // Имя исполнителя
-    val trackTime: String, // Продолжительность трека
-    val artworkUrl100: String // Ссылка на изображение обложки
-)
-
-class Adapter(
-    private val track: ArrayList<Track>
-): RecyclerView.Adapter<Adapter.TrackViewHolder>(){
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.v_track_line, parent, false)
-        return TrackViewHolder(view)
-    }
-
-    override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
-        holder.bind(track[position])
-    }
-
-    override fun getItemCount(): Int {
-        return track.size
-    }
-    class TrackViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
-        private val albumImage: ImageView = itemView.findViewById(R.id.albumImageView)
-        private val trackName: TextView = itemView.findViewById(R.id.trackNameTextView)
-        private val artistName: TextView = itemView.findViewById(R.id.artistNameTextView)
-        private val songDuration: TextView = itemView.findViewById(R.id.songDurationTextView)
-
-        fun bind(track: Track){
-            Glide.with(itemView).load(track.artworkUrl100).into(albumImage)
-            albumImage.clipToOutline = true
-            albumImage.outlineProvider = object : ViewOutlineProvider() {
-                override fun getOutline(view: View, outline: Outline) {
-                    val cornerRadius = 15
-                    outline.setRoundRect(0,0,view.width,view.height, cornerRadius.toFloat())
-                }
-            }
-            if (track.trackName.length > 30){
-                trackName.text = track.trackName.substring(0,30) + "..."
-            }
-            else{
-                trackName.text = track.trackName
-            }
-            artistName.text = track.artistName
-            songDuration.text = track.trackTime
-
-        }
-    }
 }
 
 

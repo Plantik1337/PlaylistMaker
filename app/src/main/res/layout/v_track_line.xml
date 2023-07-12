@@ -32,8 +32,10 @@
                 style="@style/songNameTrackListStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/app_name"
-                android:textSize="@dimen/trackNameTextSize" />
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textSize="@dimen/trackNameTextSize"
+                tools:text="Track Name" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -45,8 +47,11 @@
                     style="@style/littleTextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:text="@string/app_name"
-                    android:textSize="@dimen/songwriterTextSize" />
+                    android:textSize="@dimen/songwriterTextSize"
+                    tools:text="Artist Name" />
 
                 <ImageView
                     style="@style/arrowTrackListStyle"
@@ -62,8 +67,11 @@
                     style="@style/littleTextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:text="@string/app_name"
-                    android:textSize="@dimen/songwriterTextSize" />
+                    android:textSize="@dimen/songwriterTextSize"
+                    tools:text="Song Time" />
             </LinearLayout>
 
         </LinearLayout>
