@@ -22,7 +22,7 @@ class Adapter(
         holder.bind(track[position])
     }
 
-    override fun getItemCount() = track.size
+    override fun getItemCount(): Int = track.size ?: 0
 
     class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val albumImage: ImageView = itemView.findViewById(R.id.albumImageView)
@@ -30,22 +30,13 @@ class Adapter(
         private val artistName: TextView = itemView.findViewById(R.id.artistNameTextView)
         private val songDuration: TextView = itemView.findViewById(R.id.songDurationTextView)
 
-//        fun getScreenWidthInDp(context: Context): Int {// размер экрана
-//            val displayMetrics = context.resources.displayMetrics
-//            return (displayMetrics.widthPixels / displayMetrics.density).toInt()
-//        }
-//
-//        fun shortenText(text: String, maxLength: Int): String {
-//            return if (text.length > maxLength - 110){
-//                val shortenText = text.substring(0,maxLength)
-//                shortenText
-//            }else{
-//                text
-//            }
-//        }
-
         fun bind(track: Track) {
-
+            val maxSymbols = 32
+            if (track.trackName.length > maxSymbols) {
+                trackName.text = track.trackName.substring(0, maxSymbols) + "..."
+            } else {
+                trackName.text = track.trackName
+            }
             Glide.with(itemView).load(track.artworkUrl100).into(albumImage)
             albumImage.clipToOutline = true
             albumImage.outlineProvider = object : ViewOutlineProvider() {
@@ -54,14 +45,11 @@ class Adapter(
                     outline.setRoundRect(0, 0, view.width, view.height, cornerRadius.toFloat())
                 }
             }
-            val maxSymbols = 32
-            if (track.trackName.length > maxSymbols) {
-                trackName.text = track.trackName.substring(0, maxSymbols) + "..."
-            } else {
-                trackName.text = track.trackName
-            }
+
             artistName.text = track.artistName
-            songDuration.text = track.trackTime
+
+            songDuration.text = track.trackTimeMillis
+            //songDuration.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
 
         }
     }
