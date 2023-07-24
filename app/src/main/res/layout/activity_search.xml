@@ -7,25 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".SearchActivity">
 
-<LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintBottom_toBottomOf="parent">
-    <ImageView
-        android:layout_width="120dp"
-        android:layout_height="120dp"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Привет"
-        android:textSize="19sp"/>
-
-</LinearLayout>
-
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
@@ -84,16 +65,16 @@
                 android:drawableStart="@drawable/ic_vector"
                 android:drawablePadding="10dp"
                 android:hint="@string/search"
+                android:imeOptions="actionDone"
                 android:inputType="textAutoCorrect"
                 android:paddingStart="20dp"
                 android:paddingEnd="10dp"
+                android:singleLine="true"
                 android:textColor="@color/DarkFun"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/linearLayout"
-                android:imeOptions="actionDone"
-                android:singleLine="true"/>
+                app:layout_constraintTop_toTopOf="@+id/linearLayout" />
 
             <ImageView
                 android:id="@+id/cancelInputSearchEditText"
@@ -111,6 +92,85 @@
             android:id="@+id/trackListRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/searchProblems"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center"
+            android:src="@drawable/search_problems_vector" />
+
+        <TextView
+            style="@style/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Ничего не нашлось"
+            android:textSize="19sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/searchInternetProblems"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center"
+            android:src="@drawable/internet_problems_vector" />
+
+        <TextView
+            style="@style/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp"
+            android:text="Проблема со связью"
+            android:textSize="19sp" />
+
+        <TextView
+            style="@style/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:text="Загрузка не удалась. Проверьте подключение к интернету"
+            android:textSize="19sp"
+            android:textAlignment="center"/>
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/refrashButton"
+            android:id="@+id/refrashButton"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="24dp"
+            android:foreground="?attr/selectableItemBackground"
+            android:insetTop="2dp"
+            android:insetBottom="8dp"
+            android:outlineProvider="none"
+            android:text="Обновить"
+            android:textSize="14sp"/>
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

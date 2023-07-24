@@ -1,5 +1,6 @@
 package com.example.playlistmaker
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.text.Editable
@@ -10,6 +11,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -33,6 +35,8 @@ class SearchActivity : AppCompatActivity() {
         const val TAG = "MUSIC_STATE"
     }
 
+
+    @SuppressLint("LocalSuppress")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
@@ -43,6 +47,10 @@ class SearchActivity : AppCompatActivity() {
         val imageViewButton = findViewById<ImageView>(R.id.cancelInputSearchEditText)
         val inputMethod = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         val trackListView = findViewById<RecyclerView>(R.id.trackListRecyclerView)
+
+        val problemsSearchEvent = findViewById<LinearLayout>(R.id.searchProblems)
+        val problemsInternetSearchEvent = findViewById<LinearLayout>(R.id.searchInternetProblems)
+
 
         val baseUrl = "https://itunes.apple.com"
 
@@ -74,9 +82,12 @@ class SearchActivity : AppCompatActivity() {
                 }
             }
         })
+
         editText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                // ВЫПОЛНЯЙТЕ ПОИСКОВЫЙ ЗАПРОС ЗДЕСЬ
+
+                problemsInternetSearchEvent.visibility = View.GONE
+                problemsSearchEvent.visibility = View.GONE
 
                 val appleMusicServer = retrofit.create(AppleMusicServer::class.java)
 
@@ -86,41 +97,84 @@ class SearchActivity : AppCompatActivity() {
                             call: Call<MusicResponse>,
                             response: Response<MusicResponse>
                         ) {
-                            Log.d(TAG, "onResponse: ${response.body()?.results}")
-                            when (response.code()) {
-                                200 -> { // песни найдены
-                                    val musicCollection = response.body()!!.results
-                                    adapter = Adapter(musicCollection)
-                                    trackListView.adapter = adapter
-                                    //adapter.notifyDataSetChanged()
-                                }
+                            if (response.body()?.resultCount ?: 0 != "0") {
+                                Log.d(TAG, "onResponse: ${response.body()?.results}")
 
-                                204 -> { // песни не найдены
-                                    TODO("Вывести заглушку, которая сообщает о том, что песни по запросу не найдены")
+                                when (response.code()) {
+                                    200 -> { // песни найдены
+                                        val musicCollection = response.body()!!.results
+                                        adapter = Adapter(musicCollection)
+                                        trackListView.adapter = adapter
+                                    }
                                 }
+                            } else {//песни не найдены
+                                Log.e(TAG, "Что-то пошло не так, серер не отдаёт список песен")
+                                val emptyListTrack:ArrayList<Track> = ArrayList()
+                                trackListView.adapter = Adapter(emptyListTrack)
+                                problemsSearchEvent.visibility = View.VISIBLE
                             }
-//                            if (response.body() != null) {
-//
-//                            } else {
-//                                Log.e(TAG, "Что-то пошло не так, серер не отдаёт список песен")
-//                            }
+
 
                         }
 
                         override fun onFailure(call: Call<MusicResponse>, t: Throwable) {
                             Log.d(TAG, "onFailure: $t")
-                           // TODO("Вывести сообщение об ошибке подключения")
+                            // TODO("Вывести сообщение об ошибке подключения")
+                            val emptyListTrack:ArrayList<Track> = ArrayList()
+                            trackListView.adapter = Adapter(emptyListTrack)
+                            problemsInternetSearchEvent.visibility = View.VISIBLE
                         }
                     })
-
                 true
             }
             false
         }
+
+        val refrashButton = findViewById<MaterialButton>(R.id.refrashButton)
+
+        refrashButton.setOnClickListener {
+            // Повторный запрос при нажатии на кнопку "Refresh"
+            val appleMusicServer = retrofit.create(AppleMusicServer::class.java)
+
+            appleMusicServer.search(editText.text.toString())
+                .enqueue(object : Callback<MusicResponse> {
+                    override fun onResponse(call: Call<MusicResponse>, response: Response<MusicResponse>) {
+                        if (response.body()?.resultCount ?: 0 != "0") {
+                            Log.d(TAG, "onResponse: ${response.body()?.results}")
+
+                            when (response.code()) {
+                                200 -> { // песни найдены
+                                    problemsSearchEvent.visibility = View.GONE
+                                    problemsInternetSearchEvent.visibility = View.GONE
+                                    val musicCollection = response.body()!!.results
+                                    adapter = Adapter(musicCollection)
+                                    trackListView.adapter = adapter
+                                }
+                            }
+                        } else {//песни не найдены
+                            Log.e(TAG, "Что-то пошло не так, сервер не отдаёт список песен")
+                            val emptyListTrack:ArrayList<Track> = ArrayList()
+                            trackListView.adapter = Adapter(emptyListTrack)
+                            problemsInternetSearchEvent.visibility = View.GONE
+                            problemsSearchEvent.visibility = View.VISIBLE
+                        }
+                    }
+
+                    override fun onFailure(call: Call<MusicResponse>, t: Throwable) {
+                        Log.d(TAG, "onFailure: $t")
+                        // Вывести сообщение об ошибке подключения
+                        val emptyListTrack:ArrayList<Track> = ArrayList()
+                        trackListView.adapter = Adapter(emptyListTrack)
+                        problemsSearchEvent.visibility = View.GONE
+                        problemsInternetSearchEvent.visibility = View.VISIBLE
+                    }
+                })
+        }
+
         imageViewButton.setOnClickListener {
             editText.setText("")
-            //trackListView.adapter.clear()
-            //trackListView.recycledViewPool.clear()
+            val emptyListTrack:ArrayList<Track> = ArrayList()
+            trackListView.adapter = Adapter(emptyListTrack)
             inputMethod.hideSoftInputFromWindow(editText.windowToken, 0)
         }
         if (savedInstanceState != null) {
@@ -128,7 +182,6 @@ class SearchActivity : AppCompatActivity() {
             editText.setText(savedTextSearch)
         }
         trackListView.layoutManager = LinearLayoutManager(this)
-
 
     }
 
