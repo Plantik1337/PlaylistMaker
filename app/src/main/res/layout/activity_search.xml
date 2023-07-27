@@ -106,59 +106,37 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
+            android:id="@+id/problemImage"
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_gravity="center"
-            android:src="@drawable/search_problems_vector" />
+            android:src="@color/DarkFun" />
 
         <TextView
             style="@style/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Ничего не нашлось"
-            android:textSize="19sp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/searchInternetProblems"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_gravity="center"
-            android:src="@drawable/internet_problems_vector" />
-
-        <TextView
-            style="@style/title"
+            android:id="@+id/statusText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="8dp"
-            android:text="Проблема со связью"
+            android:text=""
             android:textSize="19sp" />
 
         <TextView
+            android:id="@+id/internetProblemText"
+            android:visibility="gone"
             style="@style/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="16dp"
-            android:text="Загрузка не удалась. Проверьте подключение к интернету"
+            android:text="@string/InternetProblems"
             android:textSize="19sp"
             android:textAlignment="center"/>
 
         <com.google.android.material.button.MaterialButton
             style="@style/refrashButton"
+            android:visibility="gone"
             android:id="@+id/refrashButton"
             android:layout_width="wrap_content"
             android:layout_height="36dp"
@@ -168,7 +146,7 @@
             android:insetTop="2dp"
             android:insetBottom="8dp"
             android:outlineProvider="none"
-            android:text="Обновить"
+            android:text="@string/Refrash"
             android:textSize="14sp"/>
 
     </LinearLayout>

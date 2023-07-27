@@ -79,6 +79,7 @@
     </style>
     <style name="littleTextStyle">
         <item name="android:textColor">@color/grey</item>
+        <item name="android:textAppearance">@font/ys_display_regular</item>
     </style>
     <style name="refrashButton">
         <item name="android:textSize">14sp</item>

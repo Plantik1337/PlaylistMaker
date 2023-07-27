@@ -1,6 +1,5 @@
 package com.example.playlistmaker
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.text.Editable
@@ -12,6 +11,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,8 +21,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.GET
-import retrofit2.http.Query
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var editText: EditText
@@ -35,10 +33,16 @@ class SearchActivity : AppCompatActivity() {
         const val TAG = "MUSIC_STATE"
     }
 
+    enum class Status {
+        ERROR_INTERNET,
+        ERROR_NOT_FOUND,
+        SUCCESS
+    }
 
-    @SuppressLint("LocalSuppress")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(R.layout.activity_search)
 
         lateinit var adapter: Adapter
@@ -48,9 +52,12 @@ class SearchActivity : AppCompatActivity() {
         val inputMethod = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         val trackListView = findViewById<RecyclerView>(R.id.trackListRecyclerView)
 
-        val problemsSearchEvent = findViewById<LinearLayout>(R.id.searchProblems)
-        val problemsInternetSearchEvent = findViewById<LinearLayout>(R.id.searchInternetProblems)
 
+        val problemsSearchEvent = findViewById<LinearLayout>(R.id.searchProblems)
+        val problemImageView = findViewById<ImageView>(R.id.problemImage)
+        val statusText = findViewById<TextView>(R.id.statusText)
+        val internetProblemText = findViewById<TextView>(R.id.internetProblemText)
+        val refrashButton = findViewById<MaterialButton>(R.id.refrashButton)
 
         val baseUrl = "https://itunes.apple.com"
 
@@ -58,6 +65,7 @@ class SearchActivity : AppCompatActivity() {
             .baseUrl(baseUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
+
 
         findViewById<MaterialButton>(R.id.backToMainActivityFromSearchActivity).setOnClickListener {
             finish()
@@ -83,98 +91,84 @@ class SearchActivity : AppCompatActivity() {
             }
         })
 
-        editText.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
+        fun showStatus(status: Status) {
+            when (status) {
+                Status.ERROR_INTERNET -> {
+                    problemsSearchEvent.visibility = View.VISIBLE
+                    statusText.text = getString(R.string.internetProblem)
+                    internetProblemText.visibility = View.VISIBLE
+                    problemImageView.setImageResource(R.drawable.internet_problems_vector)
+                    refrashButton.visibility = View.VISIBLE
+                }
 
-                problemsInternetSearchEvent.visibility = View.GONE
-                problemsSearchEvent.visibility = View.GONE
+                Status.ERROR_NOT_FOUND -> {
+                    problemsSearchEvent.visibility = View.VISIBLE
+                    statusText.text = getString(R.string.searchNothing)
+                    problemImageView.setImageResource(R.drawable.search_problems_vector)
+                }
 
-                val appleMusicServer = retrofit.create(AppleMusicServer::class.java)
-
-                appleMusicServer.search(editText.text.toString())
-                    .enqueue(object : Callback<MusicResponse> {
-                        override fun onResponse(
-                            call: Call<MusicResponse>,
-                            response: Response<MusicResponse>
-                        ) {
-                            if (response.body()?.resultCount ?: 0 != "0") {
-                                Log.d(TAG, "onResponse: ${response.body()?.results}")
-
-                                when (response.code()) {
-                                    200 -> { // песни найдены
-                                        val musicCollection = response.body()!!.results
-                                        adapter = Adapter(musicCollection)
-                                        trackListView.adapter = adapter
-                                    }
-                                }
-                            } else {//песни не найдены
-                                Log.e(TAG, "Что-то пошло не так, серер не отдаёт список песен")
-                                val emptyListTrack:ArrayList<Track> = ArrayList()
-                                trackListView.adapter = Adapter(emptyListTrack)
-                                problemsSearchEvent.visibility = View.VISIBLE
-                            }
-
-
-                        }
-
-                        override fun onFailure(call: Call<MusicResponse>, t: Throwable) {
-                            Log.d(TAG, "onFailure: $t")
-                            // TODO("Вывести сообщение об ошибке подключения")
-                            val emptyListTrack:ArrayList<Track> = ArrayList()
-                            trackListView.adapter = Adapter(emptyListTrack)
-                            problemsInternetSearchEvent.visibility = View.VISIBLE
-                        }
-                    })
-                true
+                Status.SUCCESS -> {
+                    problemsSearchEvent.visibility = View.GONE
+                    internetProblemText.visibility = View.GONE
+                    refrashButton.visibility = View.GONE
+                }
             }
-            false
         }
 
-        val refrashButton = findViewById<MaterialButton>(R.id.refrashButton)
-
-        refrashButton.setOnClickListener {
-            // Повторный запрос при нажатии на кнопку "Refresh"
+        fun connectionToDataBase() {
             val appleMusicServer = retrofit.create(AppleMusicServer::class.java)
 
             appleMusicServer.search(editText.text.toString())
                 .enqueue(object : Callback<MusicResponse> {
-                    override fun onResponse(call: Call<MusicResponse>, response: Response<MusicResponse>) {
-                        if (response.body()?.resultCount ?: 0 != "0") {
+                    override fun onResponse(
+                        call: Call<MusicResponse>,
+                        response: Response<MusicResponse>
+                    ) {
+                        if (response.body()?.resultCount != "0") {
                             Log.d(TAG, "onResponse: ${response.body()?.results}")
 
                             when (response.code()) {
                                 200 -> { // песни найдены
-                                    problemsSearchEvent.visibility = View.GONE
-                                    problemsInternetSearchEvent.visibility = View.GONE
                                     val musicCollection = response.body()!!.results
                                     adapter = Adapter(musicCollection)
                                     trackListView.adapter = adapter
+                                    showStatus(Status.SUCCESS)
                                 }
                             }
                         } else {//песни не найдены
-                            Log.e(TAG, "Что-то пошло не так, сервер не отдаёт список песен")
-                            val emptyListTrack:ArrayList<Track> = ArrayList()
-                            trackListView.adapter = Adapter(emptyListTrack)
-                            problemsInternetSearchEvent.visibility = View.GONE
-                            problemsSearchEvent.visibility = View.VISIBLE
+                            Log.e(TAG, "Что-то пошло не так, серер не отдаёт список песен")
+                            adapter.clear()
+                            showStatus(Status.ERROR_NOT_FOUND)
                         }
+
                     }
 
                     override fun onFailure(call: Call<MusicResponse>, t: Throwable) {
                         Log.d(TAG, "onFailure: $t")
-                        // Вывести сообщение об ошибке подключения
-                        val emptyListTrack:ArrayList<Track> = ArrayList()
-                        trackListView.adapter = Adapter(emptyListTrack)
-                        problemsSearchEvent.visibility = View.GONE
-                        problemsInternetSearchEvent.visibility = View.VISIBLE
+                        adapter.clear()
+                        showStatus(Status.ERROR_INTERNET)
                     }
                 })
         }
 
+        editText.setOnEditorActionListener { _, actionId, _ ->
+            when (actionId) {
+                EditorInfo.IME_ACTION_DONE -> {
+                    connectionToDataBase()
+                }
+            }
+            false
+        }
+
+
+        refrashButton.setOnClickListener {
+            // Повторный запрос при нажатии на кнопку "Refresh"
+            connectionToDataBase()
+        }
+
         imageViewButton.setOnClickListener {
             editText.setText("")
-            val emptyListTrack:ArrayList<Track> = ArrayList()
-            trackListView.adapter = Adapter(emptyListTrack)
+            adapter.clear()
             inputMethod.hideSoftInputFromWindow(editText.windowToken, 0)
         }
         if (savedInstanceState != null) {
@@ -199,10 +193,5 @@ class SearchActivity : AppCompatActivity() {
         editText.setText(savedTextSearch)
     }
 
-}
-
-interface AppleMusicServer {
-    @GET("/search?entity=song")
-    fun search(@Query("term") text: String): Call<MusicResponse>
 }
 

@@ -1,8 +1,6 @@
 package com.example.playlistmaker
 
 import android.graphics.Outline
-import android.graphics.drawable.Drawable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +15,9 @@ import java.util.Locale
 class Adapter(
     private val track: ArrayList<Track>
 ) : RecyclerView.Adapter<Adapter.TrackViewHolder>() {
+    fun clear(){
+        track.clear()
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.v_track_line, parent, false)
         return TrackViewHolder(view)
