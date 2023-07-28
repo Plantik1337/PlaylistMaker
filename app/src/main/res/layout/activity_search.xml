@@ -65,9 +65,11 @@
                 android:drawableStart="@drawable/ic_vector"
                 android:drawablePadding="10dp"
                 android:hint="@string/search"
+                android:imeOptions="actionDone"
                 android:inputType="textAutoCorrect"
                 android:paddingStart="20dp"
                 android:paddingEnd="10dp"
+                android:singleLine="true"
                 android:textColor="@color/DarkFun"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -90,6 +92,63 @@
             android:id="@+id/trackListRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/searchProblems"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/problemImage"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center"
+            android:src="@color/DarkFun" />
+
+        <TextView
+            style="@style/title"
+            android:id="@+id/statusText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp"
+            android:text=""
+            android:textSize="19sp" />
+
+        <TextView
+            android:id="@+id/internetProblemText"
+            android:visibility="gone"
+            style="@style/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:text="@string/InternetProblems"
+            android:textSize="19sp"
+            android:textAlignment="center"/>
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/refrashButton"
+            android:visibility="gone"
+            android:id="@+id/refrashButton"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="24dp"
+            android:foreground="?attr/selectableItemBackground"
+            android:insetTop="2dp"
+            android:insetBottom="8dp"
+            android:outlineProvider="none"
+            android:text="@string/Refrash"
+            android:textSize="14sp"/>
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

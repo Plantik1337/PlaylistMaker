@@ -81,5 +81,12 @@
         <item name="android:textColor">@color/white</item>
         <item name="android:textAppearance">@font/ys_display_regular</item>
     </style>
+    <style name="refrashButton">
+        <item name="android:textSize">14sp</item>
+        <item name="android:backgroundTint">@color/white</item>
+        <item name="android:textColor">@color/DarkFun</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+    </style>
 
 </resources>

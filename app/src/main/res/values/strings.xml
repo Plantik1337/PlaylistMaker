@@ -14,4 +14,8 @@
     <string name="MessageViaEmail">Спасибо разработчикам и разработчицам за крутое приложение!</string>
     <string name="OfferLink" translatable="false">https://yandex.ru/legal/practicum_offer/</string>
     <string name="MyEmail" translatable="false">Thesol590@yandex.ru</string>
+    <string name="InternetProblems">Загрузка не удалась. Проверьте подключение к интернету</string>
+    <string name="Refrash">Обновить</string>
+    <string name="searchNothing">Ничего не нашлось</string>
+    <string name="internetProblem">Проблема со связью</string>
 </resources>

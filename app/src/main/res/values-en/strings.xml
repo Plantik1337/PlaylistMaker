@@ -11,4 +11,8 @@
     <string name="Terms_of_use">Terms of use</string>
     <string name="MessageSbjectViaEmail">A message to the developers and developers of the Playlist Maker app</string>
     <string name="MessageViaEmail">Thanks to the developers and developers for a cool app!</string>
+    <string name="InternetProblems">Download failed. Check your internet connection</string>
+    <string name="Refrash">Refrash</string>
+    <string name="searchNothing">Nothing found</string>
+    <string name="internetProblem">Problem with Internet</string>
 </resources>
