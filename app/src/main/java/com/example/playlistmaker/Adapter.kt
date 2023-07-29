@@ -1,5 +1,6 @@
 package com.example.playlistmaker
 
+import android.annotation.SuppressLint
 import android.graphics.Outline
 import android.view.LayoutInflater
 import android.view.View
@@ -13,11 +14,14 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class Adapter(
-    private val track: ArrayList<Track>
+    private var track: ArrayList<Track>
 ) : RecyclerView.Adapter<Adapter.TrackViewHolder>() {
-    fun clear(){
+    @SuppressLint("NotifyDataSetChanged")
+    fun clear() {
         track.clear()
+        notifyDataSetChanged()
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.v_track_line, parent, false)
         return TrackViewHolder(view)
@@ -27,7 +31,7 @@ class Adapter(
         holder.bind(track[position])
     }
 
-    override fun getItemCount(): Int = track.size ?: 0
+    override fun getItemCount(): Int = track.size
 
     class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val albumImage: ImageView = itemView.findViewById(R.id.albumImageView)

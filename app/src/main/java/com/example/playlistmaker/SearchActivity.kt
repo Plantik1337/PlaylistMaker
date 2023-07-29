@@ -33,7 +33,7 @@ class SearchActivity : AppCompatActivity() {
         const val TAG = "MUSIC_STATE"
     }
 
-    enum class Status {
+    private enum class Status {
         ERROR_INTERNET,
         ERROR_NOT_FOUND,
         SUCCESS
