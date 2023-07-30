@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SwitchCompat
 import com.google.android.material.button.MaterialButton
 
 class SettingsActivity : AppCompatActivity() {
@@ -16,12 +17,16 @@ class SettingsActivity : AppCompatActivity() {
         val backButton = findViewById<MaterialButton>(R.id.backToMainActivity)
         val contactUsButton = findViewById<MaterialButton>(R.id.contactUs)
         val termsOfUseButton = findViewById<MaterialButton>(R.id.termsOfUse)
+        val themeSwitcher = findViewById<SwitchCompat>(R.id.themeSwitcher)
 
         backButton.setOnClickListener {// Выход с экрана настроек
             finish()
         }
-
-
+        
+        themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
+            (applicationContext as App).switchTheme(checked)
+        }
+        
         shareButton.setOnClickListener {//Поделиться
             val courseLink = resources.getString(R.string.practicum)
             val sendIntent = Intent().apply {
