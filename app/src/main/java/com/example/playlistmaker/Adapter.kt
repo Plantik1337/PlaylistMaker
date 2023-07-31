@@ -14,17 +14,22 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class Adapter(
-    private var track: ArrayList<Track>
+    private var track: ArrayList<Track>,
+    private val clickListener: RecyclerViewClickListener
 ) : RecyclerView.Adapter<Adapter.TrackViewHolder>() {
     @SuppressLint("NotifyDataSetChanged")
     fun clear() {
         track.clear()
         notifyDataSetChanged()
     }
+//    val historyTransaction = HistoryTransaction()
+//    fun historyContent(sharedPreferences: SharedPreferences){
+//        track.addAll(historyTransaction.read(sharedPreferences))
+//    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.v_track_line, parent, false)
-        return TrackViewHolder(view)
+        return TrackViewHolder(view, clickListener)
     }
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
@@ -33,11 +38,24 @@ class Adapter(
 
     override fun getItemCount(): Int = track.size
 
-    class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class TrackViewHolder(itemView: View, private val clickListener: RecyclerViewClickListener) :
+        RecyclerView.ViewHolder(itemView),
+        View.OnClickListener {
         private val albumImage: ImageView = itemView.findViewById(R.id.albumImageView)
         private val trackName: TextView = itemView.findViewById(R.id.trackNameTextView)
         private val artistName: TextView = itemView.findViewById(R.id.artistNameTextView)
         private val songDuration: TextView = itemView.findViewById(R.id.songDurationTextView)
+
+        init {
+            itemView.setOnClickListener(this)
+        }
+
+        override fun onClick(v: View) {
+            val position = adapterPosition
+            if (position != RecyclerView.NO_POSITION) {
+                clickListener.onItemClick(position)
+            }
+        }
 
         fun bind(track: Track) {
             val maxSymbols = 30
@@ -76,3 +94,6 @@ class Adapter(
     }
 }
 
+interface RecyclerViewClickListener {
+    fun onItemClick(position: Int)
+}
