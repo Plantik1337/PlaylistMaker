@@ -78,8 +78,8 @@
 
             <ImageView
                 android:id="@+id/cancelInputSearchEditText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
                 android:layout_gravity="end"
                 android:paddingTop="8dp"
                 android:paddingEnd="10dp"
@@ -95,6 +95,7 @@
 
             <TextView
                 android:id="@+id/historyTextView"
+                style="@style/title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"

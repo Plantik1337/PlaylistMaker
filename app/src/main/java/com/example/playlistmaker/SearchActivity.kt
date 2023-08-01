@@ -14,6 +14,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isEmpty
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
@@ -79,32 +80,42 @@ class SearchActivity : AppCompatActivity() {
 
 
         val emptyTrackList = ArrayList<Track>()
-
-        fun adapter(track: ArrayList<Track>): Adapter {
+        fun historyAdapter(track: ArrayList<Track>): Adapter {
             val adapter = Adapter(track,
                 object : RecyclerViewClickListener {
                     override fun onItemClick(position: Int) {
-                        /* Ничего не выполняет.
-                         В будущем можно добавить обраточик нажатий из истории поиска. */
-                        //historyTransaction.write(
-                        //                                                    sharedPreferences,
-                        //                                                    musicCollection[position]
-                        //                                                )
-                        //historyTransaction.write()
+                        historyTransaction.write(sharedPreferences, track[position])
+                        trackListView.adapter =
+                            historyAdapter(historyTransaction.read(sharedPreferences))
+                        trackListView.adapter?.notifyDataSetChanged()
                     }
                 })
+            adapter.notifyDataSetChanged()
             return adapter
         }
 
         fun showHistory() {
-            trackListView.adapter = adapter(historyTransaction.read(sharedPreferences))
+            trackListView.adapter = historyAdapter(emptyTrackList)
+            trackListView.adapter = historyAdapter(historyTransaction.read(sharedPreferences))
+
+            if (historyAdapter(historyTransaction.read(sharedPreferences)).itemCount == 0) {
+                clearHistoryButton.visibility = View.GONE
+                historyTextView.visibility = View.GONE
+            } else {
+                clearHistoryButton.visibility = View.VISIBLE
+                historyTextView.visibility = View.VISIBLE
+            }
         }
         showHistory()
         clearHistoryButton.setOnClickListener {
             historyTransaction.cleanHistory(sharedPreferences)
-            trackListView.adapter = adapter(emptyTrackList)
+            clearHistoryButton.visibility = View.GONE
+            historyTextView.visibility = View.GONE
+            trackListView.adapter = historyAdapter(emptyTrackList)
+            showHistory()
         }
         editText.addTextChangedListener(object : TextWatcher {
+
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 //Ничего не делает
             }
@@ -126,19 +137,18 @@ class SearchActivity : AppCompatActivity() {
                     false -> {
                         historyTextView.visibility = View.GONE
                         clearHistoryButton.visibility = View.GONE
-                        trackListView.adapter = adapter(emptyTrackList)
+                        trackListView.adapter = historyAdapter(emptyTrackList)
                     }
                 }
                 if (s?.isNotEmpty() == true) {
                     imageViewButton.visibility = View.VISIBLE
-                    trackListView.adapter = adapter(emptyTrackList)
 
                 } else {
                     imageViewButton.visibility = View.GONE
-
                 }
             }
         })
+
 
         fun showStatus(status: Status) {
             when (status) {
@@ -196,16 +206,15 @@ class SearchActivity : AppCompatActivity() {
                         } else {//песни не найдены
                             Log.e(TAG, "Что-то пошло не так, серер не отдаёт список песен")
                             //adapter().clear()
-                            trackListView.adapter = adapter(emptyTrackList)
+                            trackListView.adapter = historyAdapter(emptyTrackList)
                             showStatus(Status.ERROR_NOT_FOUND)
                         }
-
                     }
 
                     override fun onFailure(call: Call<MusicResponse>, t: Throwable) {
                         Log.d(TAG, "onFailure: $t")
                         //adapter().clear()
-                        trackListView.adapter = adapter(emptyTrackList)
+                        trackListView.adapter = historyAdapter(emptyTrackList)
                         showStatus(Status.ERROR_INTERNET)
                     }
                 })
@@ -228,10 +237,18 @@ class SearchActivity : AppCompatActivity() {
 
         imageViewButton.setOnClickListener {
             editText.setText("")
-            //adapter().clear()
-            trackListView.adapter = adapter(emptyTrackList)
+            problemsSearchEvent.visibility = View.GONE
             showHistory()
             inputMethod.hideSoftInputFromWindow(editText.windowToken, 0)
+            if (trackListView.isEmpty()) {
+                Log.d("Тег", "Кнопка должна появиться")
+                historyTextView.visibility = View.VISIBLE
+                clearHistoryButton.visibility = View.VISIBLE
+            } else {
+                Log.d("Тег", "Кнопка не должна появиться")
+                historyTextView.visibility = View.GONE
+                clearHistoryButton.visibility = View.GONE
+            }
         }
         if (savedInstanceState != null) {
             savedTextSearch = savedInstanceState.getString(EDIT_TEXT, "")

@@ -18,8 +18,7 @@ class Adapter(
     private val clickListener: RecyclerViewClickListener
 ) : RecyclerView.Adapter<Adapter.TrackViewHolder>() {
     @SuppressLint("NotifyDataSetChanged")
-    fun clear() {
-        track.clear()
+    fun update() {
         notifyDataSetChanged()
     }
 //    val historyTransaction = HistoryTransaction()

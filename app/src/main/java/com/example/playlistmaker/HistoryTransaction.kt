@@ -8,6 +8,7 @@ const val HISTORY_LIST = "HISTORY_LIST"
 
 class HistoryTransaction {
     private val emptyArrayList = ArrayList<Track>()
+
     fun read(sharedPreferences: SharedPreferences): ArrayList<Track> {
         val json = sharedPreferences.getString(HISTORY_LIST, null)
         var myList = emptyArrayList
@@ -16,25 +17,27 @@ class HistoryTransaction {
         } else {
             val type = object : TypeToken<ArrayList<Track>>() {}.type
             myList = Gson().fromJson(json, type)
-            myList.reverse()
             myList
         }
     }
 
     fun write(sharedPreferences: SharedPreferences, track: Track) {
-        val myJson = sharedPreferences.getString(HISTORY_LIST, null)
-        var myList = emptyArrayList
-        if (myJson.isNullOrBlank()) {
-            myList.add(track)
+        val first = 0
+        val maxListSize = 11
+        var myJson = sharedPreferences.getString(HISTORY_LIST, null)
+        val myList: ArrayList<Track> = if (myJson.isNullOrBlank()) {
+            arrayListOf()
         } else {
-            myList = Gson().fromJson(myJson, ArrayList<Track>()::class.java)
-            myList.add(track)
+            Gson().fromJson(myJson, object : TypeToken<ArrayList<Track>>() {}.type)
         }
-        myList = ArrayList(myList.distinct())
-        //myList = ArrayList(myList.dropLast(0))
-        val newJson = Gson().toJson(myList)
+        myList.remove(track)
+        myList.add(first, track)
+        if (myList.size == maxListSize) {
+            myList.removeAt(maxListSize - 1)
+        }
+        myJson = Gson().toJson(myList)
         sharedPreferences.edit()
-            .putString(HISTORY_LIST, newJson)
+            .putString(HISTORY_LIST, myJson)
             .apply()
     }
 
