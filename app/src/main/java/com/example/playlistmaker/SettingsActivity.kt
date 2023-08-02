@@ -22,11 +22,11 @@ class SettingsActivity : AppCompatActivity() {
         backButton.setOnClickListener {// Выход с экрана настроек
             finish()
         }
-        
+
         themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
             (applicationContext as App).switchTheme(checked)
         }
-        
+
         shareButton.setOnClickListener {//Поделиться
             val courseLink = resources.getString(R.string.practicum)
             val sendIntent = Intent().apply {
