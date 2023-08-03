@@ -59,7 +59,7 @@
                 android:id="@+id/searchEditText"
                 style="@style/searchTextEditStyle"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="48dp"
                 android:autofillHints="textAutoCorrect"
                 android:background="@drawable/rounded_edittext"
                 android:drawableStart="@drawable/ic_vector"
@@ -78,8 +78,8 @@
 
             <ImageView
                 android:id="@+id/cancelInputSearchEditText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
                 android:layout_gravity="end"
                 android:paddingTop="8dp"
                 android:paddingEnd="10dp"
@@ -88,10 +88,47 @@
                 app:tint="@color/grey" />
         </FrameLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/trackListRecyclerView"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/historyTextView"
+                style="@style/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:gravity="center_horizontal|top"
+                android:text="@string/historyMessage"
+                android:textAppearance="@font/ys_display_medium"
+                android:textSize="19sp"
+                android:textStyle="bold"
+                android:visibility="visible" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/trackListRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/clearHistoryButton"
+                style="@style/refrashButton"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="24dp"
+                android:foreground="?attr/selectableItemBackground"
+                android:insetTop="2dp"
+                android:insetBottom="4dp"
+                android:outlineProvider="none"
+                android:text="@string/clearHistory"
+                android:textSize="14sp"
+                android:visibility="visible"
+                app:cornerRadius="20dp"
+                android:layout_weight="0.1"/>
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -113,8 +150,8 @@
             android:src="@color/DarkFun" />
 
         <TextView
-            style="@style/title"
             android:id="@+id/statusText"
+            style="@style/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -124,20 +161,19 @@
 
         <TextView
             android:id="@+id/internetProblemText"
-            android:visibility="gone"
             style="@style/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="16dp"
             android:text="@string/InternetProblems"
+            android:textAlignment="center"
             android:textSize="19sp"
-            android:textAlignment="center"/>
+            android:visibility="gone" />
 
         <com.google.android.material.button.MaterialButton
-            style="@style/refrashButton"
-            android:visibility="gone"
             android:id="@+id/refrashButton"
+            style="@style/refrashButton"
             android:layout_width="wrap_content"
             android:layout_height="36dp"
             android:layout_gravity="center"
@@ -147,7 +183,8 @@
             android:insetBottom="8dp"
             android:outlineProvider="none"
             android:text="@string/Refrash"
-            android:textSize="14sp"/>
+            android:textSize="14sp"
+            android:visibility="gone" />
 
     </LinearLayout>
 

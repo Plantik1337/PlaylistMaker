@@ -43,6 +43,7 @@
         </LinearLayout>
 
         <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/themeSwitcher"
             style="@style/settingsButton"
             android:layout_width="match_parent"
             android:contentDescription="@string/no"

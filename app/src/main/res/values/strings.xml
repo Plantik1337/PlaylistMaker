@@ -18,4 +18,6 @@
     <string name="Refrash">Обновить</string>
     <string name="searchNothing">Ничего не нашлось</string>
     <string name="internetProblem">Проблема со связью</string>
+    <string name="historyMessage">Вы искали</string>
+    <string name="clearHistory">Очистить историю</string>
 </resources>

@@ -15,4 +15,6 @@
     <string name="Refrash">Refrash</string>
     <string name="searchNothing">Nothing found</string>
     <string name="internetProblem">Problem with Internet</string>
+    <string name="historyMessage">You searched</string>
+    <string name="clearHistory">Clear history</string>
 </resources>

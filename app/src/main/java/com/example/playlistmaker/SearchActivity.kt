@@ -1,5 +1,6 @@
 package com.example.playlistmaker
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.text.Editable
@@ -13,6 +14,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isEmpty
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
@@ -26,26 +28,28 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var editText: EditText
     private var savedTextSearch: String? = ""
 
+
     //val gson = Gson()
 
     companion object {
         const val EDIT_TEXT = "EDIT_TEXT"
         const val TAG = "MUSIC_STATE"
+        const val HISTORY_LIST = "HISTORY_LIST"
     }
 
-    enum class Status {
+    private enum class Status {
         ERROR_INTERNET,
         ERROR_NOT_FOUND,
         SUCCESS
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(R.layout.activity_search)
 
-        lateinit var adapter: Adapter
+        val sharedPreferences: SharedPreferences = getSharedPreferences(HISTORY_LIST, MODE_PRIVATE)
+        //lateinit var adapter: Adapter
 
         val editText = findViewById<EditText>(R.id.searchEditText)
         val imageViewButton = findViewById<ImageView>(R.id.cancelInputSearchEditText)
@@ -59,6 +63,10 @@ class SearchActivity : AppCompatActivity() {
         val internetProblemText = findViewById<TextView>(R.id.internetProblemText)
         val refrashButton = findViewById<MaterialButton>(R.id.refrashButton)
 
+        val historyTextView = findViewById<TextView>(R.id.historyTextView)
+        val clearHistoryButton = findViewById<MaterialButton>(R.id.clearHistoryButton)
+        val historyTransaction = HistoryTransaction()
+
         val baseUrl = "https://itunes.apple.com"
 
         val retrofit = Retrofit.Builder()
@@ -66,12 +74,48 @@ class SearchActivity : AppCompatActivity() {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-
         findViewById<MaterialButton>(R.id.backToMainActivityFromSearchActivity).setOnClickListener {
             finish()
         }
 
+
+        val emptyTrackList = ArrayList<Track>()
+        fun historyAdapter(track: ArrayList<Track>): Adapter {
+            val adapter = Adapter(track,
+                object : RecyclerViewClickListener {
+                    override fun onItemClick(position: Int) {
+                        historyTransaction.write(sharedPreferences, track[position])
+                        trackListView.adapter =
+                            historyAdapter(historyTransaction.read(sharedPreferences))
+                        trackListView.adapter?.notifyDataSetChanged()
+                    }
+                })
+            adapter.notifyDataSetChanged()
+            return adapter
+        }
+
+        fun showHistory() {
+            trackListView.adapter = historyAdapter(emptyTrackList)
+            trackListView.adapter = historyAdapter(historyTransaction.read(sharedPreferences))
+
+            if (historyAdapter(historyTransaction.read(sharedPreferences)).itemCount == 0) {
+                clearHistoryButton.visibility = View.GONE
+                historyTextView.visibility = View.GONE
+            } else {
+                clearHistoryButton.visibility = View.VISIBLE
+                historyTextView.visibility = View.VISIBLE
+            }
+        }
+        showHistory()
+        clearHistoryButton.setOnClickListener {
+            historyTransaction.cleanHistory(sharedPreferences)
+            clearHistoryButton.visibility = View.GONE
+            historyTextView.visibility = View.GONE
+            trackListView.adapter = historyAdapter(emptyTrackList)
+            showHistory()
+        }
         editText.addTextChangedListener(object : TextWatcher {
+
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 //Ничего не делает
             }
@@ -82,6 +126,20 @@ class SearchActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
+                when (editText.hasFocus() && s?.isEmpty() == true) {
+                    true -> {
+                        historyTextView.visibility = View.VISIBLE
+                        clearHistoryButton.visibility = View.VISIBLE
+                        showHistory()
+                    }
+
+                    false -> {
+                        historyTextView.visibility = View.GONE
+                        clearHistoryButton.visibility = View.GONE
+                        trackListView.adapter = historyAdapter(emptyTrackList)
+                    }
+                }
                 if (s?.isNotEmpty() == true) {
                     imageViewButton.visibility = View.VISIBLE
 
@@ -90,6 +148,7 @@ class SearchActivity : AppCompatActivity() {
                 }
             }
         })
+
 
         fun showStatus(status: Status) {
             when (status) {
@@ -124,28 +183,38 @@ class SearchActivity : AppCompatActivity() {
                         call: Call<MusicResponse>,
                         response: Response<MusicResponse>
                     ) {
-                        if (response.body()?.resultCount != "0") {
+                        if (response.body()?.results != null) {
                             Log.d(TAG, "onResponse: ${response.body()?.results}")
 
                             when (response.code()) {
                                 200 -> { // песни найдены
                                     val musicCollection = response.body()!!.results
-                                    adapter = Adapter(musicCollection)
+                                    val adapter = Adapter(musicCollection,
+                                        object : RecyclerViewClickListener {
+                                            override fun onItemClick(position: Int) {
+                                                //val item: Track = musicCollection[position]
+                                                historyTransaction.write(
+                                                    sharedPreferences,
+                                                    musicCollection[position]
+                                                )
+                                            }
+                                        })
                                     trackListView.adapter = adapter
                                     showStatus(Status.SUCCESS)
                                 }
                             }
                         } else {//песни не найдены
                             Log.e(TAG, "Что-то пошло не так, серер не отдаёт список песен")
-                            adapter.clear()
+                            //adapter().clear()
+                            trackListView.adapter = historyAdapter(emptyTrackList)
                             showStatus(Status.ERROR_NOT_FOUND)
                         }
-
                     }
 
                     override fun onFailure(call: Call<MusicResponse>, t: Throwable) {
                         Log.d(TAG, "onFailure: $t")
-                        adapter.clear()
+                        //adapter().clear()
+                        trackListView.adapter = historyAdapter(emptyTrackList)
                         showStatus(Status.ERROR_INTERNET)
                     }
                 })
@@ -168,8 +237,18 @@ class SearchActivity : AppCompatActivity() {
 
         imageViewButton.setOnClickListener {
             editText.setText("")
-            adapter.clear()
+            problemsSearchEvent.visibility = View.GONE
+            showHistory()
             inputMethod.hideSoftInputFromWindow(editText.windowToken, 0)
+            if (trackListView.isEmpty()) {
+                Log.d("Тег", "Кнопка должна появиться")
+                historyTextView.visibility = View.VISIBLE
+                clearHistoryButton.visibility = View.VISIBLE
+            } else {
+                Log.d("Тег", "Кнопка не должна появиться")
+                historyTextView.visibility = View.GONE
+                clearHistoryButton.visibility = View.GONE
+            }
         }
         if (savedInstanceState != null) {
             savedTextSearch = savedInstanceState.getString(EDIT_TEXT, "")
