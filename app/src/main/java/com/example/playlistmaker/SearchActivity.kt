@@ -29,8 +29,6 @@ class SearchActivity : AppCompatActivity() {
     private var savedTextSearch: String? = ""
 
 
-    //val gson = Gson()
-
     companion object {
         const val EDIT_TEXT = "EDIT_TEXT"
         const val TAG = "MUSIC_STATE"
@@ -45,11 +43,9 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(R.layout.activity_search)
 
         val sharedPreferences: SharedPreferences = getSharedPreferences(HISTORY_LIST, MODE_PRIVATE)
-        //lateinit var adapter: Adapter
 
         val editText = findViewById<EditText>(R.id.searchEditText)
         val imageViewButton = findViewById<ImageView>(R.id.cancelInputSearchEditText)
@@ -90,7 +86,7 @@ class SearchActivity : AppCompatActivity() {
                         trackListView.adapter?.notifyDataSetChanged()
                     }
                 })
-            adapter.notifyDataSetChanged()
+            //adapter.notifyDataSetChanged()
             return adapter
         }
 
@@ -205,7 +201,6 @@ class SearchActivity : AppCompatActivity() {
                             }
                         } else {//песни не найдены
                             Log.e(TAG, "Что-то пошло не так, серер не отдаёт список песен")
-                            //adapter().clear()
                             trackListView.adapter = historyAdapter(emptyTrackList)
                             showStatus(Status.ERROR_NOT_FOUND)
                         }

@@ -8,12 +8,10 @@ const val THEME_KEY = "THEME_KEY"
 
 class App : Application() {
 
-    //val sharedPreferences:SharedPreferences = getSharedPreferences(THEME_KEY, MODE_PRIVATE)
     var darkTheme = false
     override fun onCreate() {
         super.onCreate()
         val sharedPreferences:SharedPreferences = getSharedPreferences(THEME_KEY, MODE_PRIVATE)
-        //setTheme(R.style.)
         when(sharedPreferences.getString(THEME_KEY,null)){
             "MODE_NIGHT_YES" ->{
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
