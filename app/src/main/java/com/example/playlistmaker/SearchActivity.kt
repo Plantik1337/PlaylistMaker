@@ -1,5 +1,6 @@
 package com.example.playlistmaker
 
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.PersistableBundle
@@ -84,6 +85,8 @@ class SearchActivity : AppCompatActivity() {
                         trackListView.adapter =
                             historyAdapter(historyTransaction.read(sharedPreferences))
                         trackListView.adapter?.notifyDataSetChanged()
+                        val playerActivity = Intent(this@SearchActivity, PlayerActivity::class.java)
+                        startActivity(playerActivity)
                     }
                 })
             //adapter.notifyDataSetChanged()
