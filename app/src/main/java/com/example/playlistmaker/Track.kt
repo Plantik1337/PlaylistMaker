@@ -14,4 +14,5 @@ data class Track(
     val country: String,
     val primaryGenreName: String,
     val collectionName: String,
+    val collectionExplicitness: String,
 )

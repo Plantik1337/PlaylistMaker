@@ -89,4 +89,13 @@
         <item name="android:fontFamily">@font/ys_display_regular</item>
     </style>
 
+    <style name="button_menu">
+        <item name="tint">@color/grey</item>
+    </style>
+    <style name="playButton">
+        <item name="tint">@color/black</item>
+    </style>
+    <style name="playerDataText">
+        <item name="android:textColor">@color/black</item>
+    </style>
 </resources>
