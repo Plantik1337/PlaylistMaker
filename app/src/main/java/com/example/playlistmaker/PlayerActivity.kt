@@ -1,7 +1,9 @@
 package com.example.playlistmaker
 
+import android.graphics.Outline
 import android.os.Bundle
 import android.view.View
+import android.view.ViewOutlineProvider
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -47,6 +49,13 @@ class PlayerActivity : AppCompatActivity() {
             .placeholder(R.drawable.placeholder)
             .error(R.drawable.placeholder)
             .into(albumImage)
+albumImage.clipToOutline = true
+            albumImage.outlineProvider = object : ViewOutlineProvider() {
+                override fun getOutline(view: View, outline: Outline) {
+                    val cornerRadius = 15
+                    outline.setRoundRect(0, 0, view.width, view.height, cornerRadius.toFloat())
+                }
+            }
 
         duration.setText(
             SimpleDateFormat(
@@ -55,12 +64,24 @@ class PlayerActivity : AppCompatActivity() {
             ).format(contentForPage[0].trackTimeMillis.toLong())
         )
 
-        if(contentForPage[0].collectionExplicitness == "notExplicit"){
+        if(contentForPage[0].collectionName.contains("single")){
             albumMessage.visibility = View.GONE
             album.visibility = View.GONE
         }
         else{
-            album.setText(contentForPage[0].collectionName)
+            val maxSymbols = 30
+            //            if (track.trackName.length > maxSymbols) {
+            //                trackName.text = track.trackName.substring(0, maxSymbols) + "..."
+            //            } else {
+            //                trackName.text = track.trackName
+            //            }
+            if(contentForPage[0].collectionName.length > maxSymbols){
+                album.setText(contentForPage[0].collectionName.substring(0,maxSymbols) + "...")
+            }
+            else{
+                album.setText(contentForPage[0].collectionName)
+            }
+
         }
         yearOfRelease.setText(contentForPage[0].releaseDate.substring(0, 4))
         genre.setText(contentForPage[0].primaryGenreName)

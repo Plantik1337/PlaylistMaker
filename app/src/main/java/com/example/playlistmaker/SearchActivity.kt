@@ -196,6 +196,8 @@ class SearchActivity : AppCompatActivity() {
                                                     sharedPreferences,
                                                     musicCollection[position]
                                                 )
+                                                val playerActivity = Intent(this@SearchActivity, PlayerActivity::class.java)
+                                                startActivity(playerActivity)
                                             }
                                         })
                                     trackListView.adapter = adapter
