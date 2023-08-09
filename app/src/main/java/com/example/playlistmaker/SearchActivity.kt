@@ -1,5 +1,6 @@
 package com.example.playlistmaker
 
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.PersistableBundle
@@ -29,8 +30,6 @@ class SearchActivity : AppCompatActivity() {
     private var savedTextSearch: String? = ""
 
 
-    //val gson = Gson()
-
     companion object {
         const val EDIT_TEXT = "EDIT_TEXT"
         const val TAG = "MUSIC_STATE"
@@ -45,11 +44,9 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(R.layout.activity_search)
 
         val sharedPreferences: SharedPreferences = getSharedPreferences(HISTORY_LIST, MODE_PRIVATE)
-        //lateinit var adapter: Adapter
 
         val editText = findViewById<EditText>(R.id.searchEditText)
         val imageViewButton = findViewById<ImageView>(R.id.cancelInputSearchEditText)
@@ -88,9 +85,11 @@ class SearchActivity : AppCompatActivity() {
                         trackListView.adapter =
                             historyAdapter(historyTransaction.read(sharedPreferences))
                         trackListView.adapter?.notifyDataSetChanged()
+                        val playerActivity = Intent(this@SearchActivity, PlayerActivity::class.java)
+                        startActivity(playerActivity)
                     }
                 })
-            adapter.notifyDataSetChanged()
+            //adapter.notifyDataSetChanged()
             return adapter
         }
 
@@ -197,6 +196,8 @@ class SearchActivity : AppCompatActivity() {
                                                     sharedPreferences,
                                                     musicCollection[position]
                                                 )
+                                                val playerActivity = Intent(this@SearchActivity, PlayerActivity::class.java)
+                                                startActivity(playerActivity)
                                             }
                                         })
                                     trackListView.adapter = adapter
@@ -205,7 +206,6 @@ class SearchActivity : AppCompatActivity() {
                             }
                         } else {//песни не найдены
                             Log.e(TAG, "Что-то пошло не так, серер не отдаёт список песен")
-                            //adapter().clear()
                             trackListView.adapter = historyAdapter(emptyTrackList)
                             showStatus(Status.ERROR_NOT_FOUND)
                         }
