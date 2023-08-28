@@ -80,7 +80,7 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginTop="30dp"
-        android:src="@drawable/baseline_pause_circle_24"
+        android:src="@drawable/baseline_play_circle_24"
         app:layout_constraintEnd_toStartOf="@id/right_guideline"
         app:layout_constraintStart_toEndOf="@id/left_guideline"
         app:layout_constraintTop_toBottomOf="@id/autorName" />
@@ -113,7 +113,7 @@
         android:id="@+id/trackTimeView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="0:30"
+        android:text="0:00"
         app:layout_constraintEnd_toStartOf="@id/right_guideline"
         app:layout_constraintStart_toEndOf="@id/left_guideline"
         app:layout_constraintTop_toBottomOf="@id/playPauseButton" />

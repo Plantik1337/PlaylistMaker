@@ -3,6 +3,8 @@ package com.example.playlistmaker
 import android.graphics.Outline
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.view.ViewOutlineProvider
@@ -21,7 +23,10 @@ class PlayerActivity : AppCompatActivity() {
         private const val STATE_PREPARED = 1
         private const val STATE_PLAYING = 2
         private const val STATE_PAUSED = 3
+        private const val DELAY = 400L
     }
+
+    private var mainThreadHandler = Handler(Looper.getMainLooper())
 
     private var playerState = STATE_DEFAULT
     private lateinit var play: ImageView
@@ -69,7 +74,7 @@ class PlayerActivity : AppCompatActivity() {
                 outline.setRoundRect(0, 0, view.width, view.height, cornerRadius.toFloat())
             }
         }
-        ////PreparePlayer
+        //// Prepare player
         mediaPlayer.setDataSource(contentForPage[0].previewUrl)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
@@ -77,10 +82,8 @@ class PlayerActivity : AppCompatActivity() {
             playerState = STATE_PREPARED
         }
         mediaPlayer.setOnCompletionListener {
-            //TODO
             playerState = STATE_PREPARED
         }
-        ////
 
         play.setOnClickListener {
             playbackControl()
@@ -107,6 +110,7 @@ class PlayerActivity : AppCompatActivity() {
         yearOfRelease.text = contentForPage[0].releaseDate.substring(0, 4)
         genre.text = contentForPage[0].primaryGenreName
         country.text = contentForPage[0].country
+
     }
 
     private fun playbackControl() {
@@ -123,11 +127,13 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun startPlayer() {
         mediaPlayer.start()
+        play.setImageResource(R.drawable.baseline_pause_circle_24)
         playerState = STATE_PLAYING
     }
 
     private fun pausePlayer() {
         mediaPlayer.pause()
+        play.setImageResource(R.drawable.baseline_play_circle_24)
         playerState = STATE_PAUSED
     }
 

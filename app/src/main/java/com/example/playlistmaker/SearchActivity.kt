@@ -3,6 +3,8 @@ package com.example.playlistmaker
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.os.PersistableBundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -13,6 +15,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isEmpty
@@ -28,18 +31,30 @@ import retrofit2.converter.gson.GsonConverterFactory
 class SearchActivity : AppCompatActivity() {
     private lateinit var editText: EditText
     private var savedTextSearch: String? = ""
-
+    private var isClickAllowed = true
+    private val handler = Handler(Looper.getMainLooper())
 
     companion object {
         const val EDIT_TEXT = "EDIT_TEXT"
         const val TAG = "MUSIC_STATE"
         const val HISTORY_LIST = "HISTORY_LIST"
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 
     private enum class Status {
         ERROR_INTERNET,
         ERROR_NOT_FOUND,
         SUCCESS
+    }
+
+    private fun clickDebounce(): Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,6 +68,7 @@ class SearchActivity : AppCompatActivity() {
         val inputMethod = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         val trackListView = findViewById<RecyclerView>(R.id.trackListRecyclerView)
 
+        val progressBar = findViewById<ProgressBar>(R.id.searchProgressBar)
 
         val problemsSearchEvent = findViewById<LinearLayout>(R.id.searchProblems)
         val problemImageView = findViewById<ImageView>(R.id.problemImage)
@@ -81,12 +97,15 @@ class SearchActivity : AppCompatActivity() {
             val adapter = Adapter(track,
                 object : RecyclerViewClickListener {
                     override fun onItemClick(position: Int) {
-                        historyTransaction.write(sharedPreferences, track[position])
-                        trackListView.adapter =
-                            historyAdapter(historyTransaction.read(sharedPreferences))
-                        trackListView.adapter?.notifyDataSetChanged()
-                        val playerActivity = Intent(this@SearchActivity, PlayerActivity::class.java)
-                        startActivity(playerActivity)
+                        if (clickDebounce()) {
+                            historyTransaction.write(sharedPreferences, track[position])
+                            trackListView.adapter =
+                                historyAdapter(historyTransaction.read(sharedPreferences))
+                            trackListView.adapter?.notifyDataSetChanged()
+                            val playerActivity =
+                                Intent(this@SearchActivity, PlayerActivity::class.java)
+                            startActivity(playerActivity)
+                        }
                     }
                 })
             //adapter.notifyDataSetChanged()
@@ -113,40 +132,7 @@ class SearchActivity : AppCompatActivity() {
             trackListView.adapter = historyAdapter(emptyTrackList)
             showHistory()
         }
-        editText.addTextChangedListener(object : TextWatcher {
 
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                //Ничего не делает
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                //Ничего не делает
-
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
-                when (editText.hasFocus() && s?.isEmpty() == true) {
-                    true -> {
-                        historyTextView.visibility = View.VISIBLE
-                        clearHistoryButton.visibility = View.VISIBLE
-                        showHistory()
-                    }
-
-                    false -> {
-                        historyTextView.visibility = View.GONE
-                        clearHistoryButton.visibility = View.GONE
-                        trackListView.adapter = historyAdapter(emptyTrackList)
-                    }
-                }
-                if (s?.isNotEmpty() == true) {
-                    imageViewButton.visibility = View.VISIBLE
-
-                } else {
-                    imageViewButton.visibility = View.GONE
-                }
-            }
-        })
 
 
         fun showStatus(status: Status) {
@@ -174,52 +160,105 @@ class SearchActivity : AppCompatActivity() {
         }
 
         fun connectionToDataBase() {
-            val appleMusicServer = retrofit.create(AppleMusicServer::class.java)
+            if (editText.text.isNotEmpty()) {
 
-            appleMusicServer.search(editText.text.toString())
-                .enqueue(object : Callback<MusicResponse> {
-                    override fun onResponse(
-                        call: Call<MusicResponse>,
-                        response: Response<MusicResponse>
-                    ) {
-                        if (response.body()?.results != null) {
-                            Log.d(TAG, "onResponse: ${response.body()?.results}")
+                progressBar.visibility = View.VISIBLE
 
-                            when (response.code()) {
-                                200 -> { // песни найдены
-                                    val musicCollection = response.body()!!.results
-                                    val adapter = Adapter(musicCollection,
-                                        object : RecyclerViewClickListener {
-                                            override fun onItemClick(position: Int) {
-                                                //val item: Track = musicCollection[position]
-                                                historyTransaction.write(
-                                                    sharedPreferences,
-                                                    musicCollection[position]
-                                                )
-                                                val playerActivity = Intent(this@SearchActivity, PlayerActivity::class.java)
-                                                startActivity(playerActivity)
-                                            }
-                                        })
-                                    trackListView.adapter = adapter
-                                    showStatus(Status.SUCCESS)
+                val appleMusicServer = retrofit.create(AppleMusicServer::class.java)
+
+                appleMusicServer.search(editText.text.toString())
+                    .enqueue(object : Callback<MusicResponse> {
+                        override fun onResponse(
+                            call: Call<MusicResponse>,
+                            response: Response<MusicResponse>
+                        ) {
+                            progressBar.visibility = View.GONE
+                            if (response.body()?.results != null) {
+                                Log.d(TAG, "onResponse: ${response.body()?.results}")
+
+                                when (response.code()) {
+                                    200 -> { // песни найдены
+                                        val musicCollection = response.body()!!.results
+                                        val adapter = Adapter(musicCollection,
+                                            object : RecyclerViewClickListener {
+                                                override fun onItemClick(position: Int) {
+                                                    if (clickDebounce()) {
+                                                        //val item: Track = musicCollection[position]
+                                                        historyTransaction.write(
+                                                            sharedPreferences,
+                                                            musicCollection[position]
+                                                        )
+                                                        val playerActivity = Intent(
+                                                            this@SearchActivity,
+                                                            PlayerActivity::class.java
+                                                        )
+                                                        startActivity(playerActivity)
+                                                    }
+                                                }
+                                            })
+                                        trackListView.adapter = adapter
+                                        showStatus(Status.SUCCESS)
+                                    }
                                 }
+                            } else {//песни не найдены
+                                Log.e(TAG, "Что-то пошло не так, серер не отдаёт список песен")
+                                trackListView.adapter = historyAdapter(emptyTrackList)
+                                showStatus(Status.ERROR_NOT_FOUND)
                             }
-                        } else {//песни не найдены
-                            Log.e(TAG, "Что-то пошло не так, серер не отдаёт список песен")
-                            trackListView.adapter = historyAdapter(emptyTrackList)
-                            showStatus(Status.ERROR_NOT_FOUND)
-                        }
-                    }
 
-                    override fun onFailure(call: Call<MusicResponse>, t: Throwable) {
-                        Log.d(TAG, "onFailure: $t")
-                        //adapter().clear()
-                        trackListView.adapter = historyAdapter(emptyTrackList)
-                        showStatus(Status.ERROR_INTERNET)
-                    }
-                })
+                        }
+
+                        override fun onFailure(call: Call<MusicResponse>, t: Throwable) {
+                            progressBar.visibility = View.GONE
+                            Log.d(TAG, "onFailure: $t")
+                            //adapter().clear()
+                            trackListView.adapter = historyAdapter(emptyTrackList)
+                            showStatus(Status.ERROR_INTERNET)
+                        }
+                    })
+            }
         }
 
+        val searchRunnable = Runnable { connectionToDataBase() }
+        fun searchDebounce() {
+            handler.removeCallbacks(searchRunnable)
+            handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+        }
+        editText.addTextChangedListener(object : TextWatcher {
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                //Ничего не делает
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                //Ничего не делает
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                searchDebounce()
+
+                when (editText.hasFocus() && s?.isEmpty() == true) {
+                    true -> {
+                        historyTextView.visibility = View.VISIBLE
+                        clearHistoryButton.visibility = View.VISIBLE
+                        showHistory()
+                    }
+
+                    false -> {
+                        historyTextView.visibility = View.GONE
+                        clearHistoryButton.visibility = View.GONE
+                        trackListView.adapter = historyAdapter(emptyTrackList)
+                    }
+                }
+                if (s?.isNotEmpty() == true) {
+                    imageViewButton.visibility = View.VISIBLE
+
+                } else {
+                    imageViewButton.visibility = View.GONE
+                }
+            }
+        })
         editText.setOnEditorActionListener { _, actionId, _ ->
             when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
@@ -257,6 +296,7 @@ class SearchActivity : AppCompatActivity() {
         trackListView.layoutManager = LinearLayoutManager(this)
 
     }
+
 
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
         super.onSaveInstanceState(outState, outPersistentState)
