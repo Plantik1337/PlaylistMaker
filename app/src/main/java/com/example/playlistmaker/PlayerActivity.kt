@@ -26,11 +26,13 @@ class PlayerActivity : AppCompatActivity() {
         private const val DELAY = 400L
     }
 
-    private var mainThreadHandler = Handler(Looper.getMainLooper())
+
 
     private var playerState = STATE_DEFAULT
     private lateinit var play: ImageView
     private var mediaPlayer = MediaPlayer()
+
+    private var mainThreadHandler = Handler(Looper.getMainLooper())
 
 
 
@@ -58,6 +60,7 @@ class PlayerActivity : AppCompatActivity() {
         val yearOfRelease = findViewById<TextView>(R.id.yearOfReliseData)
         val genre = findViewById<TextView>(R.id.genreData)
         val country = findViewById<TextView>(R.id.сountryData)
+        val trakTime = findViewById<TextView>(R.id.trackTimeView)
 
         trackName.text = contentForPage[0].trackName
         autorName.text = contentForPage[0].artistName
@@ -82,8 +85,11 @@ class PlayerActivity : AppCompatActivity() {
             playerState = STATE_PREPARED
         }
         mediaPlayer.setOnCompletionListener {
+            trakTime.text = "0:00"
             playerState = STATE_PREPARED
         }
+
+
 
         play.setOnClickListener {
             playbackControl()

@@ -51,8 +51,8 @@
         app:layout_constraintTop_toBottomOf="@id/top_guideline" />
 
     <TextView
-        style="@style/playerDataText"
         android:id="@+id/songNamePlayer"
+        style="@style/playerDataText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -63,8 +63,8 @@
         app:layout_constraintTop_toBottomOf="@id/albumPlayerImageView" />
 
     <TextView
-        style="@style/playerDataText"
         android:id="@+id/autorName"
+        style="@style/playerDataText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
@@ -109,8 +109,8 @@
         app:tint="@color/grey" />
 
     <TextView
-        style="@style/playerDataText"
         android:id="@+id/trackTimeView"
+        style="@style/playerDataText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="0:00"
@@ -129,8 +129,8 @@
         app:layout_constraintTop_toBottomOf="@id/trackTimeView" />
 
     <TextView
-        style="@style/playerDataText"
         android:id="@+id/playerSongDurationTextViewData"
+        style="@style/playerDataText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/app_name"
@@ -149,8 +149,8 @@
         app:layout_constraintTop_toBottomOf="@id/playerSongDurationTextView" />
 
     <TextView
-        style="@style/playerDataText"
         android:id="@+id/playerAlbumNameData"
+        style="@style/playerDataText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/app_name"
@@ -168,8 +168,8 @@
         app:layout_constraintTop_toBottomOf="@id/playerAlbumName" />
 
     <TextView
-        style="@style/playerDataText"
         android:id="@+id/yearOfReliseData"
+        style="@style/playerDataText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/app_name"
@@ -187,8 +187,8 @@
         app:layout_constraintTop_toBottomOf="@id/yearOfRelise" />
 
     <TextView
-        style="@style/playerDataText"
         android:id="@+id/genreData"
+        style="@style/playerDataText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/app_name"
@@ -206,8 +206,8 @@
         app:layout_constraintTop_toBottomOf="@id/genre" />
 
     <TextView
-        style="@style/playerDataText"
         android:id="@+id/сountryData"
+        style="@style/playerDataText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/app_name"
