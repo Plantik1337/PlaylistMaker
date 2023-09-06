@@ -23,9 +23,8 @@ class PlayerActivity : AppCompatActivity() {
         private const val STATE_PREPARED = 1
         private const val STATE_PLAYING = 2
         private const val STATE_PAUSED = 3
-        private const val DELAY = 400L
+        private const val DELAY = 300L
     }
-
 
 
     private var playerState = STATE_DEFAULT
@@ -35,21 +34,20 @@ class PlayerActivity : AppCompatActivity() {
     private var mainThreadHandler = Handler(Looper.getMainLooper())
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
 
-         val historyTransaction = HistoryTransaction()
-         val sharedPreferences = getSharedPreferences(HISTORY_LIST, MODE_PRIVATE)
-         val contentForPage = historyTransaction.read(sharedPreferences)
+        val historyTransaction = HistoryTransaction()
+        val sharedPreferences = getSharedPreferences(HISTORY_LIST, MODE_PRIVATE)
+        val contentForPage = historyTransaction.read(sharedPreferences)
 
         val backButton = findViewById<ImageButton>(R.id.menu_button)
         backButton.setOnClickListener {
             finish()
         }
 
-        Log.i("Data",contentForPage[0].toString())
+        Log.i("Data", contentForPage[0].toString())
         play = findViewById(R.id.playPauseButton)
         val trackName = findViewById<TextView>(R.id.songNamePlayer)
         val autorName = findViewById<TextView>(R.id.autorName)
@@ -89,10 +87,21 @@ class PlayerActivity : AppCompatActivity() {
             playerState = STATE_PREPARED
         }
 
-
+        val runnable = object : Runnable {
+            override fun run() {
+                if (mediaPlayer.isPlaying) {
+                    trakTime.text = SimpleDateFormat(
+                        "m:ss",
+                        Locale.getDefault()
+                    ).format(mediaPlayer.currentPosition)
+                    mainThreadHandler.postDelayed(this, DELAY)
+                }
+            }
+        }
 
         play.setOnClickListener {
             playbackControl()
+            runnable.run()
         }
 
         duration.text = SimpleDateFormat(
