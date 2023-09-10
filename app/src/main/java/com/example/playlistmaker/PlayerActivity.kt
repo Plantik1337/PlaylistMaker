@@ -41,13 +41,14 @@ class PlayerActivity : AppCompatActivity() {
         val historyTransaction = HistoryTransaction()
         val sharedPreferences = getSharedPreferences(HISTORY_LIST, MODE_PRIVATE)
         val contentForPage = historyTransaction.read(sharedPreferences)
+        val currentContent = contentForPage[0]
 
         val backButton = findViewById<ImageButton>(R.id.menu_button)
         backButton.setOnClickListener {
             finish()
         }
 
-        Log.i("Data", contentForPage[0].toString())
+        Log.i("Data", currentContent.toString())
         play = findViewById(R.id.playPauseButton)
         val trackName = findViewById<TextView>(R.id.songNamePlayer)
         val autorName = findViewById<TextView>(R.id.autorName)
@@ -60,11 +61,11 @@ class PlayerActivity : AppCompatActivity() {
         val country = findViewById<TextView>(R.id.сountryData)
         val trakTime = findViewById<TextView>(R.id.trackTimeView)
 
-        trackName.text = contentForPage[0].trackName
-        autorName.text = contentForPage[0].artistName
+        trackName.text = currentContent.trackName
+        autorName.text = currentContent.artistName
 
         Glide.with(albumImage)
-            .load(contentForPage[0].artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"))
+            .load(currentContent.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"))
             .placeholder(R.drawable.placeholder)
             .error(R.drawable.placeholder)
             .into(albumImage)
@@ -76,7 +77,7 @@ class PlayerActivity : AppCompatActivity() {
             }
         }
         //// Prepare player
-        mediaPlayer.setDataSource(contentForPage[0].previewUrl)
+        mediaPlayer.setDataSource(currentContent.previewUrl)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
             play.isEnabled = true
@@ -107,24 +108,24 @@ class PlayerActivity : AppCompatActivity() {
         duration.text = SimpleDateFormat(
             "mm:ss",
             Locale.getDefault()
-        ).format(contentForPage[0].trackTimeMillis.toLong())
+        ).format(currentContent.trackTimeMillis.toLong())
 
-        if (contentForPage[0].collectionName.contains("single")) {
+        if (currentContent.collectionName.contains("single")) {
             albumMessage.visibility = View.GONE
             album.visibility = View.GONE
         } else {
             val maxSymbols = 30
 
-            if (contentForPage[0].collectionName.length > maxSymbols) {
-                album.text = contentForPage[0].collectionName.substring(0, maxSymbols) + "..."
+            if (currentContent.collectionName.length > maxSymbols) {
+                album.text = currentContent.collectionName.substring(0, maxSymbols) + "..."
             } else {
-                album.text = contentForPage[0].collectionName
+                album.text = currentContent.collectionName
             }
 
         }
-        yearOfRelease.text = contentForPage[0].releaseDate.substring(0, 4)
-        genre.text = contentForPage[0].primaryGenreName
-        country.text = contentForPage[0].country
+        yearOfRelease.text = currentContent.releaseDate.substring(0, 4)
+        genre.text = currentContent.primaryGenreName
+        country.text = currentContent.country
 
     }
 
@@ -159,6 +160,7 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        //mainThreadHandler.removeCallbacks()
         mediaPlayer.release()
     }
 }
