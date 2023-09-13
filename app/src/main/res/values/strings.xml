@@ -20,4 +20,7 @@
     <string name="internetProblem">Проблема со связью</string>
     <string name="historyMessage">Вы искали</string>
     <string name="clearHistory">Очистить историю</string>
+    <string name="duration">Длительность</string>
+    <string name="album">Альбом</string>
+    <string name="year">Год</string>
 </resources>
