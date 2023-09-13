@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/trackTimeView">
+<androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MediatekaActivity">
@@ -51,8 +59,8 @@
         app:layout_constraintTop_toBottomOf="@id/top_guideline" />
 
     <TextView
-        style="@style/playerDataText"
         android:id="@+id/songNamePlayer"
+        style="@style/playerDataText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -63,8 +71,8 @@
         app:layout_constraintTop_toBottomOf="@id/albumPlayerImageView" />
 
     <TextView
-        style="@style/playerDataText"
         android:id="@+id/autorName"
+        style="@style/playerDataText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
@@ -79,8 +87,8 @@
         style="@style/playButton"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginTop="30dp"
-        android:src="@drawable/baseline_pause_circle_24"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/baseline_play_circle_24"
         app:layout_constraintEnd_toStartOf="@id/right_guideline"
         app:layout_constraintStart_toEndOf="@id/left_guideline"
         app:layout_constraintTop_toBottomOf="@id/autorName" />
@@ -89,7 +97,7 @@
         android:id="@+id/imageView"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="38dp"
         android:layout_marginEnd="20dp"
         android:src="@drawable/button_add"
         app:layout_constraintEnd_toStartOf="@+id/playPauseButton"
@@ -101,7 +109,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="38dp"
         android:src="@drawable/button_like"
         app:layout_constraintEnd_toStartOf="@+id/right_guideline"
         app:layout_constraintStart_toEndOf="@+id/playPauseButton"
@@ -109,109 +117,109 @@
         app:tint="@color/grey" />
 
     <TextView
-        style="@style/playerDataText"
         android:id="@+id/trackTimeView"
+        style="@style/playerDataText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="0:30"
+        android:text="0:00"
         app:layout_constraintEnd_toStartOf="@id/right_guideline"
         app:layout_constraintStart_toEndOf="@id/left_guideline"
         app:layout_constraintTop_toBottomOf="@id/playPauseButton" />
 
-    <TextView
-        android:id="@+id/playerSongDurationTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
-        android:text="Длительность"
-        android:textColor="@color/grey"
-        app:layout_constraintStart_toEndOf="@id/left_guideline"
-        app:layout_constraintTop_toBottomOf="@id/trackTimeView" />
+            <TextView
+                android:id="@+id/playerSongDurationTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/duration"
+                android:textColor="@color/grey"
+                android:layout_marginTop="14dp"
+                app:layout_constraintStart_toEndOf="@id/left_guideline"
+                app:layout_constraintTop_toTopOf="@id/trackTimeView" />
 
-    <TextView
-        style="@style/playerDataText"
-        android:id="@+id/playerSongDurationTextViewData"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/app_name"
-        app:layout_constraintBaseline_toBaselineOf="@id/playerSongDurationTextView"
-        app:layout_constraintEnd_toStartOf="@id/right_guideline" />
+            <TextView
+                android:id="@+id/playerSongDurationTextViewData"
+                style="@style/playerDataText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                app:layout_constraintBaseline_toBaselineOf="@id/playerSongDurationTextView"
+                app:layout_constraintEnd_toStartOf="@id/right_guideline" />
 
-    <TextView
-        android:id="@+id/playerAlbumName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Альбом"
-        android:textColor="@color/grey"
-        android:visibility="visible"
-        app:layout_constraintStart_toEndOf="@id/left_guideline"
-        app:layout_constraintTop_toBottomOf="@id/playerSongDurationTextView" />
+            <TextView
+                android:id="@+id/playerAlbumName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/album"
+                android:textColor="@color/grey"
+                android:visibility="visible"
+                app:layout_constraintStart_toEndOf="@id/left_guideline"
+                app:layout_constraintTop_toBottomOf="@id/playerSongDurationTextView" />
 
-    <TextView
-        style="@style/playerDataText"
-        android:id="@+id/playerAlbumNameData"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/app_name"
-        app:layout_constraintBaseline_toBaselineOf="@id/playerAlbumName"
-        app:layout_constraintEnd_toStartOf="@id/right_guideline" />
+            <TextView
+                android:id="@+id/playerAlbumNameData"
+                style="@style/playerDataText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                app:layout_constraintBaseline_toBaselineOf="@id/playerAlbumName"
+                app:layout_constraintEnd_toStartOf="@id/right_guideline" />
 
-    <TextView
-        android:id="@+id/yearOfRelise"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Год"
-        android:textColor="@color/grey"
-        app:layout_constraintStart_toEndOf="@id/left_guideline"
-        app:layout_constraintTop_toBottomOf="@id/playerAlbumName" />
+            <TextView
+                android:id="@+id/yearOfRelise"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/year"
+                android:textColor="@color/grey"
+                app:layout_constraintStart_toEndOf="@id/left_guideline"
+                app:layout_constraintTop_toBottomOf="@id/playerAlbumName" />
 
-    <TextView
-        style="@style/playerDataText"
-        android:id="@+id/yearOfReliseData"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/app_name"
-        app:layout_constraintBaseline_toBaselineOf="@id/yearOfRelise"
-        app:layout_constraintEnd_toStartOf="@id/right_guideline" />
+            <TextView
+                android:id="@+id/yearOfReliseData"
+                style="@style/playerDataText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                app:layout_constraintBaseline_toBaselineOf="@id/yearOfRelise"
+                app:layout_constraintEnd_toStartOf="@id/right_guideline" />
 
-    <TextView
-        android:id="@+id/genre"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Жанр"
-        android:textColor="@color/grey"
-        app:layout_constraintStart_toEndOf="@id/left_guideline"
-        app:layout_constraintTop_toBottomOf="@id/yearOfRelise" />
+            <TextView
+                android:id="@+id/genre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Жанр"
+                android:textColor="@color/grey"
+                app:layout_constraintStart_toEndOf="@id/left_guideline"
+                app:layout_constraintTop_toBottomOf="@id/yearOfRelise" />
 
-    <TextView
-        style="@style/playerDataText"
-        android:id="@+id/genreData"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/app_name"
-        app:layout_constraintBaseline_toBaselineOf="@id/genre"
-        app:layout_constraintEnd_toStartOf="@id/right_guideline" />
+            <TextView
+                android:id="@+id/genreData"
+                style="@style/playerDataText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                app:layout_constraintBaseline_toBaselineOf="@id/genre"
+                app:layout_constraintEnd_toStartOf="@id/right_guideline" />
 
-    <TextView
-        android:id="@+id/сountry"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Страна"
-        android:textColor="@color/grey"
-        app:layout_constraintStart_toEndOf="@id/left_guideline"
-        app:layout_constraintTop_toBottomOf="@id/genre" />
+            <TextView
+                android:id="@+id/сountry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Страна"
+                android:textColor="@color/grey"
+                app:layout_constraintStart_toEndOf="@id/left_guideline"
+                app:layout_constraintTop_toBottomOf="@id/genre" />
 
-    <TextView
-        style="@style/playerDataText"
-        android:id="@+id/сountryData"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/app_name"
-        app:layout_constraintBaseline_toBaselineOf="@id/сountry"
-        app:layout_constraintEnd_toStartOf="@id/right_guideline" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/сountryData"
+                style="@style/playerDataText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                app:layout_constraintBaseline_toBaselineOf="@id/сountry"
+                app:layout_constraintEnd_toStartOf="@id/right_guideline" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>

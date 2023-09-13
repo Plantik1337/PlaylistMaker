@@ -21,13 +21,10 @@ class Adapter(
     fun update() {
         notifyDataSetChanged()
     }
-//    val historyTransaction = HistoryTransaction()
-//    fun historyContent(sharedPreferences: SharedPreferences){
-//        track.addAll(historyTransaction.read(sharedPreferences))
-//    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.v_track_line, parent, false)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.v_track_line, parent, false)
         return TrackViewHolder(view, clickListener)
     }
 

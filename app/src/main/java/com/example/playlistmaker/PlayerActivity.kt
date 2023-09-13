@@ -1,7 +1,11 @@
 package com.example.playlistmaker
 
 import android.graphics.Outline
+import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.view.ViewOutlineProvider
 import android.widget.ImageButton
@@ -10,12 +14,24 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import java.text.SimpleDateFormat
-import java.time.Instant
-import java.time.Year
-import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
+
+    companion object {
+        private const val STATE_DEFAULT = 0
+        private const val STATE_PREPARED = 1
+        private const val STATE_PLAYING = 2
+        private const val STATE_PAUSED = 3
+        private const val DELAY = 300L
+    }
+
+
+    private var playerState = STATE_DEFAULT
+    private lateinit var play: ImageView
+    private var mediaPlayer = MediaPlayer()
+
+    private var mainThreadHandler = Handler(Looper.getMainLooper())
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,12 +41,15 @@ class PlayerActivity : AppCompatActivity() {
         val historyTransaction = HistoryTransaction()
         val sharedPreferences = getSharedPreferences(HISTORY_LIST, MODE_PRIVATE)
         val contentForPage = historyTransaction.read(sharedPreferences)
+        val currentContent = contentForPage[0]
 
         val backButton = findViewById<ImageButton>(R.id.menu_button)
         backButton.setOnClickListener {
             finish()
         }
 
+        Log.i("Data", currentContent.toString())
+        play = findViewById(R.id.playPauseButton)
         val trackName = findViewById<TextView>(R.id.songNamePlayer)
         val autorName = findViewById<TextView>(R.id.autorName)
         val albumImage = findViewById<ImageView>(R.id.albumPlayerImageView)
@@ -40,51 +59,108 @@ class PlayerActivity : AppCompatActivity() {
         val yearOfRelease = findViewById<TextView>(R.id.yearOfReliseData)
         val genre = findViewById<TextView>(R.id.genreData)
         val country = findViewById<TextView>(R.id.сountryData)
+        val trakTime = findViewById<TextView>(R.id.trackTimeView)
 
-        trackName.setText(contentForPage[0].trackName)
-        autorName.setText(contentForPage[0].artistName)
+        trackName.text = currentContent.trackName
+        autorName.text = currentContent.artistName
 
         Glide.with(albumImage)
-            .load(contentForPage[0].artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"))
+            .load(currentContent.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"))
             .placeholder(R.drawable.placeholder)
             .error(R.drawable.placeholder)
             .into(albumImage)
-albumImage.clipToOutline = true
-            albumImage.outlineProvider = object : ViewOutlineProvider() {
-                override fun getOutline(view: View, outline: Outline) {
-                    val cornerRadius = 15
-                    outline.setRoundRect(0, 0, view.width, view.height, cornerRadius.toFloat())
+        albumImage.clipToOutline = true
+        albumImage.outlineProvider = object : ViewOutlineProvider() {
+            override fun getOutline(view: View, outline: Outline) {
+                val cornerRadius = 15
+                outline.setRoundRect(0, 0, view.width, view.height, cornerRadius.toFloat())
+            }
+        }
+        //// Prepare player
+        mediaPlayer.setDataSource(currentContent.previewUrl)
+        mediaPlayer.prepareAsync()
+        mediaPlayer.setOnPreparedListener {
+            play.isEnabled = true
+            playerState = STATE_PREPARED
+        }
+        mediaPlayer.setOnCompletionListener {
+            trakTime.text = "0:00"
+            playerState = STATE_PREPARED
+        }
+
+        val runnable = object : Runnable {
+            override fun run() {
+                if (mediaPlayer.isPlaying) {
+                    trakTime.text = SimpleDateFormat(
+                        "m:ss",
+                        Locale.getDefault()
+                    ).format(mediaPlayer.currentPosition)
+                    mainThreadHandler.postDelayed(this, DELAY)
                 }
             }
+        }
 
-        duration.setText(
-            SimpleDateFormat(
-                "mm:ss",
-                Locale.getDefault()
-            ).format(contentForPage[0].trackTimeMillis.toLong())
-        )
+        play.setOnClickListener {
+            playbackControl()
+            runnable.run()
+        }
 
-        if(contentForPage[0].collectionName.contains("single")){
+        duration.text = SimpleDateFormat(
+            "mm:ss",
+            Locale.getDefault()
+        ).format(currentContent.trackTimeMillis.toLong())
+
+        if (currentContent.collectionName.contains("single")) {
             albumMessage.visibility = View.GONE
             album.visibility = View.GONE
-        }
-        else{
+        } else {
             val maxSymbols = 30
-            //            if (track.trackName.length > maxSymbols) {
-            //                trackName.text = track.trackName.substring(0, maxSymbols) + "..."
-            //            } else {
-            //                trackName.text = track.trackName
-            //            }
-            if(contentForPage[0].collectionName.length > maxSymbols){
-                album.setText(contentForPage[0].collectionName.substring(0,maxSymbols) + "...")
-            }
-            else{
-                album.setText(contentForPage[0].collectionName)
+
+            if (currentContent.collectionName.length > maxSymbols) {
+                album.text = currentContent.collectionName.substring(0, maxSymbols) + "..."
+            } else {
+                album.text = currentContent.collectionName
             }
 
         }
-        yearOfRelease.setText(contentForPage[0].releaseDate.substring(0, 4))
-        genre.setText(contentForPage[0].primaryGenreName)
-        country.setText(contentForPage[0].country)
+        yearOfRelease.text = currentContent.releaseDate.substring(0, 4)
+        genre.text = currentContent.primaryGenreName
+        country.text = currentContent.country
+
+    }
+
+    private fun playbackControl() {
+        when (playerState) {
+            STATE_PLAYING -> {
+                pausePlayer()
+            }
+
+            STATE_PREPARED, STATE_PAUSED -> {
+                startPlayer()
+            }
+        }
+    }
+
+    private fun startPlayer() {
+        mediaPlayer.start()
+        play.setImageResource(R.drawable.baseline_pause_circle_24)
+        playerState = STATE_PLAYING
+    }
+
+    private fun pausePlayer() {
+        mediaPlayer.pause()
+        play.setImageResource(R.drawable.baseline_play_circle_24)
+        playerState = STATE_PAUSED
+    }
+
+    override fun onPause() {
+        super.onPause()
+        pausePlayer()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        //mainThreadHandler.removeCallbacks()
+        mediaPlayer.release()
     }
 }
