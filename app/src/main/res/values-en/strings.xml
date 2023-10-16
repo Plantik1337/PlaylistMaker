@@ -17,4 +17,7 @@
     <string name="internetProblem">Problem with Internet</string>
     <string name="historyMessage">You searched</string>
     <string name="clearHistory">Clear history</string>
+    <string name="duration">Длительность</string>
+    <string name="album">Альбом</string>
+    <string name="year">Год</string>
 </resources>
