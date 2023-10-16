@@ -42,7 +42,6 @@ class PlayerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
 
-        //val historyTransaction = HistoryTransaction()
         //data
         val currentContent =
             HistoryTransaction().returnFirst(getSharedPreferences(HISTORY_LIST, MODE_PRIVATE))
@@ -82,22 +81,12 @@ class PlayerActivity : AppCompatActivity() {
             }
         }
         //// Prepare player
-        //mediaPlayer.setDataSource(currentContent.previewUrl)
         player.setDataSource(currentContent.previewUrl)
-        //mediaPlayer.prepareAsync()
         player.prepareAsync()
-//        mediaPlayer.setOnPreparedListener {
-//            play.isEnabled = true
-//            playerState = STATE_PREPARED
-//        }
         player.setOnPreparedListener {
             play.isEnabled = true
             playerState = STATE_PREPARED
         }
-//        mediaPlayer.setOnCompletionListener {
-//            trakTime.text = "0:00"
-//            playerState = STATE_PREPARED
-//        }
         player.setOnCompletionListener {
             trakTime.text = "0:00"
             playerState = STATE_PREPARED
@@ -175,7 +164,6 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        //mainThreadHandler.removeCallbacks()
         player.release()
     }
 }
