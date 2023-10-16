@@ -1,6 +1,7 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.data
 
 import android.content.SharedPreferences
+import com.example.playlistmaker.Track
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -51,5 +52,9 @@ class HistoryTransaction {
             true -> true
             false -> false
         }
+    }
+    fun returnFirst(sharedPreferences: SharedPreferences):Track{
+        val listOfData = read(sharedPreferences)
+        return listOfData[0]
     }
 }

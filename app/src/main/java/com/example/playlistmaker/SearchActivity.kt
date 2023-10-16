@@ -21,6 +21,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isEmpty
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.data.HistoryTransaction
+import com.example.playlistmaker.presentation.PlayerActivity
 import com.google.android.material.button.MaterialButton
 import retrofit2.Call
 import retrofit2.Callback
