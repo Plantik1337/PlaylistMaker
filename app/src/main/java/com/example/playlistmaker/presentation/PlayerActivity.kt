@@ -16,7 +16,9 @@ import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.data.HISTORY_LIST
 import com.example.playlistmaker.data.HistoryTransaction
-import com.example.playlistmaker.data.Player
+import com.example.playlistmaker.data.PlayerRepositoryImpl
+import com.example.playlistmaker.domain.HistoryRepository
+import com.example.playlistmaker.domain.PlayerRepository
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -34,7 +36,8 @@ class PlayerActivity : AppCompatActivity() {
     private var playerState = STATE_DEFAULT
     private lateinit var play: ImageView
     private var mediaPlayer = MediaPlayer()
-    private val player = Player(mediaPlayer)
+    private val player: PlayerRepository = PlayerRepositoryImpl(mediaPlayer)
+    private val history: HistoryRepository = HistoryTransaction()
     private var mainThreadHandler = Handler(Looper.getMainLooper())
 
 
@@ -42,10 +45,8 @@ class PlayerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
 
-        //data
         val currentContent =
-            HistoryTransaction().returnFirst(getSharedPreferences(HISTORY_LIST, MODE_PRIVATE))
-        //
+            history.returnFirst(getSharedPreferences(HISTORY_LIST, MODE_PRIVATE))
 
         val backButton = findViewById<ImageButton>(R.id.menu_button)
         backButton.setOnClickListener {

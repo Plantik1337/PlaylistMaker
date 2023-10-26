@@ -1,16 +1,17 @@
 package com.example.playlistmaker.data
 
 import android.content.SharedPreferences
-import com.example.playlistmaker.Track
+import com.example.playlistmaker.domain.HistoryRepository
+import com.example.playlistmaker.domain.Track
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 const val HISTORY_LIST = "HISTORY_LIST"
 
-class HistoryTransaction {
+class HistoryTransaction : HistoryRepository {
     private val emptyArrayList = ArrayList<Track>()
 
-    fun read(sharedPreferences: SharedPreferences): ArrayList<Track> {
+    override fun read(sharedPreferences: SharedPreferences): ArrayList<Track> {
         val json = sharedPreferences.getString(HISTORY_LIST, null)
         var myList = emptyArrayList
         return if (json.isNullOrBlank()) {
@@ -22,7 +23,7 @@ class HistoryTransaction {
         }
     }
 
-    fun write(sharedPreferences: SharedPreferences, track: Track) {
+    override fun write(sharedPreferences: SharedPreferences, track: Track) {
         val first = 0
         val maxListSize = 11
         var myJson = sharedPreferences.getString(HISTORY_LIST, null)
@@ -42,7 +43,7 @@ class HistoryTransaction {
             .apply()
     }
 
-    fun cleanHistory(sharedPreferences: SharedPreferences) {
+    override fun clearHistory(sharedPreferences: SharedPreferences) {
         sharedPreferences.edit().clear().apply()
     }
 
@@ -53,7 +54,8 @@ class HistoryTransaction {
             false -> false
         }
     }
-    fun returnFirst(sharedPreferences: SharedPreferences):Track{
+
+    override fun returnFirst(sharedPreferences: SharedPreferences): Track {
         val listOfData = read(sharedPreferences)
         return listOfData[0]
     }
