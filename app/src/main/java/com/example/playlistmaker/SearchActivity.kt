@@ -21,6 +21,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isEmpty
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.data.AppleMusicServer
+import com.example.playlistmaker.data.HistoryTransaction
+import com.example.playlistmaker.domain.HistoryRepository
+import com.example.playlistmaker.domain.MusicResponse
+import com.example.playlistmaker.domain.Track
+import com.example.playlistmaker.presentation.PlayerActivity
 import com.google.android.material.button.MaterialButton
 import retrofit2.Call
 import retrofit2.Callback
@@ -38,6 +44,7 @@ class SearchActivity : AppCompatActivity() {
         const val EDIT_TEXT = "EDIT_TEXT"
         const val TAG = "MUSIC_STATE"
         const val HISTORY_LIST = "HISTORY_LIST"
+        private const val TRACK = "TRACK"
         private const val CLICK_DEBOUNCE_DELAY = 1000L
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
@@ -62,23 +69,20 @@ class SearchActivity : AppCompatActivity() {
         setContentView(R.layout.activity_search)
 
         val sharedPreferences: SharedPreferences = getSharedPreferences(HISTORY_LIST, MODE_PRIVATE)
+        val historyTransaction: HistoryRepository = HistoryTransaction()
 
         val editText = findViewById<EditText>(R.id.searchEditText)
         val imageViewButton = findViewById<ImageView>(R.id.cancelInputSearchEditText)
         val inputMethod = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         val trackListView = findViewById<RecyclerView>(R.id.trackListRecyclerView)
-
         val progressBar = findViewById<ProgressBar>(R.id.searchProgressBar)
-
         val problemsSearchEvent = findViewById<LinearLayout>(R.id.searchProblems)
         val problemImageView = findViewById<ImageView>(R.id.problemImage)
         val statusText = findViewById<TextView>(R.id.statusText)
         val internetProblemText = findViewById<TextView>(R.id.internetProblemText)
         val refrashButton = findViewById<MaterialButton>(R.id.refrashButton)
-
         val historyTextView = findViewById<TextView>(R.id.historyTextView)
         val clearHistoryButton = findViewById<MaterialButton>(R.id.clearHistoryButton)
-        val historyTransaction = HistoryTransaction()
 
         val baseUrl = "https://itunes.apple.com"
 
@@ -126,7 +130,7 @@ class SearchActivity : AppCompatActivity() {
         }
         showHistory()
         clearHistoryButton.setOnClickListener {
-            historyTransaction.cleanHistory(sharedPreferences)
+            historyTransaction.clearHistory(sharedPreferences)
             clearHistoryButton.visibility = View.GONE
             historyTextView.visibility = View.GONE
             trackListView.adapter = historyAdapter(emptyTrackList)

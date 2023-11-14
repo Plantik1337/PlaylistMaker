@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation
 
 import android.graphics.Outline
 import android.media.MediaPlayer
@@ -13,6 +13,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.example.playlistmaker.R
+import com.example.playlistmaker.data.HISTORY_LIST
+import com.example.playlistmaker.data.HistoryTransaction
+import com.example.playlistmaker.data.PlayerRepositoryImpl
+import com.example.playlistmaker.domain.HistoryRepository
+import com.example.playlistmaker.domain.PlayerRepository
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -30,7 +36,8 @@ class PlayerActivity : AppCompatActivity() {
     private var playerState = STATE_DEFAULT
     private lateinit var play: ImageView
     private var mediaPlayer = MediaPlayer()
-
+    private val player: PlayerRepository = PlayerRepositoryImpl(mediaPlayer)
+    private val history: HistoryRepository = HistoryTransaction()
     private var mainThreadHandler = Handler(Looper.getMainLooper())
 
 
@@ -38,10 +45,8 @@ class PlayerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
 
-        val historyTransaction = HistoryTransaction()
-        val sharedPreferences = getSharedPreferences(HISTORY_LIST, MODE_PRIVATE)
-        val contentForPage = historyTransaction.read(sharedPreferences)
-        val currentContent = contentForPage[0]
+        val currentContent =
+            history.returnFirst(getSharedPreferences(HISTORY_LIST, MODE_PRIVATE))
 
         val backButton = findViewById<ImageButton>(R.id.menu_button)
         backButton.setOnClickListener {
@@ -77,13 +82,13 @@ class PlayerActivity : AppCompatActivity() {
             }
         }
         //// Prepare player
-        mediaPlayer.setDataSource(currentContent.previewUrl)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener {
+        player.setDataSource(currentContent.previewUrl)
+        player.prepareAsync()
+        player.setOnPreparedListener {
             play.isEnabled = true
             playerState = STATE_PREPARED
         }
-        mediaPlayer.setOnCompletionListener {
+        player.setOnCompletionListener {
             trakTime.text = "0:00"
             playerState = STATE_PREPARED
         }
@@ -142,13 +147,13 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun startPlayer() {
-        mediaPlayer.start()
+        player.start()
         play.setImageResource(R.drawable.baseline_pause_circle_24)
         playerState = STATE_PLAYING
     }
 
     private fun pausePlayer() {
-        mediaPlayer.pause()
+        player.pause()
         play.setImageResource(R.drawable.baseline_play_circle_24)
         playerState = STATE_PAUSED
     }
@@ -160,7 +165,6 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        //mainThreadHandler.removeCallbacks()
-        mediaPlayer.release()
+        player.release()
     }
 }
