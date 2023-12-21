@@ -1,4 +1,4 @@
-package com.example.playlistmaker.domain
+package com.example.playlistmaker.player
 
 interface PlayerRepository {
     fun setDataSource(url: String)

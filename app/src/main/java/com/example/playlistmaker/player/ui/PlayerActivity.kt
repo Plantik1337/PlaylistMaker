@@ -1,4 +1,4 @@
-package com.example.playlistmaker.presentation
+package com.example.playlistmaker.player.ui
 
 import android.graphics.Outline
 import android.media.MediaPlayer
@@ -13,12 +13,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.example.playlistmaker.HISTORY_LIST
+import com.example.playlistmaker.HistoryRepository
+import com.example.playlistmaker.HistoryTransaction
 import com.example.playlistmaker.R
-import com.example.playlistmaker.data.HISTORY_LIST
-import com.example.playlistmaker.data.HistoryTransaction
-import com.example.playlistmaker.data.PlayerRepositoryImpl
-import com.example.playlistmaker.domain.HistoryRepository
-import com.example.playlistmaker.domain.PlayerRepository
+import com.example.playlistmaker.player.PlayerRepository
+import com.example.playlistmaker.player.PlayerRepositoryImpl
 import java.text.SimpleDateFormat
 import java.util.Locale
 

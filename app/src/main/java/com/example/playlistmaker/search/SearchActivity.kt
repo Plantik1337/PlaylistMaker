@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.search
 
 import android.content.Intent
 import android.content.SharedPreferences
@@ -21,12 +21,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isEmpty
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.data.AppleMusicServer
-import com.example.playlistmaker.data.HistoryTransaction
-import com.example.playlistmaker.domain.HistoryRepository
-import com.example.playlistmaker.domain.MusicResponse
-import com.example.playlistmaker.domain.Track
-import com.example.playlistmaker.presentation.PlayerActivity
+import com.example.playlistmaker.HistoryRepository
+import com.example.playlistmaker.HistoryTransaction
+import com.example.playlistmaker.MusicResponse
+import com.example.playlistmaker.R
+import com.example.playlistmaker.Track
+import com.example.playlistmaker.player.ui.PlayerActivity
+import com.example.playlistmaker.search.data.AppleMusicServer
+import com.example.playlistmaker.search.domain.Adapter
+import com.example.playlistmaker.search.domain.RecyclerViewClickListener
 import com.google.android.material.button.MaterialButton
 import retrofit2.Call
 import retrofit2.Callback

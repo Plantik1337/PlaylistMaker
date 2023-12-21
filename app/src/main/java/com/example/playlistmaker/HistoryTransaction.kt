@@ -1,8 +1,6 @@
-package com.example.playlistmaker.data
+package com.example.playlistmaker
 
 import android.content.SharedPreferences
-import com.example.playlistmaker.domain.HistoryRepository
-import com.example.playlistmaker.domain.Track
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
