@@ -22,7 +22,7 @@
             android:name=".MediatekaActivity"
             android:exported="false" />
         <activity
-            android:name=".search.SettingsActivity"
+            android:name=".settings.ui.SettingsActivity"
             android:exported="false"
             android:theme="@style/Theme.Settings"/>
         <activity

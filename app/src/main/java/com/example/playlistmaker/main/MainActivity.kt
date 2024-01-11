@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.playlistmaker.MediatekaActivity
 import com.example.playlistmaker.R
 import com.example.playlistmaker.search.SearchActivity
-import com.example.playlistmaker.search.SettingsActivity
+import com.example.playlistmaker.settings.ui.SettingsActivity
 import com.google.android.material.button.MaterialButton
 
 class MainActivity : AppCompatActivity() {
