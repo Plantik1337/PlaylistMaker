@@ -16,7 +16,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class Adapter(
-    private var track: ArrayList<Track>,
+    private var track: List<Track>,
     private val clickListener: RecyclerViewClickListener
 ) : RecyclerView.Adapter<Adapter.TrackViewHolder>() {
     @SuppressLint("NotifyDataSetChanged")

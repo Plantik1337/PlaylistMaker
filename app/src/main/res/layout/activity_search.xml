@@ -5,7 +5,7 @@
     style="@style/searchActivityTheme"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".search.SearchActivity">
+    tools:context=".search.ui.SearchActivity">
 
     <LinearLayout
         android:id="@+id/linearLayout"

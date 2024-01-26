@@ -2,7 +2,7 @@ package com.example.playlistmaker
 
 data class MusicResponse(
     val resultCount: String,
-    val results: ArrayList<Track>
+    val results: List<Track>
 )
 
 data class Track(

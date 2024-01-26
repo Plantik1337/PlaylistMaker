@@ -214,7 +214,7 @@
                 app:layout_constraintTop_toBottomOf="@id/genre" />
 
             <TextView
-                android:id="@+id/сountryData"
+                android:id="@+id/countryData"
                 style="@style/playerDataText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

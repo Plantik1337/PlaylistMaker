@@ -10,15 +10,15 @@ import android.view.View
 import android.view.ViewOutlineProvider
 import android.widget.ImageButton
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
-import com.example.playlistmaker.HISTORY_LIST
-import com.example.playlistmaker.HistoryRepository
-import com.example.playlistmaker.HistoryTransaction
 import com.example.playlistmaker.R
+import com.example.playlistmaker.databinding.ActivityPlayerBinding
 import com.example.playlistmaker.player.PlayerRepository
 import com.example.playlistmaker.player.PlayerRepositoryImpl
+import com.example.playlistmaker.search.data.HISTORY_LIST
+import com.example.playlistmaker.search.data.HistoryTransaction
+import com.example.playlistmaker.search.domain.HistoryRepository
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -43,7 +43,8 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_player)
+        val binding = ActivityPlayerBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         val currentContent =
             history.returnFirst(getSharedPreferences(HISTORY_LIST, MODE_PRIVATE))
@@ -55,27 +56,17 @@ class PlayerActivity : AppCompatActivity() {
 
         Log.i("Data", currentContent.toString())
         play = findViewById(R.id.playPauseButton)
-        val trackName = findViewById<TextView>(R.id.songNamePlayer)
-        val autorName = findViewById<TextView>(R.id.autorName)
-        val albumImage = findViewById<ImageView>(R.id.albumPlayerImageView)
-        val duration = findViewById<TextView>(R.id.playerSongDurationTextViewData)
-        val album = findViewById<TextView>(R.id.playerAlbumNameData)
-        val albumMessage = findViewById<TextView>(R.id.playerAlbumName)
-        val yearOfRelease = findViewById<TextView>(R.id.yearOfReliseData)
-        val genre = findViewById<TextView>(R.id.genreData)
-        val country = findViewById<TextView>(R.id.сountryData)
-        val trakTime = findViewById<TextView>(R.id.trackTimeView)
 
-        trackName.text = currentContent.trackName
-        autorName.text = currentContent.artistName
+        binding.songNamePlayer.text = currentContent.trackName
+        binding.autorName.text = currentContent.artistName
 
-        Glide.with(albumImage)
+        Glide.with(binding.albumPlayerImageView)
             .load(currentContent.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"))
             .placeholder(R.drawable.placeholder)
             .error(R.drawable.placeholder)
-            .into(albumImage)
-        albumImage.clipToOutline = true
-        albumImage.outlineProvider = object : ViewOutlineProvider() {
+            .into(binding.albumPlayerImageView)
+        binding.albumPlayerImageView.clipToOutline = true
+        binding.albumPlayerImageView.outlineProvider = object : ViewOutlineProvider() {
             override fun getOutline(view: View, outline: Outline) {
                 val cornerRadius = 15
                 outline.setRoundRect(0, 0, view.width, view.height, cornerRadius.toFloat())
@@ -89,14 +80,14 @@ class PlayerActivity : AppCompatActivity() {
             playerState = STATE_PREPARED
         }
         player.setOnCompletionListener {
-            trakTime.text = "0:00"
+            binding.trackTimeView.text = "0:00"
             playerState = STATE_PREPARED
         }
 
         val runnable = object : Runnable {
             override fun run() {
                 if (mediaPlayer.isPlaying) {
-                    trakTime.text = SimpleDateFormat(
+                    binding.trackTimeView.text = SimpleDateFormat(
                         "m:ss",
                         Locale.getDefault()
                     ).format(mediaPlayer.currentPosition)
@@ -110,27 +101,27 @@ class PlayerActivity : AppCompatActivity() {
             runnable.run()
         }
 
-        duration.text = SimpleDateFormat(
+        binding.playerSongDurationTextViewData.text = SimpleDateFormat(
             "mm:ss",
             Locale.getDefault()
         ).format(currentContent.trackTimeMillis.toLong())
 
         if (currentContent.collectionName.contains("single")) {
-            albumMessage.visibility = View.GONE
-            album.visibility = View.GONE
+            binding.playerAlbumName.visibility = View.GONE
+            binding.playerAlbumNameData.visibility = View.GONE
         } else {
             val maxSymbols = 30
 
             if (currentContent.collectionName.length > maxSymbols) {
-                album.text = currentContent.collectionName.substring(0, maxSymbols) + "..."
+                binding.playerAlbumNameData.text = currentContent.collectionName.substring(0, maxSymbols) + "..."
             } else {
-                album.text = currentContent.collectionName
+                binding.playerAlbumNameData.text = currentContent.collectionName
             }
 
         }
-        yearOfRelease.text = currentContent.releaseDate.substring(0, 4)
-        genre.text = currentContent.primaryGenreName
-        country.text = currentContent.country
+        binding.yearOfReliseData.text = currentContent.releaseDate.substring(0, 4)
+        binding.genreData.text = currentContent.primaryGenreName
+        binding.countryData.text = currentContent.country
 
     }
 

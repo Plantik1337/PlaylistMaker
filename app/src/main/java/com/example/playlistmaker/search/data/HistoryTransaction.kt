@@ -1,15 +1,18 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.search.data
 
 import android.content.SharedPreferences
+import com.example.playlistmaker.Track
+import com.example.playlistmaker.search.domain.HistoryRepository
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 const val HISTORY_LIST = "HISTORY_LIST"
 
+
 class HistoryTransaction : HistoryRepository {
     private val emptyArrayList = ArrayList<Track>()
-
     override fun read(sharedPreferences: SharedPreferences): ArrayList<Track> {
+
         val json = sharedPreferences.getString(HISTORY_LIST, null)
         var myList = emptyArrayList
         return if (json.isNullOrBlank()) {
