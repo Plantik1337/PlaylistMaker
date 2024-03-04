@@ -19,6 +19,7 @@ class Adapter(
     private var track: List<Track>,
     private val clickListener: RecyclerViewClickListener
 ) : RecyclerView.Adapter<Adapter.TrackViewHolder>() {
+
     @SuppressLint("NotifyDataSetChanged")
     fun update() {
         notifyDataSetChanged()

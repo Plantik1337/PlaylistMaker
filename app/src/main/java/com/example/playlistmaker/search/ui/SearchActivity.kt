@@ -15,10 +15,12 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isEmpty
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.Track
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.player.ui.PlayerActivity
+import com.example.playlistmaker.search.Statement
 import com.example.playlistmaker.search.domain.Adapter
 import com.example.playlistmaker.search.domain.RecyclerViewClickListener
 import com.example.playlistmaker.search.ui.viewmodel.SearchViewModel
@@ -29,23 +31,26 @@ class SearchActivity : AppCompatActivity() {
     private var isClickAllowed = true
     private val handler = Handler(Looper.getMainLooper())
 
+    private lateinit var viewModel: SearchViewModel
+
 
     companion object {
         const val EDIT_TEXT = "EDIT_TEXT"
-        const val TAG = "MUSIC_STATE"
+
+        // const val TAG = "MUSIC_STATE"
         const val HISTORY_LIST = "HISTORY_LIST"
-        private const val TRACK = "TRACK"
+
+        //        private const val TRACK = "TRACK"
         private const val CLICK_DEBOUNCE_DELAY = 1000L
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 
-    private enum class Status {
-        ERROR_INTERNET,
-        ERROR_NOT_FOUND,
-        SUCCESS,
-        HISTORY
-    }
-
+    //    private enum class Status {
+//        ERROR_INTERNET,
+//        ERROR_NOT_FOUND,
+//        SUCCESS,
+//        HISTORY
+//    }
     private fun clickDebounce(): Boolean {
         val current = isClickAllowed
         if (isClickAllowed) {
@@ -62,77 +67,60 @@ class SearchActivity : AppCompatActivity() {
 
         editText = binding.searchEditText
 
-        val viewModel = SearchViewModel()
-
         val sharedPreferences: SharedPreferences = getSharedPreferences(HISTORY_LIST, MODE_PRIVATE)
+
+        viewModel = ViewModelProvider(
+            this,
+            SearchViewModel.getViewModelFactory(sharedPreferences)
+        )[SearchViewModel::class.java]
+
         //val historyTransaction: HistoryRepository = HistoryTransaction()
         val inputMethod = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-
         val emptyTrackList = emptyList<Track>()
 
         binding.backToMainActivityFromSearchActivity.setOnClickListener {
             finish()
         }
-        //var status: Status = Status.HISTORY
 
-        //        fun showStatus(status: Status) {
-//            when (status) {
-//                Status.ERROR_INTERNET -> {
-//                    binding.searchProblems.visibility = View.VISIBLE
-//                    binding.statusText.text = getString(R.string.internetProblem)
-//                    binding.internetProblemText.visibility = View.VISIBLE
-//                    binding.problemImage.setImageResource(R.drawable.internet_problems_vector)
-//                    binding.refrashButton.visibility = View.VISIBLE
-//                }
+
+//        fun screenState(statement: Statement) = when (statement) {
+//            statement.ERROR_INTERNET -> {
+//                binding.searchProblems.visibility = View.VISIBLE
+//                binding.statusText.text = getString(R.string.internetProblem)
+//                binding.internetProblemText.visibility = View.VISIBLE
+//                binding.problemImage.setImageResource(R.drawable.internet_problems_vector)
+//                binding.refrashButton.visibility = View.VISIBLE
+//                binding.historyTextView.visibility = View.GONE
+//                binding.trackListRecyclerView.visibility = View.GONE
+//            }
 //
-//                Status.ERROR_NOT_FOUND -> {
-//                    binding.searchProblems.visibility = View.VISIBLE
-//                    binding.statusText.text = getString(R.string.searchNothing)
-//                    binding.problemImage.setImageResource(R.drawable.search_problems_vector)
-//                }
+//            statement.ERROR_NOT_FOUND -> {
+//                binding.searchProblems.visibility = View.VISIBLE
+//                binding.statusText.text = getString(R.string.searchNothing)
+//                binding.problemImage.setImageResource(R.drawable.search_problems_vector)
+//                binding.historyTextView.visibility = View.GONE
+//                binding.trackListRecyclerView.visibility = View.GONE
+//            }
 //
-//                Status.SUCCESS -> {
-//                    binding.searchProblems.visibility = View.GONE
-//                    binding.internetProblemText.visibility = View.GONE
-//                    binding.refrashButton.visibility = View.GONE
+//            statement.SUCCESS -> {
+//                binding.searchProblems.visibility = View.GONE
+//                binding.internetProblemText.visibility = View.GONE
+//                binding.refrashButton.visibility = View.GONE
+//                binding.historyTextView.visibility = View.GONE
+//                binding.trackListRecyclerView.visibility = View.VISIBLE
+//            }
+//
+//            statement.HISTORY -> {
+//                if(binding.trackListRecyclerView.isEmpty()){
+//
+//                }
+//                else {
+//                    binding.historyTextView.visibility = View.VISIBLE
+//                    binding.trackListRecyclerView.visibility = View.VISIBLE
+//                    binding.clearHistoryButton.visibility = View.VISIBLE
 //                }
 //            }
 //        }
-
-        fun screenState(status: Status) {
-            when (status) {
-                Status.ERROR_INTERNET -> {
-//                    binding.searchProblems.visibility = View.VISIBLE
-//                    binding.statusText.text = getString(R.string.internetProblem)
-//                    binding.internetProblemText.visibility = View.VISIBLE
-//                    binding.problemImage.setImageResource(R.drawable.internet_problems_vector)
-//                    binding.refrashButton.visibility = View.VISIBLE
-                    binding.historyTextView.visibility = View.GONE
-                    binding.trackListRecyclerView.visibility = View.GONE
-                }
-
-                Status.ERROR_NOT_FOUND -> {
-//                    binding.searchProblems.visibility = View.VISIBLE
-//                    binding.statusText.text = getString(R.string.searchNothing)
-//                    binding.problemImage.setImageResource(R.drawable.search_problems_vector)
-                    binding.historyTextView.visibility = View.GONE
-                    binding.trackListRecyclerView.visibility = View.GONE
-                }
-
-                Status.SUCCESS -> {
-//                    binding.searchProblems.visibility = View.GONE
-//                    binding.internetProblemText.visibility = View.GONE
-//                    binding.refrashButton.visibility = View.GONE
-                    binding.historyTextView.visibility = View.GONE
-                    binding.trackListRecyclerView.visibility = View.VISIBLE
-                }
-
-                Status.HISTORY -> {
-                    binding.historyTextView.visibility = View.VISIBLE
-                    binding.trackListRecyclerView.visibility = View.VISIBLE
-                }
-            }
-        }
 
         fun recyclerViewInteractor(track: List<Track>): Adapter {
             val adapter = Adapter(track,
@@ -140,14 +128,11 @@ class SearchActivity : AppCompatActivity() {
                     override fun onItemClick(position: Int) {
 
                         if (clickDebounce()) {
-                            viewModel.writeToHistory(sharedPreferences, track[position])
-//                            binding.trackListRecyclerView.adapter =
-//                                historyAdapter(historyTransaction.read(sharedPreferences))
+                            viewModel.writeToHistory(track[position])
                             binding.trackListRecyclerView.adapter?.notifyDataSetChanged()
                             val playerActivity =
                                 Intent(this@SearchActivity, PlayerActivity::class.java)
                             playerActivity.putExtra("TrackToPlayer", track[position].toString())
-
                             Log.i("Track", track[position].toString())
 
                             startActivity(playerActivity)
@@ -157,41 +142,68 @@ class SearchActivity : AppCompatActivity() {
             return adapter
         }
 
-        fun showHistory() {
-            binding.trackListRecyclerView.adapter = recyclerViewInteractor(emptyTrackList)
-            viewModel.history(sharedPreferences)
-            binding.trackListRecyclerView.adapter =
-                recyclerViewInteractor(viewModel.getLiveData().value.orEmpty())
-
-            if (recyclerViewInteractor(viewModel.getLiveData().value.orEmpty()).itemCount == 0) {
-                binding.clearHistoryButton.visibility = View.GONE
-                binding.historyTextView.visibility = View.GONE
-            } else {
-                binding.clearHistoryButton.visibility = View.VISIBLE
-                binding.historyTextView.visibility = View.VISIBLE
-            }
-        }
-
-        showHistory()
 
         binding.clearHistoryButton.setOnClickListener {
-            viewModel.clearHistory(sharedPreferences)
+            viewModel.clearHistory()
             binding.clearHistoryButton.visibility = View.GONE
             binding.historyTextView.visibility = View.GONE
             binding.trackListRecyclerView.adapter = recyclerViewInteractor(emptyTrackList)
-            showHistory()
+            //showHistory()
         }
 
+        viewModel.getTracklistLiveData().observe(this) { screenState ->
+            Log.i("Состояние", screenState.toString())
+            when (screenState) {
+//                Statement.ERROR_INTERNET -> {
+////                    binding.searchProblems.visibility = View.VISIBLE
+////                    binding.statusText.text = getString(R.string.internetProblem)
+////                    binding.internetProblemText.visibility = View.VISIBLE
+////                    binding.problemImage.setImageResource(R.drawable.internet_problems_vector)
+////                    binding.refrashButton.visibility = View.VISIBLE
+////                    binding.historyTextView.visibility = View.GONE
+////                    binding.trackListRecyclerView.visibility = View.GONE
+//                }
+//
+//                Statement.ERROR_NOT_FOUND -> {
+////                    binding.searchProblems.visibility = View.VISIBLE
+////                    binding.statusText.text = getString(R.string.searchNothing)
+////                    binding.problemImage.setImageResource(R.drawable.search_problems_vector)
+////                    binding.historyTextView.visibility = View.GONE
+////                    binding.trackListRecyclerView.visibility = View.GONE
+//                }
+
+                is Statement.HISTORY -> {
+                    Log.i("Показать историю", screenState.trackList.toString())
+                    binding.trackListRecyclerView.visibility = View.VISIBLE
+                    if (screenState.trackList.isEmpty()) {
+                        Log.e("Нету", "Треков нема")
+                    }
+                    binding.trackListRecyclerView.adapter =
+                        recyclerViewInteractor(screenState.trackList)
+                }
+
+                is Statement.Error -> {}
+                is Statement.Success -> {
+                    Log.i("успешный запрос", screenState.trackList.toString())
+                    binding.trackListRecyclerView.visibility = View.VISIBLE
+                    binding.trackListRecyclerView.adapter =
+                        recyclerViewInteractor(screenState.trackList)
+                }
+            }
+
+        }
 
         val searchRunnable = Runnable {
             viewModel.doRequest(editText.text.toString())
-            binding.trackListRecyclerView.adapter =
-                recyclerViewInteractor(viewModel.getLiveData().value.orEmpty())
+            //binding.searchProgressBar.visibility = View.VISIBLE
         }
 
         fun searchDebounce() {
+            handler.removeCallbacks(searchRunnable)
+            //binding.searchProgressBar.visibility = View.GONE
             handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
-            //handler.removeCallbacks(searchRunnable)
+
+            //viewModel.doRequest(editText.text.toString())
         }
         editText.addTextChangedListener(object : TextWatcher {
 
@@ -205,13 +217,13 @@ class SearchActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                searchDebounce()
+
 
                 when (editText.hasFocus() && s?.isEmpty() == true) {
                     true -> {
                         binding.historyTextView.visibility = View.VISIBLE
                         binding.clearHistoryButton.visibility = View.VISIBLE
-                        showHistory()
+                        //showHistory()
                     }
 
                     false -> {
@@ -227,6 +239,7 @@ class SearchActivity : AppCompatActivity() {
                 }
                 if (s?.isNotEmpty() == true) {
                     binding.cancelInputSearchEditText.visibility = View.VISIBLE
+                    searchDebounce()
 
                 } else {
                     binding.cancelInputSearchEditText.visibility = View.GONE
@@ -251,7 +264,7 @@ class SearchActivity : AppCompatActivity() {
         binding.cancelInputSearchEditText.setOnClickListener {
             editText.setText("")
             binding.searchProblems.visibility = View.GONE
-            showHistory()
+            //showHistory()
             inputMethod.hideSoftInputFromWindow(editText.windowToken, 0)
             if (binding.trackListRecyclerView.isEmpty()) {
                 Log.d("Тег", "Кнопка должна появиться")
@@ -262,6 +275,7 @@ class SearchActivity : AppCompatActivity() {
                 binding.historyTextView.visibility = View.GONE
                 binding.clearHistoryButton.visibility = View.GONE
             }
+            viewModel.history()
         }
         if (savedInstanceState != null) {
             savedTextSearch = savedInstanceState.getString(EDIT_TEXT, "")

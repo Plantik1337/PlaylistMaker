@@ -2,7 +2,9 @@ package com.example.playlistmaker.search.domain
 
 import android.content.SharedPreferences
 import com.example.playlistmaker.Track
+import com.example.playlistmaker.search.Statement
 import com.example.playlistmaker.search.data.DbConnection
+import com.example.playlistmaker.search.data.DbConnection.Response
 import com.example.playlistmaker.search.data.HistoryTransaction
 
 class InteractorImlp : Interactor {
@@ -17,16 +19,15 @@ class InteractorImlp : Interactor {
         history.clearHistory(sharedPreferences)
     }
 
-    override fun doRequest(expression: String): List<Track> {
-        val request = dbConnection.connection(expression)
-        return if (request.size > 0) {
-            //Log.i("OnRespoce", "Нашлись песни")
-            dbConnection.callMusicResponse()//нашлись песни
-        } else {
-            //Log.e("OnFailure", "Песни не нашлись")
-            emptyList<Track>()//ничего не нашлось, вернуть пустой список
+    override fun doRequest(expression: String): Statement {
+        val result =
+            dbConnection.callMusicResponse(expression)
+        return when (result) {
+            is Response.Error -> Statement.Error(result.errorMessage)
+            is Response.Success ->  Statement.Success(result.data.results)
         }
     }
+    //return dbConnection.callMusicResponse()//нашлись песни
 
     override fun write(sharedPreferences: SharedPreferences, track: Track) {
         history.write(sharedPreferences, track)
