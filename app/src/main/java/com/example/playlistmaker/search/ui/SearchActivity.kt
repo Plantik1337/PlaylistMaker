@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isEmpty
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.playlistmaker.R
 import com.example.playlistmaker.Track
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.player.ui.PlayerActivity
@@ -71,7 +72,7 @@ class SearchActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(
             this,
-            SearchViewModel.getViewModelFactory(sharedPreferences)
+            SearchViewModel.getViewModelFactory(sharedPreferences, this)
         )[SearchViewModel::class.java]
 
         //val historyTransaction: HistoryRepository = HistoryTransaction()
@@ -129,7 +130,7 @@ class SearchActivity : AppCompatActivity() {
 
                         if (clickDebounce()) {
                             viewModel.writeToHistory(track[position])
-                            binding.trackListRecyclerView.adapter?.notifyDataSetChanged()
+                            //binding.trackListRecyclerView.adapter?.notifyDataSetChanged()
                             val playerActivity =
                                 Intent(this@SearchActivity, PlayerActivity::class.java)
                             playerActivity.putExtra("TrackToPlayer", track[position].toString())
@@ -173,6 +174,7 @@ class SearchActivity : AppCompatActivity() {
 //                }
 
                 is Statement.HISTORY -> {
+                    binding.searchProgressBar.visibility = View.GONE
                     Log.i("Показать историю", screenState.trackList.toString())
                     binding.trackListRecyclerView.visibility = View.VISIBLE
                     if (screenState.trackList.isEmpty()) {
@@ -182,12 +184,30 @@ class SearchActivity : AppCompatActivity() {
                         recyclerViewInteractor(screenState.trackList)
                 }
 
-                is Statement.Error -> {}
+                is Statement.Error -> {
+                    binding.searchProgressBar.visibility = View.GONE
+                    when(screenState.errorMessage){
+                        "-1" ->{
+                            binding.searchProblems.visibility = View.VISIBLE
+                            binding.statusText.text = getString(R.string.internetProblem)
+                            binding.internetProblemText.visibility = View.VISIBLE
+                            binding.problemImage.setImageResource(R.drawable.internet_problems_vector)
+                            binding.refrashButton.visibility = View.VISIBLE
+                            binding.historyTextView.visibility = View.GONE
+                            binding.trackListRecyclerView.visibility = View.GONE
+                        }
+                    }
+                }
                 is Statement.Success -> {
+                    binding.searchProgressBar.visibility = View.GONE
                     Log.i("успешный запрос", screenState.trackList.toString())
                     binding.trackListRecyclerView.visibility = View.VISIBLE
                     binding.trackListRecyclerView.adapter =
                         recyclerViewInteractor(screenState.trackList)
+                }
+
+                Statement.Loading -> {
+                    binding.searchProgressBar.visibility = View.VISIBLE
                 }
             }
 
@@ -258,6 +278,10 @@ class SearchActivity : AppCompatActivity() {
 
         binding.refrashButton.setOnClickListener {
             // Повторный запрос при нажатии на кнопку "Refresh"
+            binding.searchProblems.visibility = View.GONE
+            binding.internetProblemText.visibility = View.GONE
+            binding.refrashButton.visibility = View.GONE
+            binding.historyTextView.visibility = View.GONE
             viewModel.doRequest(editText.text.toString())
         }
 

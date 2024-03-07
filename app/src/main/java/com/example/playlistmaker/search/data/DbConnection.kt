@@ -1,5 +1,9 @@
 package com.example.playlistmaker.search.data
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.util.Log
 import com.example.playlistmaker.MusicResponse
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -7,13 +11,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 class DbConnection {
 
     companion object {
-        const val TAG = "MUSIC_STATE"
+        const val TAG = "ERROR_STATE"
     }
-
-    //private val serverLiveData = MutableLiveData<ResponseFromServer>()
-    //fun getServerResponse(): LiveData<ResponseFromServer> = serverLiveData
-
-    //var musicResponse = emptyList<Track>()
 
     private val baseUrl = "https://itunes.apple.com"
     private val retrofit = Retrofit.Builder()
@@ -29,22 +28,58 @@ class DbConnection {
 //        data class Successful(val serverResponse: List<Track>) : ResponseFromServer()
 //    }
 
-    fun callMusicResponse(exception: String): Response<MusicResponse> {
-        val response = appleMusicServer.search(exception).execute()
+//    private fun isConnected(): Boolean {
+//        val connectivityManager =
+//            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+//        val capabilities =
+//            connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork) if (capabilities != null) {
+//            when {
+//                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> return true capabilities . hasTransport (NetworkCapabilities.TRANSPORT_WIFI)
+//                -> return true capabilities . hasTransport (NetworkCapabilities.TRANSPORT_ETHERNET)
+//                -> return true
+//            }
+//        } return false
+//    }
 
-        return if (response.isSuccessful) {
-            val musicResponse: MusicResponse? = response.body()
-            if (musicResponse != null) {
-                Response.Success(musicResponse)
+    private fun isNetworkAvalible(context: Context): Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val capabilities =
+            connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+        if (capabilities != null) {
+            when {
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> return true
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> return true
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> return true
+            }
+        }
+        return false
+    }
+
+    fun callMusicResponse(exception: String, context: Context): Response<MusicResponse> {
+        if (isNetworkAvalible(context)) {
+            val response = appleMusicServer.search(exception).execute()
+
+            return if (response.isSuccessful) {
+                val musicResponse: MusicResponse? = response.body()
+                if (musicResponse != null) {
+                    Response.Success(musicResponse)
+                } else {
+                    Log.e(TAG, "${response.code()}")
+                    Response.Error("Failed to get music response")
+                }
             } else {
-                Response.Error("Failed to get music response")
+                val errorMessage = response.errorBody()?.string() ?: "Unknown error"
+                //response.code()
+                //val errorMessage = response.code()
+                Log.e(TAG, "${response.code()}")
+                Response.Error(errorMessage)
             }
         } else {
-            val errorMessage = response.errorBody()?.string() ?: "Unknown error"
-            //response.code()
-            Response.Error(errorMessage)
+            return Response.Error("-1")
         }
     }
+
 
     sealed class Response<out T> {
         data class Success<out T>(val data: T) : Response<T>()

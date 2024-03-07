@@ -1,5 +1,6 @@
 package com.example.playlistmaker.search.domain
 
+import android.content.Context
 import android.content.SharedPreferences
 import com.example.playlistmaker.Track
 import com.example.playlistmaker.search.Statement
@@ -19,9 +20,9 @@ class InteractorImlp : Interactor {
         history.clearHistory(sharedPreferences)
     }
 
-    override fun doRequest(expression: String): Statement {
+    override fun doRequest(expression: String, context: Context): Statement {
         val result =
-            dbConnection.callMusicResponse(expression)
+            dbConnection.callMusicResponse(expression, context)
         return when (result) {
             is Response.Error -> Statement.Error(result.errorMessage)
             is Response.Success ->  Statement.Success(result.data.results)
