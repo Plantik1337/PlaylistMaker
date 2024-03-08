@@ -46,12 +46,6 @@ class SearchActivity : AppCompatActivity() {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 
-    //    private enum class Status {
-//        ERROR_INTERNET,
-//        ERROR_NOT_FOUND,
-//        SUCCESS,
-//        HISTORY
-//    }
     private fun clickDebounce(): Boolean {
         val current = isClickAllowed
         if (isClickAllowed) {
@@ -83,46 +77,6 @@ class SearchActivity : AppCompatActivity() {
             finish()
         }
 
-
-//        fun screenState(statement: Statement) = when (statement) {
-//            statement.ERROR_INTERNET -> {
-//                binding.searchProblems.visibility = View.VISIBLE
-//                binding.statusText.text = getString(R.string.internetProblem)
-//                binding.internetProblemText.visibility = View.VISIBLE
-//                binding.problemImage.setImageResource(R.drawable.internet_problems_vector)
-//                binding.refrashButton.visibility = View.VISIBLE
-//                binding.historyTextView.visibility = View.GONE
-//                binding.trackListRecyclerView.visibility = View.GONE
-//            }
-//
-//            statement.ERROR_NOT_FOUND -> {
-//                binding.searchProblems.visibility = View.VISIBLE
-//                binding.statusText.text = getString(R.string.searchNothing)
-//                binding.problemImage.setImageResource(R.drawable.search_problems_vector)
-//                binding.historyTextView.visibility = View.GONE
-//                binding.trackListRecyclerView.visibility = View.GONE
-//            }
-//
-//            statement.SUCCESS -> {
-//                binding.searchProblems.visibility = View.GONE
-//                binding.internetProblemText.visibility = View.GONE
-//                binding.refrashButton.visibility = View.GONE
-//                binding.historyTextView.visibility = View.GONE
-//                binding.trackListRecyclerView.visibility = View.VISIBLE
-//            }
-//
-//            statement.HISTORY -> {
-//                if(binding.trackListRecyclerView.isEmpty()){
-//
-//                }
-//                else {
-//                    binding.historyTextView.visibility = View.VISIBLE
-//                    binding.trackListRecyclerView.visibility = View.VISIBLE
-//                    binding.clearHistoryButton.visibility = View.VISIBLE
-//                }
-//            }
-//        }
-
         fun recyclerViewInteractor(track: List<Track>): Adapter {
             val adapter = Adapter(track,
                 object : RecyclerViewClickListener {
@@ -130,12 +84,10 @@ class SearchActivity : AppCompatActivity() {
 
                         if (clickDebounce()) {
                             viewModel.writeToHistory(track[position])
-                            //binding.trackListRecyclerView.adapter?.notifyDataSetChanged()
                             val playerActivity =
                                 Intent(this@SearchActivity, PlayerActivity::class.java)
                             playerActivity.putExtra("TrackToPlayer", track[position].toString())
                             Log.i("Track", track[position].toString())
-
                             startActivity(playerActivity)
                         }
                     }
@@ -149,45 +101,37 @@ class SearchActivity : AppCompatActivity() {
             binding.clearHistoryButton.visibility = View.GONE
             binding.historyTextView.visibility = View.GONE
             binding.trackListRecyclerView.adapter = recyclerViewInteractor(emptyTrackList)
-            //showHistory()
+            viewModel.history()
         }
 
         viewModel.getTracklistLiveData().observe(this) { screenState ->
             Log.i("Состояние", screenState.toString())
             when (screenState) {
-//                Statement.ERROR_INTERNET -> {
-////                    binding.searchProblems.visibility = View.VISIBLE
-////                    binding.statusText.text = getString(R.string.internetProblem)
-////                    binding.internetProblemText.visibility = View.VISIBLE
-////                    binding.problemImage.setImageResource(R.drawable.internet_problems_vector)
-////                    binding.refrashButton.visibility = View.VISIBLE
-////                    binding.historyTextView.visibility = View.GONE
-////                    binding.trackListRecyclerView.visibility = View.GONE
-//                }
-//
-//                Statement.ERROR_NOT_FOUND -> {
-////                    binding.searchProblems.visibility = View.VISIBLE
-////                    binding.statusText.text = getString(R.string.searchNothing)
-////                    binding.problemImage.setImageResource(R.drawable.search_problems_vector)
-////                    binding.historyTextView.visibility = View.GONE
-////                    binding.trackListRecyclerView.visibility = View.GONE
-//                }
 
                 is Statement.HISTORY -> {
                     binding.searchProgressBar.visibility = View.GONE
                     Log.i("Показать историю", screenState.trackList.toString())
                     binding.trackListRecyclerView.visibility = View.VISIBLE
-                    if (screenState.trackList.isEmpty()) {
-                        Log.e("Нету", "Треков нема")
-                    }
                     binding.trackListRecyclerView.adapter =
                         recyclerViewInteractor(screenState.trackList)
+                    if (screenState.trackList.isEmpty()) {
+                        //Log.e("Нету", "Треков нема")
+                        Log.d("Тег", "Кнопка не должна появиться")
+                        binding.historyTextView.visibility = View.GONE
+                        binding.clearHistoryButton.visibility = View.GONE
+
+                    } else {
+
+                        Log.d("Тег", "Кнопка должна появиться")
+                        binding.historyTextView.visibility = View.VISIBLE
+                        binding.clearHistoryButton.visibility = View.VISIBLE
+                    }
                 }
 
                 is Statement.Error -> {
                     binding.searchProgressBar.visibility = View.GONE
-                    when(screenState.errorMessage){
-                        "-1" ->{
+                    when (screenState.errorMessage) {
+                        "-1" -> {
                             binding.searchProblems.visibility = View.VISIBLE
                             binding.statusText.text = getString(R.string.internetProblem)
                             binding.internetProblemText.visibility = View.VISIBLE
@@ -196,8 +140,17 @@ class SearchActivity : AppCompatActivity() {
                             binding.historyTextView.visibility = View.GONE
                             binding.trackListRecyclerView.visibility = View.GONE
                         }
+
+                        "empty" -> {
+                            binding.searchProblems.visibility = View.VISIBLE
+                            binding.statusText.text = getString(R.string.searchNothing)
+                            binding.problemImage.setImageResource(R.drawable.search_problems_vector)
+                            binding.historyTextView.visibility = View.GONE
+                            binding.trackListRecyclerView.visibility = View.GONE
+                        }
                     }
                 }
+
                 is Statement.Success -> {
                     binding.searchProgressBar.visibility = View.GONE
                     Log.i("успешный запрос", screenState.trackList.toString())
@@ -251,10 +204,6 @@ class SearchActivity : AppCompatActivity() {
                         binding.clearHistoryButton.visibility = View.GONE
                         binding.trackListRecyclerView.adapter =
                             recyclerViewInteractor(emptyTrackList)
-
-//                        viewModel.doRequest(editText.text.toString())
-//                        binding.trackListRecyclerView.adapter =
-//                            recyclerViewInteractor(viewModel.getLiveData().value.orEmpty())
                     }
                 }
                 if (s?.isNotEmpty() == true) {
@@ -290,15 +239,6 @@ class SearchActivity : AppCompatActivity() {
             binding.searchProblems.visibility = View.GONE
             //showHistory()
             inputMethod.hideSoftInputFromWindow(editText.windowToken, 0)
-            if (binding.trackListRecyclerView.isEmpty()) {
-                Log.d("Тег", "Кнопка должна появиться")
-                binding.historyTextView.visibility = View.VISIBLE
-                binding.clearHistoryButton.visibility = View.VISIBLE
-            } else {
-                Log.d("Тег", "Кнопка не должна появиться")
-                binding.historyTextView.visibility = View.GONE
-                binding.clearHistoryButton.visibility = View.GONE
-            }
             viewModel.history()
         }
         if (savedInstanceState != null) {
@@ -306,9 +246,7 @@ class SearchActivity : AppCompatActivity() {
             editText.setText(savedTextSearch)
         }
         binding.trackListRecyclerView.layoutManager = LinearLayoutManager(this)
-
     }
-
 
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
         super.onSaveInstanceState(outState, outPersistentState)

@@ -18,6 +18,7 @@ class SearchViewModel(
     private val interactor: Interactor = InteractorImlp()
 
     private var trackMutableLiveData = MutableLiveData<Statement>()
+
     fun getTracklistLiveData(): LiveData<Statement> = trackMutableLiveData
 
     companion object {
@@ -51,8 +52,6 @@ class SearchViewModel(
                 }
             }
         }.start()
-
-        //trackMutableLiveData.postValue(interactor.doRequest(expression))
     }
 
     fun history() {
@@ -67,6 +66,4 @@ class SearchViewModel(
     fun writeToHistory(track: Track) {
         interactor.write(sharedPreferences, track)
     }
-
-
 }
