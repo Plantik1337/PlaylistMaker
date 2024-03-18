@@ -1,8 +1,8 @@
-package com.example.playlistmaker.domain
+package com.example.playlistmaker.search.data
 
 data class MusicResponse(
     val resultCount: String,
-    val results: ArrayList<Track>
+    val results: List<Track>
 )
 
 data class Track(

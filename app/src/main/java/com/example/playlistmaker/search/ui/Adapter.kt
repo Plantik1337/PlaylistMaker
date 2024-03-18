@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.search.ui
 
 import android.annotation.SuppressLint
 import android.graphics.Outline
@@ -10,14 +10,16 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.playlistmaker.domain.Track
+import com.example.playlistmaker.R
+import com.example.playlistmaker.search.data.Track
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class Adapter(
-    private var track: ArrayList<Track>,
+    private var track: List<Track>,
     private val clickListener: RecyclerViewClickListener
 ) : RecyclerView.Adapter<Adapter.TrackViewHolder>() {
+
     @SuppressLint("NotifyDataSetChanged")
     fun update() {
         notifyDataSetChanged()
