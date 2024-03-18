@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import com.example.playlistmaker.R
-import com.example.playlistmaker.settings.domain.SettingsRepository
 
 class SettingsRepositoryImpl(val context: Context) : SettingsRepository {
     override fun shareLink() {

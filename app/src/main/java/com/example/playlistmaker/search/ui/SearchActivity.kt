@@ -62,11 +62,14 @@ class SearchActivity : AppCompatActivity() {
 
         editText = binding.searchEditText
 
-        val sharedPreferences: SharedPreferences = getSharedPreferences(HISTORY_LIST, MODE_PRIVATE)
+        //val sharedPreferences: SharedPreferences = getSharedPreferences(HISTORY_LIST, MODE_PRIVATE)
 
         viewModel = ViewModelProvider(
             this,
-            SearchViewModel.getViewModelFactory(sharedPreferences, this)
+            SearchViewModel.getViewModelFactory(
+                getSharedPreferences(HISTORY_LIST, MODE_PRIVATE),
+                this
+            )
         )[SearchViewModel::class.java]
 
         //val historyTransaction: HistoryRepository = HistoryTransaction()
@@ -86,7 +89,28 @@ class SearchActivity : AppCompatActivity() {
                             viewModel.writeToHistory(track[position])
                             val playerActivity =
                                 Intent(this@SearchActivity, PlayerActivity::class.java)
-                            playerActivity.putExtra("TrackToPlayer", track[position].toString())
+                            playerActivity.putExtra("trackName", track[position].trackName)
+                            playerActivity.putExtra("artistName", track[position].artistName)
+                            playerActivity.putExtra(
+                                "trackTimeMillis",
+                                track[position].trackTimeMillis
+                            )
+                            playerActivity.putExtra("artworkUrl100", track[position].artworkUrl100)
+                            playerActivity.putExtra("previewUrl", track[position].previewUrl)
+                            playerActivity.putExtra("releaseDate", track[position].releaseDate)
+                            playerActivity.putExtra("country", track[position].country)
+                            playerActivity.putExtra(
+                                "primaryGenreName",
+                                track[position].primaryGenreName
+                            )
+                            playerActivity.putExtra(
+                                "collectionName",
+                                track[position].collectionName
+                            )
+                            playerActivity.putExtra(
+                                "collectionExplicitness",
+                                track[position].collectionExplicitness
+                            )
                             Log.i("Track", track[position].toString())
                             startActivity(playerActivity)
                         }
@@ -110,19 +134,14 @@ class SearchActivity : AppCompatActivity() {
 
                 is Statement.HISTORY -> {
                     binding.searchProgressBar.visibility = View.GONE
-                    Log.i("Показать историю", screenState.trackList.toString())
                     binding.trackListRecyclerView.visibility = View.VISIBLE
                     binding.trackListRecyclerView.adapter =
                         recyclerViewInteractor(screenState.trackList)
                     if (screenState.trackList.isEmpty()) {
-                        //Log.e("Нету", "Треков нема")
-                        Log.d("Тег", "Кнопка не должна появиться")
                         binding.historyTextView.visibility = View.GONE
                         binding.clearHistoryButton.visibility = View.GONE
 
                     } else {
-
-                        Log.d("Тег", "Кнопка должна появиться")
                         binding.historyTextView.visibility = View.VISIBLE
                         binding.clearHistoryButton.visibility = View.VISIBLE
                     }

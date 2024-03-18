@@ -11,34 +11,31 @@ import android.view.ViewOutlineProvider
 import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
+import com.example.playlistmaker.Track
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
 import com.example.playlistmaker.player.PlayerRepository
 import com.example.playlistmaker.player.PlayerRepositoryImpl
-import com.example.playlistmaker.search.data.HISTORY_LIST
-import com.example.playlistmaker.search.data.HistoryTransaction
-import com.example.playlistmaker.search.domain.HistoryRepository
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
 
     companion object {
-        private const val STATE_DEFAULT = 0
-        private const val STATE_PREPARED = 1
-        private const val STATE_PLAYING = 2
-        private const val STATE_PAUSED = 3
         private const val DELAY = 300L
     }
 
 
-    private var playerState = STATE_DEFAULT
+    //private var playerState = STATE_DEFAULT
     private lateinit var play: ImageView
     private var mediaPlayer = MediaPlayer()
-    private val player: PlayerRepository = PlayerRepositoryImpl(mediaPlayer)
-    private val history: HistoryRepository = HistoryTransaction()
+
+    //private val player: PlayerRepository = PlayerRepositoryImpl(mediaPlayer)
     private var mainThreadHandler = Handler(Looper.getMainLooper())
+
+    private lateinit var viewModel: PlayerViewModel
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,8 +43,24 @@ class PlayerActivity : AppCompatActivity() {
         val binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val currentContent =
-            history.returnFirst(getSharedPreferences(HISTORY_LIST, MODE_PRIVATE))
+
+        val currentContent = Track(
+            intent.getStringExtra("trackName").toString(),
+            intent.getStringExtra("artistName").toString(),
+            intent.getStringExtra("trackTimeMillis").toString(),
+            intent.getStringExtra("artworkUrl100").toString(),
+            intent.getStringExtra("previewUrl").toString(),
+            intent.getStringExtra("releaseDate").toString(),
+            intent.getStringExtra("country").toString(),
+            intent.getStringExtra("primaryGenreName").toString(),
+            intent.getStringExtra("collectionName").toString(),
+            intent.getStringExtra("collectionExplicitness").toString()
+        )
+
+        viewModel = ViewModelProvider(
+            this,
+            PlayerViewModel.getViewModelFactory(mediaPlayer, currentContent.previewUrl)
+        )[PlayerViewModel::class.java]
 
         val backButton = findViewById<ImageButton>(R.id.menu_button)
         backButton.setOnClickListener {
@@ -72,33 +85,42 @@ class PlayerActivity : AppCompatActivity() {
                 outline.setRoundRect(0, 0, view.width, view.height, cornerRadius.toFloat())
             }
         }
-        //// Prepare player
-        player.setDataSource(currentContent.previewUrl)
-        player.prepareAsync()
-        player.setOnPreparedListener {
-            play.isEnabled = true
-            playerState = STATE_PREPARED
-        }
-        player.setOnCompletionListener {
-            binding.trackTimeView.text = "0:00"
-            playerState = STATE_PREPARED
-        }
 
-        val runnable = object : Runnable {
-            override fun run() {
-                if (mediaPlayer.isPlaying) {
-                    binding.trackTimeView.text = SimpleDateFormat(
-                        "m:ss",
-                        Locale.getDefault()
-                    ).format(mediaPlayer.currentPosition)
-                    mainThreadHandler.postDelayed(this, DELAY)
+        viewModel.playerLiveData().observe(this) { screenState ->
+            when (screenState) {
+                PlayerState.StateDefault -> {
+                    play.isEnabled = false
+                }
+
+                PlayerState.StatePaused -> {
+                    binding.playPauseButton.setImageResource(R.drawable.baseline_play_circle_24)
+                }
+
+                PlayerState.StatePlaying -> {
+                    binding.playPauseButton.setImageResource((R.drawable.baseline_pause_circle_24))
+                }
+                PlayerState.StatePrepared -> {
+                    play.isEnabled = true
+                    binding.trackTimeView.text = "0:00"
                 }
             }
         }
 
         play.setOnClickListener {
-            playbackControl()
-            runnable.run()
+
+            viewModel.playbackControl()
+
+            object : Runnable {
+                override fun run() {
+                    if (mediaPlayer.isPlaying) {
+                        binding.trackTimeView.text = SimpleDateFormat(
+                            "m:ss",
+                            Locale.getDefault()
+                        ).format(mediaPlayer.currentPosition)
+                        mainThreadHandler.postDelayed(this, DELAY)
+                    }
+                }
+            }.run()
         }
 
         binding.playerSongDurationTextViewData.text = SimpleDateFormat(
@@ -113,7 +135,8 @@ class PlayerActivity : AppCompatActivity() {
             val maxSymbols = 30
 
             if (currentContent.collectionName.length > maxSymbols) {
-                binding.playerAlbumNameData.text = currentContent.collectionName.substring(0, maxSymbols) + "..."
+                binding.playerAlbumNameData.text =
+                    currentContent.collectionName.substring(0, maxSymbols) + "..."
             } else {
                 binding.playerAlbumNameData.text = currentContent.collectionName
             }
@@ -125,37 +148,7 @@ class PlayerActivity : AppCompatActivity() {
 
     }
 
-    private fun playbackControl() {
-        when (playerState) {
-            STATE_PLAYING -> {
-                pausePlayer()
-            }
-
-            STATE_PREPARED, STATE_PAUSED -> {
-                startPlayer()
-            }
-        }
-    }
-
-    private fun startPlayer() {
-        player.start()
-        play.setImageResource(R.drawable.baseline_pause_circle_24)
-        playerState = STATE_PLAYING
-    }
-
-    private fun pausePlayer() {
-        player.pause()
-        play.setImageResource(R.drawable.baseline_play_circle_24)
-        playerState = STATE_PAUSED
-    }
-
-    override fun onPause() {
-        super.onPause()
-        pausePlayer()
-    }
-
     override fun onDestroy() {
         super.onDestroy()
-        player.release()
     }
 }
