@@ -1,7 +1,6 @@
 package com.example.playlistmaker.search.ui
 
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -14,16 +13,13 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isEmpty
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
-import com.example.playlistmaker.Track
+import com.example.playlistmaker.search.data.Track
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.player.ui.PlayerActivity
 import com.example.playlistmaker.search.Statement
-import com.example.playlistmaker.search.domain.Adapter
-import com.example.playlistmaker.search.domain.RecyclerViewClickListener
 import com.example.playlistmaker.search.ui.viewmodel.SearchViewModel
 
 class SearchActivity : AppCompatActivity() {
@@ -37,11 +33,7 @@ class SearchActivity : AppCompatActivity() {
 
     companion object {
         const val EDIT_TEXT = "EDIT_TEXT"
-
-        // const val TAG = "MUSIC_STATE"
         const val HISTORY_LIST = "HISTORY_LIST"
-
-        //        private const val TRACK = "TRACK"
         private const val CLICK_DEBOUNCE_DELAY = 1000L
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
@@ -62,8 +54,6 @@ class SearchActivity : AppCompatActivity() {
 
         editText = binding.searchEditText
 
-        //val sharedPreferences: SharedPreferences = getSharedPreferences(HISTORY_LIST, MODE_PRIVATE)
-
         viewModel = ViewModelProvider(
             this,
             SearchViewModel.getViewModelFactory(
@@ -72,7 +62,6 @@ class SearchActivity : AppCompatActivity() {
             )
         )[SearchViewModel::class.java]
 
-        //val historyTransaction: HistoryRepository = HistoryTransaction()
         val inputMethod = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         val emptyTrackList = emptyList<Track>()
 
@@ -186,16 +175,13 @@ class SearchActivity : AppCompatActivity() {
         }
 
         val searchRunnable = Runnable {
-            viewModel.doRequest(editText.text.toString())
-            //binding.searchProgressBar.visibility = View.VISIBLE
+            viewModel.doRequest(editText.text.toString(), this)
         }
 
         fun searchDebounce() {
             handler.removeCallbacks(searchRunnable)
-            //binding.searchProgressBar.visibility = View.GONE
             handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
 
-            //viewModel.doRequest(editText.text.toString())
         }
         editText.addTextChangedListener(object : TextWatcher {
 
@@ -237,7 +223,7 @@ class SearchActivity : AppCompatActivity() {
         editText.setOnEditorActionListener { _, actionId, _ ->
             when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
-                    viewModel.doRequest(editText.text.toString())
+                    viewModel.doRequest(editText.text.toString(), this)
                 }
             }
             false
@@ -250,7 +236,7 @@ class SearchActivity : AppCompatActivity() {
             binding.internetProblemText.visibility = View.GONE
             binding.refrashButton.visibility = View.GONE
             binding.historyTextView.visibility = View.GONE
-            viewModel.doRequest(editText.text.toString())
+            viewModel.doRequest(editText.text.toString(), this)
         }
 
         binding.cancelInputSearchEditText.setOnClickListener {

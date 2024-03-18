@@ -5,8 +5,8 @@ import android.content.Intent
 import android.net.Uri
 import com.example.playlistmaker.R
 
-class SettingsRepositoryImpl(val context: Context) : SettingsRepository {
-    override fun shareLink() {
+class SettingsRepositoryImpl() : SettingsRepository {
+    override fun shareLink(context: Context) {
         val courseLinkUrl = context.getString(R.string.practicum)
         val sendIntent = Intent().apply {
             action = Intent.ACTION_SEND
@@ -21,7 +21,7 @@ class SettingsRepositoryImpl(val context: Context) : SettingsRepository {
         )
     }
 
-    override fun supportContact() {
+    override fun supportContact(context: Context) {
         val sendIntent = Intent(Intent.ACTION_SENDTO).apply {
             data = Uri.parse("mailto:") // тип данных для отправки
             putExtra(Intent.EXTRA_EMAIL, context.getString(R.string.MyEmail))// почта
@@ -43,7 +43,7 @@ class SettingsRepositoryImpl(val context: Context) : SettingsRepository {
         )
     }
 
-    override fun termOfUse() {
+    override fun termOfUse(context: Context) {
         val sendIntent = Intent(Intent.ACTION_VIEW)
         sendIntent.data =
             Uri.parse(context.getString(R.string.OfferLink)) // Ссылка на пользовательское соглашение

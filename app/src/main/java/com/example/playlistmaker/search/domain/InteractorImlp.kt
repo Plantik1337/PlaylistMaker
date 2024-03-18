@@ -2,7 +2,7 @@ package com.example.playlistmaker.search.domain
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.example.playlistmaker.Track
+import com.example.playlistmaker.search.data.Track
 import com.example.playlistmaker.search.Statement
 import com.example.playlistmaker.search.data.DbConnection
 import com.example.playlistmaker.search.data.DbConnection.Response
@@ -28,7 +28,6 @@ class InteractorImlp : Interactor {
             is Response.Success ->  Statement.Success(result.data.results)
         }
     }
-    //return dbConnection.callMusicResponse()//нашлись песни
 
     override fun write(sharedPreferences: SharedPreferences, track: Track) {
         history.write(sharedPreferences, track)

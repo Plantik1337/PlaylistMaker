@@ -1,9 +1,11 @@
 package com.example.playlistmaker.settings.domain
 
+import android.content.Context
+
 interface SettingsInteractor {
-    fun themeSwitch(value: Boolean)
-    fun shareLink()
-    fun supportContact()
-    fun termOfUse()
-    fun isDarkMode():Boolean
+    fun themeSwitch(value: Boolean, context: Context)
+    fun shareLink(context: Context)
+    fun supportContact(context: Context)
+    fun termOfUse(context: Context)
+    fun isDarkMode(context: Context):Boolean
 }

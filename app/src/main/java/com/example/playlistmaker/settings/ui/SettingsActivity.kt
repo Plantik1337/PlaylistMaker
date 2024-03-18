@@ -19,29 +19,29 @@ class SettingsActivity : AppCompatActivity() {
         viewModel =
             ViewModelProvider(
                 this,
-                SettingsViewModel.getViewModelFactory(this)
+                SettingsViewModel.getViewModelFactory()
             )[SettingsViewModel::class.java]
 
-        binding.themeSwitcher.isChecked = viewModel.isDarkMode()
+        binding.themeSwitcher.isChecked = viewModel.isDarkMode(this)
 
         binding.backToMainActivity.setOnClickListener {// Выход с экрана настроек
             finish()
         }
 
-        binding.themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
+        binding.themeSwitcher.setOnCheckedChangeListener { _, checked ->
             Log.i("switching theme", "${checked}")
-            viewModel.themeSwitch(checked)
+            viewModel.themeSwitch(checked, this)
         }
 
         binding.shareButton.setOnClickListener {//Поделиться
-            viewModel.share()
+            viewModel.share(this)
         }
         binding.contactUs.setOnClickListener {// Связь с техподдержкой
-            viewModel.supportContact()
+            viewModel.supportContact(this)
         }
 
         binding.termsOfUse.setOnClickListener {// Пользовательское соглашение
-            viewModel.termOfUse()
+            viewModel.termOfUse(this)
         }
     }
 }

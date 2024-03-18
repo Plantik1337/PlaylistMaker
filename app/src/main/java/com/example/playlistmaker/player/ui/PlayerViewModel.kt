@@ -14,7 +14,7 @@ import com.example.playlistmaker.player.ui.PlayerState.StatePlaying
 @Suppress("UNCHECKED_CAST")
 class PlayerViewModel(val mediaPlayer: MediaPlayer, val previewUrl: String) : ViewModel() {
 
-    private var playerStatusLiveData = MutableLiveData<PlayerState>()
+    private val playerStatusLiveData = MutableLiveData<PlayerState>()
     fun playerLiveData(): LiveData<PlayerState> = playerStatusLiveData
 
     private var isSongPlaying: Boolean = false

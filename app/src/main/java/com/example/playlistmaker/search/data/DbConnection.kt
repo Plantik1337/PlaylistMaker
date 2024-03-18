@@ -4,7 +4,6 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.util.Log
-import com.example.playlistmaker.MusicResponse
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 

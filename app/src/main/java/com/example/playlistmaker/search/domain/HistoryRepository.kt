@@ -1,7 +1,7 @@
 package com.example.playlistmaker.search.domain
 
 import android.content.SharedPreferences
-import com.example.playlistmaker.Track
+import com.example.playlistmaker.search.data.Track
 
 interface HistoryRepository {
     fun read(sharedPreferences: SharedPreferences): ArrayList<Track>

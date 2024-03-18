@@ -42,9 +42,9 @@ class App : Application() {
     fun isDarkMode(): Boolean {
         val sharedPreferences: SharedPreferences = getSharedPreferences(THEME_KEY, MODE_PRIVATE)
         return when (sharedPreferences.getString(THEME_KEY, MODE_PRIVATE.toString())) {
-            "MODE_NIGHT_NO" -> {false}
-            "MODE_NIGHT_YES" -> {true}
-            else -> {false}
+            "MODE_NIGHT_NO" -> false
+            "MODE_NIGHT_YES" -> true
+            else -> false
         }
     }
 

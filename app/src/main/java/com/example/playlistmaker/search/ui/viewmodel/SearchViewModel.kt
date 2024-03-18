@@ -6,18 +6,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.playlistmaker.Track
+import com.example.playlistmaker.search.data.Track
 import com.example.playlistmaker.search.Statement
 import com.example.playlistmaker.search.domain.Interactor
 import com.example.playlistmaker.search.domain.InteractorImlp
 
 class SearchViewModel(
-    private val sharedPreferences: SharedPreferences, private val context: Context
+    private val sharedPreferences: SharedPreferences
 ) : ViewModel() {
 
     private val interactor: Interactor = InteractorImlp()
 
-    private var trackMutableLiveData = MutableLiveData<Statement>()
+    private val trackMutableLiveData = MutableLiveData<Statement>()
 
     fun getTracklistLiveData(): LiveData<Statement> = trackMutableLiveData
 
@@ -27,7 +27,7 @@ class SearchViewModel(
             sharedPreferences: SharedPreferences, context: Context
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return SearchViewModel(sharedPreferences, context) as T
+                return SearchViewModel(sharedPreferences) as T
             }
         }
     }
@@ -37,8 +37,7 @@ class SearchViewModel(
     }
 
 
-    fun doRequest(expression: String) {
-        //val newList = Statement.Request(interactor.doRequest(expression))
+    fun doRequest(expression: String, context: Context) {
         trackMutableLiveData.postValue(Statement.Loading)
         Thread {
             val responseData = interactor.doRequest(expression, context)

@@ -14,10 +14,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
-import com.example.playlistmaker.Track
+import com.example.playlistmaker.search.data.Track
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
-import com.example.playlistmaker.player.PlayerRepository
-import com.example.playlistmaker.player.PlayerRepositoryImpl
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -26,13 +24,8 @@ class PlayerActivity : AppCompatActivity() {
     companion object {
         private const val DELAY = 300L
     }
-
-
-    //private var playerState = STATE_DEFAULT
     private lateinit var play: ImageView
     private var mediaPlayer = MediaPlayer()
-
-    //private val player: PlayerRepository = PlayerRepositoryImpl(mediaPlayer)
     private var mainThreadHandler = Handler(Looper.getMainLooper())
 
     private lateinit var viewModel: PlayerViewModel
