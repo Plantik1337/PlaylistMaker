@@ -3,7 +3,7 @@ package com.example.playlistmaker.main
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.playlistmaker.MediatekaActivity
+import com.example.playlistmaker.mediateka.MediatekaActivity
 import com.example.playlistmaker.R
 import com.example.playlistmaker.search.ui.SearchActivity
 import com.example.playlistmaker.settings.ui.SettingsActivity

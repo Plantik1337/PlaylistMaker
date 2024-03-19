@@ -8,19 +8,8 @@ import com.example.playlistmaker.settings.domain.Impl.SettingsInteractorImpl
 import com.example.playlistmaker.settings.domain.SettingsInteractor
 
 
-class SettingsViewModel() :
+class SettingsViewModel(private val settingsInteractor: SettingsInteractor) :
     ViewModel() {
-
-    private val settingsInteractor: SettingsInteractor = SettingsInteractorImpl()
-
-    companion object {
-        fun getViewModelFactory(): ViewModelProvider.Factory =
-            object : ViewModelProvider.Factory {
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return SettingsViewModel() as T
-                }
-            }
-    }
 
     fun share(context: Context) {
         settingsInteractor.shareLink(context)
@@ -37,7 +26,8 @@ class SettingsViewModel() :
     fun themeSwitch(value: Boolean, context: Context) {
         settingsInteractor.themeSwitch(value, context)
     }
-    fun isDarkMode(context: Context):Boolean{
+
+    fun isDarkMode(context: Context): Boolean {
         return settingsInteractor.isDarkMode(context)
     }
 

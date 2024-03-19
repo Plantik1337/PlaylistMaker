@@ -16,6 +16,8 @@ import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.search.data.Track
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -28,14 +30,15 @@ class PlayerActivity : AppCompatActivity() {
     private var mediaPlayer = MediaPlayer()
     private var mainThreadHandler = Handler(Looper.getMainLooper())
 
-    private lateinit var viewModel: PlayerViewModel
+    private val viewModel: PlayerViewModel by viewModel{
+        parametersOf(mediaPlayer, intent.getStringExtra("previewUrl").toString())
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
 
         val currentContent = Track(
             intent.getStringExtra("trackName").toString(),
@@ -50,13 +53,9 @@ class PlayerActivity : AppCompatActivity() {
             intent.getStringExtra("collectionExplicitness").toString()
         )
 
-        viewModel = ViewModelProvider(
-            this,
-            PlayerViewModel.getViewModelFactory(mediaPlayer, currentContent.previewUrl)
-        )[PlayerViewModel::class.java]
-
         val backButton = findViewById<ImageButton>(R.id.menu_button)
         backButton.setOnClickListener {
+            mediaPlayer.pause()
             finish()
         }
 

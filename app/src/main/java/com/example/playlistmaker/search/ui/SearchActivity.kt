@@ -1,6 +1,7 @@
 package com.example.playlistmaker.search.ui
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -13,14 +14,16 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.core.widget.addTextChangedListener
 import com.example.playlistmaker.R
 import com.example.playlistmaker.search.data.Track
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.player.ui.PlayerActivity
 import com.example.playlistmaker.search.Statement
 import com.example.playlistmaker.search.ui.viewmodel.SearchViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var editText: EditText
@@ -28,12 +31,13 @@ class SearchActivity : AppCompatActivity() {
     private var isClickAllowed = true
     private val handler = Handler(Looper.getMainLooper())
 
-    private lateinit var viewModel: SearchViewModel
+    private val viewModel: SearchViewModel by viewModel<SearchViewModel>()
 
 
     companion object {
         const val EDIT_TEXT = "EDIT_TEXT"
-        const val HISTORY_LIST = "HISTORY_LIST"
+
+        //const val HISTORY_LIST = "HISTORY_LIST"
         private const val CLICK_DEBOUNCE_DELAY = 1000L
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
@@ -54,13 +58,13 @@ class SearchActivity : AppCompatActivity() {
 
         editText = binding.searchEditText
 
-        viewModel = ViewModelProvider(
-            this,
-            SearchViewModel.getViewModelFactory(
-                getSharedPreferences(HISTORY_LIST, MODE_PRIVATE),
-                this
-            )
-        )[SearchViewModel::class.java]
+//        viewModel = ViewModelProvider(
+//            this,
+//            SearchViewModel.getViewModelFactory(
+//                getSharedPreferences(HISTORY_LIST, MODE_PRIVATE),
+//                this
+//            )
+//        )[SearchViewModel::class.java]
 
         val inputMethod = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         val emptyTrackList = emptyList<Track>()
@@ -117,6 +121,8 @@ class SearchActivity : AppCompatActivity() {
             viewModel.history()
         }
 
+
+
         viewModel.getTracklistLiveData().observe(this) { screenState ->
             Log.i("Состояние", screenState.toString())
             when (screenState) {
@@ -160,6 +166,7 @@ class SearchActivity : AppCompatActivity() {
                 }
 
                 is Statement.Success -> {
+                    //binding.statusText
                     binding.searchProgressBar.visibility = View.GONE
                     Log.i("успешный запрос", screenState.trackList.toString())
                     binding.trackListRecyclerView.visibility = View.VISIBLE
@@ -183,20 +190,9 @@ class SearchActivity : AppCompatActivity() {
             handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
 
         }
-        editText.addTextChangedListener(object : TextWatcher {
 
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                //Ничего не делает
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                //Ничего не делает
-
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
-
+        editText.addTextChangedListener(
+            onTextChanged = {s: CharSequence?, start: Int, before: Int, count: Int ->
                 when (editText.hasFocus() && s?.isEmpty() == true) {
                     true -> {
                         binding.historyTextView.visibility = View.VISIBLE
@@ -219,7 +215,7 @@ class SearchActivity : AppCompatActivity() {
                     binding.cancelInputSearchEditText.visibility = View.GONE
                 }
             }
-        })
+        )
         editText.setOnEditorActionListener { _, actionId, _ ->
             when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {

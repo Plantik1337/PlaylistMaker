@@ -1,26 +1,20 @@
-package com.example.playlistmaker.search.data
+package com.example.playlistmaker.search.data.network
 
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.util.Log
+import com.example.playlistmaker.search.data.MusicResponse
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class DbConnection {
+class NetworkClientImpl(private val appleServiceapit: AppleServiceapit): NetworkClient {
 
     companion object {
         const val TAG = "ERROR_STATE"
     }
 
-    private val baseUrl = "https://itunes.apple.com"
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(baseUrl)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-    private val appleMusicServer = retrofit.create(AppleMusicServer::class.java)
-
-    private fun isNetworkAvalible(context: Context): Boolean {
+     override fun isNetworkAvalible(context: Context): Boolean {
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val capabilities =
@@ -35,9 +29,9 @@ class DbConnection {
         return false
     }
 
-    fun callMusicResponse(exception: String, context: Context): Response<MusicResponse> {
+    override fun callMusicResponse(exception: String, context: Context): Response<MusicResponse> {
         if (isNetworkAvalible(context)) {
-            val response = appleMusicServer.search(exception).execute()
+            val response = appleServiceapit.search(exception).execute()
 
             return if (response.isSuccessful) {
                 val musicResponse: MusicResponse? = response.body()
@@ -64,8 +58,5 @@ class DbConnection {
     }
 
 
-    sealed class Response<out T> {
-        data class Success<out T>(val data: T) : Response<T>()
-        data class Error(val errorMessage: String) : Response<Nothing>()
-    }
+
 }

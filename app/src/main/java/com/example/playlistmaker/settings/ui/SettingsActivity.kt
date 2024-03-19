@@ -3,24 +3,17 @@ package com.example.playlistmaker.settings.ui
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
-import com.example.playlistmaker.App
 import com.example.playlistmaker.databinding.SettingsScreenBinding
 import com.example.playlistmaker.settings.ui.viewmodel.SettingsViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsActivity : AppCompatActivity() {
-    private lateinit var viewModel: SettingsViewModel
+
+    private val viewModel: SettingsViewModel by viewModel<SettingsViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = SettingsScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-
-        viewModel =
-            ViewModelProvider(
-                this,
-                SettingsViewModel.getViewModelFactory()
-            )[SettingsViewModel::class.java]
 
         binding.themeSwitcher.isChecked = viewModel.isDarkMode(this)
 

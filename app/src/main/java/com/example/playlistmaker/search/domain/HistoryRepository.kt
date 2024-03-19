@@ -4,8 +4,8 @@ import android.content.SharedPreferences
 import com.example.playlistmaker.search.data.Track
 
 interface HistoryRepository {
-    fun read(sharedPreferences: SharedPreferences): ArrayList<Track>
-    fun write(sharedPreferences: SharedPreferences, track: Track)
-    fun clearHistory(sharedPreferences: SharedPreferences)
-    fun returnFirst(sharedPreferences: SharedPreferences): Track
+    fun read(): ArrayList<Track>
+    fun write(track: Track)
+    fun clearHistory()
+    fun returnFirst(): Track
 }
