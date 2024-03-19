@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import com.example.playlistmaker.di.dataModuel
 import com.example.playlistmaker.di.repositoryModule
 import com.example.playlistmaker.di.viewModelModule
+import com.example.playlistmaker.settings.ui.SettingsActivity
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -21,7 +22,7 @@ class App : Application() {
 
         startKoin {
             androidContext(this@App)
-            androidLogger(Level.NONE)//Для дебага
+            androidLogger(Level.DEBUG)//Для дебага
             modules(listOf(dataModuel, repositoryModule, viewModelModule))
         }
 

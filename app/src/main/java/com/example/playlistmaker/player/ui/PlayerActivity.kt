@@ -21,16 +21,17 @@ import org.koin.core.parameter.parametersOf
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class PlayerActivity : AppCompatActivity() {
+class PlayerActivity(private val mediaPlayer: MediaPlayer) : AppCompatActivity() {
 
     companion object {
         private const val DELAY = 300L
     }
+
     private lateinit var play: ImageView
-    private var mediaPlayer = MediaPlayer()
+
     private var mainThreadHandler = Handler(Looper.getMainLooper())
 
-    private val viewModel: PlayerViewModel by viewModel{
+    private val viewModel: PlayerViewModel by viewModel {
         parametersOf(mediaPlayer, intent.getStringExtra("previewUrl").toString())
     }
 
@@ -91,6 +92,7 @@ class PlayerActivity : AppCompatActivity() {
                 PlayerState.StatePlaying -> {
                     binding.playPauseButton.setImageResource((R.drawable.baseline_pause_circle_24))
                 }
+
                 PlayerState.StatePrepared -> {
                     play.isEnabled = true
                     binding.trackTimeView.text = "0:00"

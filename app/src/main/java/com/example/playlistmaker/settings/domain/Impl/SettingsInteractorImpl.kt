@@ -1,30 +1,35 @@
 package com.example.playlistmaker.settings.domain.Impl
 
 import android.content.Context
+import android.content.Intent
+import androidx.lifecycle.MutableLiveData
 import com.example.playlistmaker.App
 import com.example.playlistmaker.settings.domain.SettingsInteractor
 import com.example.playlistmaker.settings.data.SettingsRepository
 import com.example.playlistmaker.settings.data.SettingsRepositoryImpl
 
-class SettingsInteractorImpl: SettingsInteractor {
+class SettingsInteractorImpl(
+    private val context: Context,
+    private val repository: SettingsRepository
+) : SettingsInteractor {
 
-    private val repository: SettingsRepository = SettingsRepositoryImpl()
-    override fun shareLink(context: Context) {
-        repository.shareLink(context)
+    override fun shareLink() {
+        repository.shareLink()
     }
 
-    override fun supportContact(context: Context) {
-        repository.supportContact(context)
+    override fun supportContact() {
+        repository.supportContact()
     }
 
-    override fun termOfUse(context: Context) {
-        repository.termOfUse(context)
+    override fun termOfUse() {
+        repository.termOfUse()
     }
-    override fun themeSwitch(value: Boolean, context: Context){
+
+    override fun themeSwitch(value: Boolean) {
         (context.applicationContext as App).switchTheme(value)
     }
 
-    override fun isDarkMode(context: Context): Boolean {
+    override fun isDarkMode(): Boolean {
         return (context.applicationContext as App).isDarkMode()
     }
 }

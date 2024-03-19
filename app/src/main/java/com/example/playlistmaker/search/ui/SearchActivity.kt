@@ -20,6 +20,7 @@ import com.example.playlistmaker.player.ui.PlayerActivity
 import com.example.playlistmaker.search.Statement
 import com.example.playlistmaker.search.ui.viewmodel.SearchViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var editText: EditText
@@ -28,7 +29,6 @@ class SearchActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
 
     private val viewModel: SearchViewModel by viewModel<SearchViewModel>()
-
 
     companion object {
         const val EDIT_TEXT = "EDIT_TEXT"

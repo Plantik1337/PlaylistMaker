@@ -1,6 +1,9 @@
 package com.example.playlistmaker.settings.ui.viewmodel
 
 import android.content.Context
+import android.content.Intent
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.App
@@ -11,24 +14,27 @@ import com.example.playlistmaker.settings.domain.SettingsInteractor
 class SettingsViewModel(private val settingsInteractor: SettingsInteractor) :
     ViewModel() {
 
-    fun share(context: Context) {
-        settingsInteractor.shareLink(context)
+//    val intentLiveData = MutableLiveData<Intent>()
+//    fun getLiveData():LiveData<Intent> = intentLiveData
+
+    fun share() {
+        settingsInteractor.shareLink()
     }
 
-    fun supportContact(context: Context) {
-        settingsInteractor.supportContact(context)
+    fun supportContact() {
+        settingsInteractor.supportContact()
     }
 
-    fun termOfUse(context: Context) {
-        settingsInteractor.termOfUse(context)
+    fun termOfUse() {
+        settingsInteractor.termOfUse()
     }
 
-    fun themeSwitch(value: Boolean, context: Context) {
-        settingsInteractor.themeSwitch(value, context)
+    fun themeSwitch(value: Boolean) {
+        settingsInteractor.themeSwitch(value)
     }
 
-    fun isDarkMode(context: Context): Boolean {
-        return settingsInteractor.isDarkMode(context)
+    fun isDarkMode(): Boolean {
+        return settingsInteractor.isDarkMode()
     }
 
     override fun onCleared() {

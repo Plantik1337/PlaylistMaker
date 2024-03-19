@@ -17,7 +17,7 @@ import org.koin.dsl.module
 
 val viewModelModule = module {
     viewModel { (mediaPlayer: MediaPlayer, perviewUrl: String) ->
-        PlayerViewModel(mediaPlayer, perviewUrl, player = PlayerRepositoryImpl(mediaPlayer) )
+        PlayerViewModel(mediaPlayer, perviewUrl, player = PlayerRepositoryImpl(mediaPlayer))
     }
     viewModel {
         SettingsViewModel(get())

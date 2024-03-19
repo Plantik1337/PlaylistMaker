@@ -17,7 +17,7 @@ val dataModuel = module {
             .create(AppleServiceapit::class.java)
     }
 
-    factory {
+    single {
         Gson() }
 
     single<NetworkClient> {
