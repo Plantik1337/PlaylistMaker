@@ -17,11 +17,6 @@ val dataModuel = module {
             .create(AppleServiceapit::class.java)
     }
 
-//    single {
-//        androidContext()
-//            .getSharedPreferences("HISTORY_LIST", Context.MODE_PRIVATE)
-//    }
-
     factory {
         Gson() }
 

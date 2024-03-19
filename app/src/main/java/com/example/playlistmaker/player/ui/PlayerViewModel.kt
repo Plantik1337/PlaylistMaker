@@ -6,15 +6,19 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.player.PlayerRepository
 import com.example.playlistmaker.player.PlayerRepositoryImpl
+import org.koin.core.qualifier.named
+import org.koin.java.KoinJavaComponent.inject
 
-class PlayerViewModel(private val mediaPlayer: MediaPlayer, private val previewUrl: String) : ViewModel() {
+class PlayerViewModel(private val mediaPlayer: MediaPlayer, private val previewUrl: String, private val player: PlayerRepository) : ViewModel() {
 
     private val playerStatusLiveData = MutableLiveData<PlayerState>()
     fun playerLiveData(): LiveData<PlayerState> = playerStatusLiveData
 
     private var isSongPlaying: Boolean = false
 
-    private val player: PlayerRepository = PlayerRepositoryImpl(mediaPlayer)
+    //val player: PlayerRepository by inject<PlayerRepositoryImpl>()
+
+    //private val player: PlayerRepository = PlayerRepositoryImpl(mediaPlayer)
 
 
     init {

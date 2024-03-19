@@ -13,12 +13,14 @@ import com.example.playlistmaker.settings.domain.Impl.SettingsInteractorImpl
 import com.example.playlistmaker.settings.domain.SettingsInteractor
 import com.google.gson.Gson
 import org.koin.android.ext.koin.androidContext
+import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module
 
 val repositoryModule = module {
 
-    factory<PlayerRepository> { PlayerRepositoryImpl(get()) }
-    factory { MediaPlayer() }
+    factory<PlayerRepository> {(mediaPlayer: MediaPlayer) ->
+        PlayerRepositoryImpl(mediaPlayer) }
+    //factory { MediaPlayer() }
 
     factory<SettingsInteractor> { SettingsInteractorImpl() }
 

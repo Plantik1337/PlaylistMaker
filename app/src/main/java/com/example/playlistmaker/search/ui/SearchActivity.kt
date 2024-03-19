@@ -1,13 +1,10 @@
 package com.example.playlistmaker.search.ui
 
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.PersistableBundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -23,7 +20,6 @@ import com.example.playlistmaker.player.ui.PlayerActivity
 import com.example.playlistmaker.search.Statement
 import com.example.playlistmaker.search.ui.viewmodel.SearchViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var editText: EditText
@@ -57,14 +53,6 @@ class SearchActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         editText = binding.searchEditText
-
-//        viewModel = ViewModelProvider(
-//            this,
-//            SearchViewModel.getViewModelFactory(
-//                getSharedPreferences(HISTORY_LIST, MODE_PRIVATE),
-//                this
-//            )
-//        )[SearchViewModel::class.java]
 
         val inputMethod = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         val emptyTrackList = emptyList<Track>()
@@ -192,7 +180,8 @@ class SearchActivity : AppCompatActivity() {
         }
 
         editText.addTextChangedListener(
-            onTextChanged = {s: CharSequence?, start: Int, before: Int, count: Int ->
+            onTextChanged = { s: CharSequence?, _: Int, _: Int, _: Int ->
+
                 when (editText.hasFocus() && s?.isEmpty() == true) {
                     true -> {
                         binding.historyTextView.visibility = View.VISIBLE
@@ -238,7 +227,6 @@ class SearchActivity : AppCompatActivity() {
         binding.cancelInputSearchEditText.setOnClickListener {
             editText.setText("")
             binding.searchProblems.visibility = View.GONE
-            //showHistory()
             inputMethod.hideSoftInputFromWindow(editText.windowToken, 0)
             viewModel.history()
         }

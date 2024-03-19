@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.media.MediaPlayer
 import android.util.Log
+import com.example.playlistmaker.player.PlayerRepository
+import com.example.playlistmaker.player.PlayerRepositoryImpl
 import com.example.playlistmaker.player.ui.PlayerViewModel
 import com.example.playlistmaker.search.domain.Interactor
 import com.example.playlistmaker.search.domain.InteractorImlp
@@ -15,7 +17,7 @@ import org.koin.dsl.module
 
 val viewModelModule = module {
     viewModel { (mediaPlayer: MediaPlayer, perviewUrl: String) ->
-        PlayerViewModel(mediaPlayer, perviewUrl)
+        PlayerViewModel(mediaPlayer, perviewUrl, player = PlayerRepositoryImpl(mediaPlayer) )
     }
     viewModel {
         SettingsViewModel(get())
