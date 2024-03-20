@@ -7,7 +7,7 @@ import com.example.playlistmaker.search.Statement
 
 interface Interactor {
     fun read(): List<Track>
-    fun doRequest(expression: String, context: Context): Statement
+    fun doRequest(expression: String): Statement
     fun clearHistory()
     fun write(track: Track)
 }

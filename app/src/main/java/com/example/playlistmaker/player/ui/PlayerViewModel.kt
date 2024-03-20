@@ -1,6 +1,9 @@
 package com.example.playlistmaker.player.ui
 
 import android.media.MediaPlayer
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,18 +11,23 @@ import com.example.playlistmaker.player.PlayerRepository
 import com.example.playlistmaker.player.PlayerRepositoryImpl
 import org.koin.core.qualifier.named
 import org.koin.java.KoinJavaComponent.inject
+import kotlin.time.Duration.Companion.milliseconds
 
-class PlayerViewModel(private val mediaPlayer: MediaPlayer, private val previewUrl: String, private val player: PlayerRepository) : ViewModel() {
+class PlayerViewModel(previewUrl: String, private val player: PlayerRepository) : ViewModel() {
 
-    private val playerStatusLiveData = MutableLiveData<PlayerState>()
-    fun playerLiveData(): LiveData<PlayerState> = playerStatusLiveData
-
+    companion object {
+        private const val DELAY = 300L
+    }
     private var isSongPlaying: Boolean = false
 
-    //val player: PlayerRepository by inject<PlayerRepositoryImpl>()
+    private val playerStatusLiveData = MutableLiveData<PlayerState>()
+    private val currentTimeMutableLiveData = MutableLiveData<Int>()
+    fun playerLiveData(): LiveData<PlayerState> = playerStatusLiveData
+    fun currentTimeLiveData(): LiveData<Int> = currentTimeMutableLiveData
 
-    //private val player: PlayerRepository = PlayerRepositoryImpl(mediaPlayer)
+    private var mainThreadHandler = Handler(Looper.getMainLooper())
 
+    private var currentPositionUpdateRunnable: Runnable
 
     init {
         playerStatusLiveData.postValue(PlayerState.StateDefault)
@@ -28,9 +36,21 @@ class PlayerViewModel(private val mediaPlayer: MediaPlayer, private val previewU
         player.prepareAsync()
         player.setOnPreparedListener {
             playerStatusLiveData.postValue(PlayerState.StatePrepared)
+            isSongPlaying = false
         }
         player.setOnCompletionListener {
             playerStatusLiveData.postValue(PlayerState.StatePrepared)
+            isSongPlaying = false
+        }
+
+        currentPositionUpdateRunnable = object : Runnable {
+            override fun run() {
+                if (isSongPlaying) {
+                    currentTimeMutableLiveData.postValue(player.getCurrentPosition())
+                    mainThreadHandler.postDelayed(this, DELAY)
+                    Log.i("Time", player.getCurrentPosition().toString())
+                }
+            }
         }
     }
 
@@ -44,15 +64,22 @@ class PlayerViewModel(private val mediaPlayer: MediaPlayer, private val previewU
 
             false -> {
                 isSongPlaying = true
+                mainThreadHandler.post(currentPositionUpdateRunnable)
                 player.start()
                 playerStatusLiveData.postValue(PlayerState.StatePlaying)
             }
         }
     }
 
+    fun stopPlayer() {
+        isSongPlaying = false
+        player.pause()
+    }
+
     override fun onCleared() {
-        super.onCleared()
+        mainThreadHandler.removeCallbacks(currentPositionUpdateRunnable)
         player.release()
+        super.onCleared()
     }
 
 

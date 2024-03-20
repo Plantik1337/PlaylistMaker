@@ -14,7 +14,7 @@ class SettingsActivity : AppCompatActivity() {
 
     private val viewModel: SettingsViewModel by viewModel<SettingsViewModel>()
 
-    private val context: Context by inject { parametersOf(this) }
+        //private val context: Context by inject { parametersOf(this) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = SettingsScreenBinding.inflate(layoutInflater)

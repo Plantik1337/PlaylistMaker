@@ -1,5 +1,6 @@
 package com.example.playlistmaker.di
 
+import android.media.MediaPlayer
 import com.example.playlistmaker.search.data.network.AppleServiceapit
 import com.example.playlistmaker.search.data.network.NetworkClientImpl
 import com.example.playlistmaker.search.data.network.NetworkClient
@@ -21,5 +22,7 @@ val dataModuel = module {
         Gson() }
 
     single<NetworkClient> {
-        NetworkClientImpl(appleServiceapit = get()) }
+        NetworkClientImpl(appleServiceapit = get(), context = get()) }
+
+    factory { MediaPlayer() }
 }

@@ -19,9 +19,9 @@ class InteractorImlp(
         history.clearHistory()
     }
 
-    override fun doRequest(expression: String, context: Context): Statement {
+    override fun doRequest(expression: String): Statement {
         val result =
-            networkClient.callMusicResponse(expression, context)
+            networkClient.callMusicResponse(expression)
         return when (result) {
             is Response.Error -> Statement.Error(result.errorMessage)
             is Response.Success -> Statement.Success(result.data.results)

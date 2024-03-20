@@ -5,16 +5,14 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.util.Log
 import com.example.playlistmaker.search.data.MusicResponse
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
-class NetworkClientImpl(private val appleServiceapit: AppleServiceapit): NetworkClient {
+class NetworkClientImpl(private val appleServiceapit: AppleServiceapit, private val context: Context): NetworkClient {
 
     companion object {
         const val TAG = "ERROR_STATE"
     }
 
-     override fun isNetworkAvalible(context: Context): Boolean {
+     override fun isNetworkAvalible(): Boolean {
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val capabilities =
@@ -29,8 +27,8 @@ class NetworkClientImpl(private val appleServiceapit: AppleServiceapit): Network
         return false
     }
 
-    override fun callMusicResponse(exception: String, context: Context): Response<MusicResponse> {
-        if (isNetworkAvalible(context)) {
+    override fun callMusicResponse(exception: String): Response<MusicResponse> {
+        if (isNetworkAvalible()) {
             val response = appleServiceapit.search(exception).execute()
 
             return if (response.isSuccessful) {

@@ -23,4 +23,5 @@
     <string name="duration">Длительность</string>
     <string name="album">Альбом</string>
     <string name="year">Год</string>
+    <string name="startCountingPlayer" translatable="false">0:00</string>
 </resources>

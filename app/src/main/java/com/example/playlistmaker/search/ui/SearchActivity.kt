@@ -20,7 +20,6 @@ import com.example.playlistmaker.player.ui.PlayerActivity
 import com.example.playlistmaker.search.Statement
 import com.example.playlistmaker.search.ui.viewmodel.SearchViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var editText: EditText
@@ -32,8 +31,6 @@ class SearchActivity : AppCompatActivity() {
 
     companion object {
         const val EDIT_TEXT = "EDIT_TEXT"
-
-        //const val HISTORY_LIST = "HISTORY_LIST"
         private const val CLICK_DEBOUNCE_DELAY = 1000L
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
@@ -170,7 +167,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         val searchRunnable = Runnable {
-            viewModel.doRequest(editText.text.toString(), this)
+            viewModel.doRequest(editText.text.toString())
         }
 
         fun searchDebounce() {
@@ -208,7 +205,7 @@ class SearchActivity : AppCompatActivity() {
         editText.setOnEditorActionListener { _, actionId, _ ->
             when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
-                    viewModel.doRequest(editText.text.toString(), this)
+                    viewModel.doRequest(editText.text.toString())
                 }
             }
             false
@@ -221,7 +218,7 @@ class SearchActivity : AppCompatActivity() {
             binding.internetProblemText.visibility = View.GONE
             binding.refrashButton.visibility = View.GONE
             binding.historyTextView.visibility = View.GONE
-            viewModel.doRequest(editText.text.toString(), this)
+            viewModel.doRequest(editText.text.toString())
         }
 
         binding.cancelInputSearchEditText.setOnClickListener {

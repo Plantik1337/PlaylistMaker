@@ -16,23 +16,18 @@ import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.search.data.Track
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class PlayerActivity(private val mediaPlayer: MediaPlayer) : AppCompatActivity() {
-
-    companion object {
-        private const val DELAY = 300L
-    }
+class PlayerActivity : AppCompatActivity() {
 
     private lateinit var play: ImageView
 
-    private var mainThreadHandler = Handler(Looper.getMainLooper())
-
     private val viewModel: PlayerViewModel by viewModel {
-        parametersOf(mediaPlayer, intent.getStringExtra("previewUrl").toString())
+        parametersOf(intent.getStringExtra("previewUrl").toString())
     }
 
 
@@ -56,7 +51,7 @@ class PlayerActivity(private val mediaPlayer: MediaPlayer) : AppCompatActivity()
 
         val backButton = findViewById<ImageButton>(R.id.menu_button)
         backButton.setOnClickListener {
-            mediaPlayer.pause()
+            viewModel.stopPlayer()
             finish()
         }
 
@@ -95,26 +90,22 @@ class PlayerActivity(private val mediaPlayer: MediaPlayer) : AppCompatActivity()
 
                 PlayerState.StatePrepared -> {
                     play.isEnabled = true
-                    binding.trackTimeView.text = "0:00"
+                    Log.i("Time is...", binding.trackTimeView.toString())
+                    binding.playPauseButton.setImageResource(R.drawable.baseline_play_circle_24)
+                    binding.trackTimeView.text = getString(R.string.startCountingPlayer)
                 }
             }
         }
 
+        viewModel.currentTimeLiveData().observe(this) { time ->
+            binding.trackTimeView.text = SimpleDateFormat(
+                "m:ss",
+                Locale.getDefault()
+            ).format(time)
+        }
+
         play.setOnClickListener {
-
             viewModel.playbackControl()
-
-            object : Runnable {
-                override fun run() {
-                    if (mediaPlayer.isPlaying) {
-                        binding.trackTimeView.text = SimpleDateFormat(
-                            "m:ss",
-                            Locale.getDefault()
-                        ).format(mediaPlayer.currentPosition)
-                        mainThreadHandler.postDelayed(this, DELAY)
-                    }
-                }
-            }.run()
         }
 
         binding.playerSongDurationTextViewData.text = SimpleDateFormat(
