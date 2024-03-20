@@ -3,17 +3,18 @@ package com.example.playlistmaker.search.data
 import android.content.SharedPreferences
 import com.example.playlistmaker.search.domain.HistoryRepository
 import com.google.gson.Gson
-
 import com.google.gson.reflect.TypeToken
-import org.koin.java.KoinJavaComponent.inject
 
 const val HISTORY_LIST = "HISTORY_LIST"
 
 
-class HistoryTransaction(private val sharedPreferences: SharedPreferences, private val gson: Gson) : HistoryRepository {
+class HistoryTransaction(
+    private val sharedPreferences: SharedPreferences,
+    private val gson: Gson
+) : HistoryRepository {
 
     private val emptyArrayList = ArrayList<Track>()
-    //val gson = Gson()
+
     override fun read(): ArrayList<Track> {
 
         val json = sharedPreferences.getString(HISTORY_LIST, null)
@@ -27,7 +28,7 @@ class HistoryTransaction(private val sharedPreferences: SharedPreferences, priva
         }
     }
 
-    override fun write( track: Track) {
+    override fun write(track: Track) {
         val first = 0
         val maxListSize = 11
         var myJson = sharedPreferences.getString(HISTORY_LIST, null)

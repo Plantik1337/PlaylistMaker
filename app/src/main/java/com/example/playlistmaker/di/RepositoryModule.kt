@@ -4,7 +4,6 @@ import android.content.Context
 import android.media.MediaPlayer
 import com.example.playlistmaker.player.PlayerRepository
 import com.example.playlistmaker.player.PlayerRepositoryImpl
-import com.example.playlistmaker.player.ui.PlayerActivity
 import com.example.playlistmaker.search.data.HistoryTransaction
 import com.example.playlistmaker.search.domain.HistoryRepository
 import com.example.playlistmaker.search.domain.Interactor

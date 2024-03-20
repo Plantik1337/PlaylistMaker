@@ -1,6 +1,5 @@
 package com.example.playlistmaker.search.data.network
 
-import android.content.Context
 import com.example.playlistmaker.search.data.MusicResponse
 
 interface NetworkClient {

@@ -1,7 +1,5 @@
 package com.example.playlistmaker.search.domain
 
-import android.content.Context
-import android.content.SharedPreferences
 import com.example.playlistmaker.search.data.Track
 import com.example.playlistmaker.search.Statement
 

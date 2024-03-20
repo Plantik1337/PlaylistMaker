@@ -1,12 +1,9 @@
 package com.example.playlistmaker.settings.domain.Impl
 
 import android.content.Context
-import android.content.Intent
-import androidx.lifecycle.MutableLiveData
 import com.example.playlistmaker.App
 import com.example.playlistmaker.settings.domain.SettingsInteractor
 import com.example.playlistmaker.settings.data.SettingsRepository
-import com.example.playlistmaker.settings.data.SettingsRepositoryImpl
 
 class SettingsInteractorImpl(
     private val context: Context,

@@ -1,22 +1,17 @@
 package com.example.playlistmaker.player.ui
 
 import android.graphics.Outline
-import android.media.MediaPlayer
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.view.ViewOutlineProvider
 import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.search.data.Track
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import java.text.SimpleDateFormat
@@ -63,8 +58,7 @@ class PlayerActivity : AppCompatActivity() {
 
         Glide.with(binding.albumPlayerImageView)
             .load(currentContent.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"))
-            .placeholder(R.drawable.placeholder)
-            .error(R.drawable.placeholder)
+            .placeholder(R.drawable.placeholder).error(R.drawable.placeholder)
             .into(binding.albumPlayerImageView)
         binding.albumPlayerImageView.clipToOutline = true
         binding.albumPlayerImageView.outlineProvider = object : ViewOutlineProvider() {
@@ -99,8 +93,7 @@ class PlayerActivity : AppCompatActivity() {
 
         viewModel.currentTimeLiveData().observe(this) { time ->
             binding.trackTimeView.text = SimpleDateFormat(
-                "m:ss",
-                Locale.getDefault()
+                "m:ss", Locale.getDefault()
             ).format(time)
         }
 
@@ -109,8 +102,7 @@ class PlayerActivity : AppCompatActivity() {
         }
 
         binding.playerSongDurationTextViewData.text = SimpleDateFormat(
-            "mm:ss",
-            Locale.getDefault()
+            "mm:ss", Locale.getDefault()
         ).format(currentContent.trackTimeMillis.toLong())
 
         if (currentContent.collectionName.contains("single")) {

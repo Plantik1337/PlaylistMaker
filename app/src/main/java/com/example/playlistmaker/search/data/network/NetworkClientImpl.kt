@@ -6,13 +6,16 @@ import android.net.NetworkCapabilities
 import android.util.Log
 import com.example.playlistmaker.search.data.MusicResponse
 
-class NetworkClientImpl(private val appleServiceapit: AppleServiceapit, private val context: Context): NetworkClient {
+class NetworkClientImpl(
+    private val appleServiceapit: AppleServiceapit,
+    private val context: Context
+) : NetworkClient {
 
     companion object {
         const val TAG = "ERROR_STATE"
     }
 
-     override fun isNetworkAvalible(): Boolean {
+    override fun isNetworkAvalible(): Boolean {
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val capabilities =
@@ -54,7 +57,6 @@ class NetworkClientImpl(private val appleServiceapit: AppleServiceapit, private 
             return Response.Error("-1")
         }
     }
-
 
 
 }

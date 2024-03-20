@@ -1,6 +1,5 @@
 package com.example.playlistmaker.player.ui
 
-import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -8,16 +7,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.player.PlayerRepository
-import com.example.playlistmaker.player.PlayerRepositoryImpl
-import org.koin.core.qualifier.named
-import org.koin.java.KoinJavaComponent.inject
-import kotlin.time.Duration.Companion.milliseconds
 
 class PlayerViewModel(previewUrl: String, private val player: PlayerRepository) : ViewModel() {
 
     companion object {
         private const val DELAY = 300L
     }
+
     private var isSongPlaying: Boolean = false
 
     private val playerStatusLiveData = MutableLiveData<PlayerState>()
@@ -48,7 +44,7 @@ class PlayerViewModel(previewUrl: String, private val player: PlayerRepository) 
                 if (isSongPlaying) {
                     currentTimeMutableLiveData.postValue(player.getCurrentPosition())
                     mainThreadHandler.postDelayed(this, DELAY)
-                    Log.i("Time", player.getCurrentPosition().toString())
+                    //Log.i("Time", player.getCurrentPosition().toString())
                 }
             }
         }

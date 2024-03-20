@@ -26,7 +26,6 @@ class SearchActivity : AppCompatActivity() {
     private var savedTextSearch: String? = ""
     private var isClickAllowed = true
     private val handler = Handler(Looper.getMainLooper())
-
     private val viewModel: SearchViewModel by viewModel<SearchViewModel>()
 
     companion object {
@@ -59,41 +58,37 @@ class SearchActivity : AppCompatActivity() {
         }
 
         fun recyclerViewInteractor(track: List<Track>): Adapter {
-            val adapter = Adapter(track,
-                object : RecyclerViewClickListener {
-                    override fun onItemClick(position: Int) {
+            val adapter = Adapter(track, object : RecyclerViewClickListener {
+                override fun onItemClick(position: Int) {
 
-                        if (clickDebounce()) {
-                            viewModel.writeToHistory(track[position])
-                            val playerActivity =
-                                Intent(this@SearchActivity, PlayerActivity::class.java)
-                            playerActivity.putExtra("trackName", track[position].trackName)
-                            playerActivity.putExtra("artistName", track[position].artistName)
-                            playerActivity.putExtra(
-                                "trackTimeMillis",
-                                track[position].trackTimeMillis
-                            )
-                            playerActivity.putExtra("artworkUrl100", track[position].artworkUrl100)
-                            playerActivity.putExtra("previewUrl", track[position].previewUrl)
-                            playerActivity.putExtra("releaseDate", track[position].releaseDate)
-                            playerActivity.putExtra("country", track[position].country)
-                            playerActivity.putExtra(
-                                "primaryGenreName",
-                                track[position].primaryGenreName
-                            )
-                            playerActivity.putExtra(
-                                "collectionName",
-                                track[position].collectionName
-                            )
-                            playerActivity.putExtra(
-                                "collectionExplicitness",
-                                track[position].collectionExplicitness
-                            )
-                            Log.i("Track", track[position].toString())
-                            startActivity(playerActivity)
-                        }
+                    if (clickDebounce()) {
+                        viewModel.writeToHistory(track[position])
+                        val playerActivity = Intent(
+                            this@SearchActivity, PlayerActivity::class.java
+                        )
+                        playerActivity.putExtra("trackName", track[position].trackName)
+                        playerActivity.putExtra("artistName", track[position].artistName)
+                        playerActivity.putExtra(
+                            "trackTimeMillis", track[position].trackTimeMillis
+                        )
+                        playerActivity.putExtra("artworkUrl100", track[position].artworkUrl100)
+                        playerActivity.putExtra("previewUrl", track[position].previewUrl)
+                        playerActivity.putExtra("releaseDate", track[position].releaseDate)
+                        playerActivity.putExtra("country", track[position].country)
+                        playerActivity.putExtra(
+                            "primaryGenreName", track[position].primaryGenreName
+                        )
+                        playerActivity.putExtra(
+                            "collectionName", track[position].collectionName
+                        )
+                        playerActivity.putExtra(
+                            "collectionExplicitness", track[position].collectionExplicitness
+                        )
+                        Log.i("Track", track[position].toString())
+                        startActivity(playerActivity)
                     }
-                })
+                }
+            })
             return adapter
         }
 
@@ -173,35 +168,30 @@ class SearchActivity : AppCompatActivity() {
         fun searchDebounce() {
             handler.removeCallbacks(searchRunnable)
             handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
-
         }
 
-        editText.addTextChangedListener(
-            onTextChanged = { s: CharSequence?, _: Int, _: Int, _: Int ->
+        editText.addTextChangedListener(onTextChanged = { s: CharSequence?, _: Int, _: Int, _: Int ->
 
-                when (editText.hasFocus() && s?.isEmpty() == true) {
-                    true -> {
-                        binding.historyTextView.visibility = View.VISIBLE
-                        binding.clearHistoryButton.visibility = View.VISIBLE
-                        //showHistory()
-                    }
-
-                    false -> {
-                        binding.historyTextView.visibility = View.GONE
-                        binding.clearHistoryButton.visibility = View.GONE
-                        binding.trackListRecyclerView.adapter =
-                            recyclerViewInteractor(emptyTrackList)
-                    }
+            when (editText.hasFocus() && s?.isEmpty() == true) {
+                true -> {
+                    binding.historyTextView.visibility = View.VISIBLE
+                    binding.clearHistoryButton.visibility = View.VISIBLE
                 }
-                if (s?.isNotEmpty() == true) {
-                    binding.cancelInputSearchEditText.visibility = View.VISIBLE
-                    searchDebounce()
 
-                } else {
-                    binding.cancelInputSearchEditText.visibility = View.GONE
+                false -> {
+                    binding.historyTextView.visibility = View.GONE
+                    binding.clearHistoryButton.visibility = View.GONE
+                    binding.trackListRecyclerView.adapter = recyclerViewInteractor(emptyTrackList)
                 }
             }
-        )
+            if (s?.isNotEmpty() == true) {
+                binding.cancelInputSearchEditText.visibility = View.VISIBLE
+                searchDebounce()
+
+            } else {
+                binding.cancelInputSearchEditText.visibility = View.GONE
+            }
+        })
         editText.setOnEditorActionListener { _, actionId, _ ->
             when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
@@ -212,8 +202,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
 
-        binding.refrashButton.setOnClickListener {
-            // Повторный запрос при нажатии на кнопку "Refresh"
+        binding.refrashButton.setOnClickListener {// Повторный запрос при нажатии на кнопку "Refresh"
             binding.searchProblems.visibility = View.GONE
             binding.internetProblemText.visibility = View.GONE
             binding.refrashButton.visibility = View.GONE
