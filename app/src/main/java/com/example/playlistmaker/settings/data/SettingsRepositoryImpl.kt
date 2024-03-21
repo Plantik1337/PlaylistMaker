@@ -3,13 +3,11 @@ package com.example.playlistmaker.settings.data
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.util.Log
 import com.example.playlistmaker.R
 
 class SettingsRepositoryImpl(private val context: Context) : SettingsRepository {
 
     override fun shareLink() {
-        Log.i("Контекст", context.toString())
         val courseLinkUrl = context.getString(R.string.practicum)
         val sendIntent =
             Intent().apply {
