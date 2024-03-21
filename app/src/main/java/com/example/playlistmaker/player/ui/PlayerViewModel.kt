@@ -1,39 +1,29 @@
 package com.example.playlistmaker.player.ui
 
-import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.player.PlayerRepository
-import com.example.playlistmaker.player.PlayerRepositoryImpl
-import com.example.playlistmaker.player.ui.PlayerState.StatePlaying
 
-@Suppress("UNCHECKED_CAST")
-class PlayerViewModel(val mediaPlayer: MediaPlayer, val previewUrl: String) : ViewModel() {
+class PlayerViewModel(previewUrl: String, private val player: PlayerRepository) : ViewModel() {
 
-    private val playerStatusLiveData = MutableLiveData<PlayerState>()
-    fun playerLiveData(): LiveData<PlayerState> = playerStatusLiveData
+    companion object {
+        private const val DELAY = 300L
+    }
 
     private var isSongPlaying: Boolean = false
 
+    private val playerStatusLiveData = MutableLiveData<PlayerState>()
+    private val currentTimeMutableLiveData = MutableLiveData<Int>()
+    fun playerLiveData(): LiveData<PlayerState> = playerStatusLiveData
+    fun currentTimeLiveData(): LiveData<Int> = currentTimeMutableLiveData
 
-    companion object {
-        fun getViewModelFactory(
-            mediaPlayer: MediaPlayer,
-            previewUrl: String
-        ): ViewModelProvider.Factory =
-            object : ViewModelProvider.Factory {
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return PlayerViewModel(mediaPlayer, previewUrl) as T
-                }
-            }
-    }
+    private var mainThreadHandler = Handler(Looper.getMainLooper())
 
-
-    private val player: PlayerRepository = PlayerRepositoryImpl(mediaPlayer)
+    private var currentPositionUpdateRunnable: Runnable
 
     init {
         playerStatusLiveData.postValue(PlayerState.StateDefault)
@@ -42,9 +32,21 @@ class PlayerViewModel(val mediaPlayer: MediaPlayer, val previewUrl: String) : Vi
         player.prepareAsync()
         player.setOnPreparedListener {
             playerStatusLiveData.postValue(PlayerState.StatePrepared)
+            isSongPlaying = false
         }
         player.setOnCompletionListener {
             playerStatusLiveData.postValue(PlayerState.StatePrepared)
+            isSongPlaying = false
+        }
+
+        currentPositionUpdateRunnable = object : Runnable {
+            override fun run() {
+                if (isSongPlaying) {
+                    currentTimeMutableLiveData.postValue(player.getCurrentPosition())
+                    mainThreadHandler.postDelayed(this, DELAY)
+                    //Log.i("Time", player.getCurrentPosition().toString())
+                }
+            }
         }
     }
 
@@ -58,15 +60,22 @@ class PlayerViewModel(val mediaPlayer: MediaPlayer, val previewUrl: String) : Vi
 
             false -> {
                 isSongPlaying = true
+                mainThreadHandler.post(currentPositionUpdateRunnable)
                 player.start()
                 playerStatusLiveData.postValue(PlayerState.StatePlaying)
             }
         }
     }
 
+    fun stopPlayer() {
+        isSongPlaying = false
+        player.pause()
+    }
+
     override fun onCleared() {
-        super.onCleared()
+        mainThreadHandler.removeCallbacks(currentPositionUpdateRunnable)
         player.release()
+        super.onCleared()
     }
 
 

@@ -1,44 +1,30 @@
 package com.example.playlistmaker.settings.ui.viewmodel
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import com.example.playlistmaker.App
-import com.example.playlistmaker.settings.domain.Impl.SettingsInteractorImpl
 import com.example.playlistmaker.settings.domain.SettingsInteractor
 
 
-class SettingsViewModel() :
+class SettingsViewModel(private val settingsInteractor: SettingsInteractor) :
     ViewModel() {
 
-    private val settingsInteractor: SettingsInteractor = SettingsInteractorImpl()
-
-    companion object {
-        fun getViewModelFactory(): ViewModelProvider.Factory =
-            object : ViewModelProvider.Factory {
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return SettingsViewModel() as T
-                }
-            }
+    fun share() {
+        settingsInteractor.shareLink()
     }
 
-    fun share(context: Context) {
-        settingsInteractor.shareLink(context)
+    fun supportContact() {
+        settingsInteractor.supportContact()
     }
 
-    fun supportContact(context: Context) {
-        settingsInteractor.supportContact(context)
+    fun termOfUse() {
+        settingsInteractor.termOfUse()
     }
 
-    fun termOfUse(context: Context) {
-        settingsInteractor.termOfUse(context)
+    fun themeSwitch(value: Boolean) {
+        settingsInteractor.themeSwitch(value)
     }
 
-    fun themeSwitch(value: Boolean, context: Context) {
-        settingsInteractor.themeSwitch(value, context)
-    }
-    fun isDarkMode(context: Context):Boolean{
-        return settingsInteractor.isDarkMode(context)
+    fun isDarkMode(): Boolean {
+        return settingsInteractor.isDarkMode()
     }
 
     override fun onCleared() {

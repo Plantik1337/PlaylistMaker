@@ -1,41 +1,35 @@
 package com.example.playlistmaker.player.ui
 
 import android.graphics.Outline
-import android.media.MediaPlayer
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.view.ViewOutlineProvider
 import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.search.data.Track
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
 
-    companion object {
-        private const val DELAY = 300L
-    }
     private lateinit var play: ImageView
-    private var mediaPlayer = MediaPlayer()
-    private var mainThreadHandler = Handler(Looper.getMainLooper())
 
-    private lateinit var viewModel: PlayerViewModel
+    private val viewModel: PlayerViewModel by viewModel {
+        parametersOf(intent.getStringExtra("previewUrl").toString())
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
 
         val currentContent = Track(
             intent.getStringExtra("trackName").toString(),
@@ -50,13 +44,9 @@ class PlayerActivity : AppCompatActivity() {
             intent.getStringExtra("collectionExplicitness").toString()
         )
 
-        viewModel = ViewModelProvider(
-            this,
-            PlayerViewModel.getViewModelFactory(mediaPlayer, currentContent.previewUrl)
-        )[PlayerViewModel::class.java]
-
         val backButton = findViewById<ImageButton>(R.id.menu_button)
         backButton.setOnClickListener {
+            viewModel.stopPlayer()
             finish()
         }
 
@@ -68,8 +58,7 @@ class PlayerActivity : AppCompatActivity() {
 
         Glide.with(binding.albumPlayerImageView)
             .load(currentContent.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"))
-            .placeholder(R.drawable.placeholder)
-            .error(R.drawable.placeholder)
+            .placeholder(R.drawable.placeholder).error(R.drawable.placeholder)
             .into(binding.albumPlayerImageView)
         binding.albumPlayerImageView.clipToOutline = true
         binding.albumPlayerImageView.outlineProvider = object : ViewOutlineProvider() {
@@ -92,33 +81,28 @@ class PlayerActivity : AppCompatActivity() {
                 PlayerState.StatePlaying -> {
                     binding.playPauseButton.setImageResource((R.drawable.baseline_pause_circle_24))
                 }
+
                 PlayerState.StatePrepared -> {
                     play.isEnabled = true
-                    binding.trackTimeView.text = "0:00"
+                    Log.i("Time is...", binding.trackTimeView.toString())
+                    binding.playPauseButton.setImageResource(R.drawable.baseline_play_circle_24)
+                    binding.trackTimeView.text = getString(R.string.startCountingPlayer)
                 }
             }
         }
 
+        viewModel.currentTimeLiveData().observe(this) { time ->
+            binding.trackTimeView.text = SimpleDateFormat(
+                "m:ss", Locale.getDefault()
+            ).format(time)
+        }
+
         play.setOnClickListener {
-
             viewModel.playbackControl()
-
-            object : Runnable {
-                override fun run() {
-                    if (mediaPlayer.isPlaying) {
-                        binding.trackTimeView.text = SimpleDateFormat(
-                            "m:ss",
-                            Locale.getDefault()
-                        ).format(mediaPlayer.currentPosition)
-                        mainThreadHandler.postDelayed(this, DELAY)
-                    }
-                }
-            }.run()
         }
 
         binding.playerSongDurationTextViewData.text = SimpleDateFormat(
-            "mm:ss",
-            Locale.getDefault()
+            "mm:ss", Locale.getDefault()
         ).format(currentContent.trackTimeMillis.toLong())
 
         if (currentContent.collectionName.contains("single")) {

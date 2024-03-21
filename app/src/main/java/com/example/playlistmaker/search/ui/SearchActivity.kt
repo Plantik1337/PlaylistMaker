@@ -5,35 +5,31 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.PersistableBundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.core.widget.addTextChangedListener
 import com.example.playlistmaker.R
 import com.example.playlistmaker.search.data.Track
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.player.ui.PlayerActivity
 import com.example.playlistmaker.search.Statement
 import com.example.playlistmaker.search.ui.viewmodel.SearchViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var editText: EditText
     private var savedTextSearch: String? = ""
     private var isClickAllowed = true
     private val handler = Handler(Looper.getMainLooper())
-
-    private lateinit var viewModel: SearchViewModel
-
+    private val viewModel: SearchViewModel by viewModel<SearchViewModel>()
 
     companion object {
         const val EDIT_TEXT = "EDIT_TEXT"
-        const val HISTORY_LIST = "HISTORY_LIST"
         private const val CLICK_DEBOUNCE_DELAY = 1000L
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
@@ -54,14 +50,6 @@ class SearchActivity : AppCompatActivity() {
 
         editText = binding.searchEditText
 
-        viewModel = ViewModelProvider(
-            this,
-            SearchViewModel.getViewModelFactory(
-                getSharedPreferences(HISTORY_LIST, MODE_PRIVATE),
-                this
-            )
-        )[SearchViewModel::class.java]
-
         val inputMethod = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         val emptyTrackList = emptyList<Track>()
 
@@ -70,41 +58,37 @@ class SearchActivity : AppCompatActivity() {
         }
 
         fun recyclerViewInteractor(track: List<Track>): Adapter {
-            val adapter = Adapter(track,
-                object : RecyclerViewClickListener {
-                    override fun onItemClick(position: Int) {
+            val adapter = Adapter(track, object : RecyclerViewClickListener {
+                override fun onItemClick(position: Int) {
 
-                        if (clickDebounce()) {
-                            viewModel.writeToHistory(track[position])
-                            val playerActivity =
-                                Intent(this@SearchActivity, PlayerActivity::class.java)
-                            playerActivity.putExtra("trackName", track[position].trackName)
-                            playerActivity.putExtra("artistName", track[position].artistName)
-                            playerActivity.putExtra(
-                                "trackTimeMillis",
-                                track[position].trackTimeMillis
-                            )
-                            playerActivity.putExtra("artworkUrl100", track[position].artworkUrl100)
-                            playerActivity.putExtra("previewUrl", track[position].previewUrl)
-                            playerActivity.putExtra("releaseDate", track[position].releaseDate)
-                            playerActivity.putExtra("country", track[position].country)
-                            playerActivity.putExtra(
-                                "primaryGenreName",
-                                track[position].primaryGenreName
-                            )
-                            playerActivity.putExtra(
-                                "collectionName",
-                                track[position].collectionName
-                            )
-                            playerActivity.putExtra(
-                                "collectionExplicitness",
-                                track[position].collectionExplicitness
-                            )
-                            Log.i("Track", track[position].toString())
-                            startActivity(playerActivity)
-                        }
+                    if (clickDebounce()) {
+                        viewModel.writeToHistory(track[position])
+                        val playerActivity = Intent(
+                            this@SearchActivity, PlayerActivity::class.java
+                        )
+                        playerActivity.putExtra("trackName", track[position].trackName)
+                        playerActivity.putExtra("artistName", track[position].artistName)
+                        playerActivity.putExtra(
+                            "trackTimeMillis", track[position].trackTimeMillis
+                        )
+                        playerActivity.putExtra("artworkUrl100", track[position].artworkUrl100)
+                        playerActivity.putExtra("previewUrl", track[position].previewUrl)
+                        playerActivity.putExtra("releaseDate", track[position].releaseDate)
+                        playerActivity.putExtra("country", track[position].country)
+                        playerActivity.putExtra(
+                            "primaryGenreName", track[position].primaryGenreName
+                        )
+                        playerActivity.putExtra(
+                            "collectionName", track[position].collectionName
+                        )
+                        playerActivity.putExtra(
+                            "collectionExplicitness", track[position].collectionExplicitness
+                        )
+                        Log.i("Track", track[position].toString())
+                        startActivity(playerActivity)
                     }
-                })
+                }
+            })
             return adapter
         }
 
@@ -116,6 +100,8 @@ class SearchActivity : AppCompatActivity() {
             binding.trackListRecyclerView.adapter = recyclerViewInteractor(emptyTrackList)
             viewModel.history()
         }
+
+
 
         viewModel.getTracklistLiveData().observe(this) { screenState ->
             Log.i("Состояние", screenState.toString())
@@ -160,6 +146,7 @@ class SearchActivity : AppCompatActivity() {
                 }
 
                 is Statement.Success -> {
+                    //binding.statusText
                     binding.searchProgressBar.visibility = View.GONE
                     Log.i("успешный запрос", screenState.trackList.toString())
                     binding.trackListRecyclerView.visibility = View.VISIBLE
@@ -175,74 +162,57 @@ class SearchActivity : AppCompatActivity() {
         }
 
         val searchRunnable = Runnable {
-            viewModel.doRequest(editText.text.toString(), this)
+            viewModel.doRequest(editText.text.toString())
         }
 
         fun searchDebounce() {
             handler.removeCallbacks(searchRunnable)
             handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
-
         }
-        editText.addTextChangedListener(object : TextWatcher {
 
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                //Ничего не делает
-            }
+        editText.addTextChangedListener(onTextChanged = { s: CharSequence?, _: Int, _: Int, _: Int ->
 
-            override fun afterTextChanged(s: Editable?) {
-                //Ничего не делает
-
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
-
-                when (editText.hasFocus() && s?.isEmpty() == true) {
-                    true -> {
-                        binding.historyTextView.visibility = View.VISIBLE
-                        binding.clearHistoryButton.visibility = View.VISIBLE
-                        //showHistory()
-                    }
-
-                    false -> {
-                        binding.historyTextView.visibility = View.GONE
-                        binding.clearHistoryButton.visibility = View.GONE
-                        binding.trackListRecyclerView.adapter =
-                            recyclerViewInteractor(emptyTrackList)
-                    }
+            when (editText.hasFocus() && s?.isEmpty() == true) {
+                true -> {
+                    binding.historyTextView.visibility = View.VISIBLE
+                    binding.clearHistoryButton.visibility = View.VISIBLE
                 }
-                if (s?.isNotEmpty() == true) {
-                    binding.cancelInputSearchEditText.visibility = View.VISIBLE
-                    searchDebounce()
 
-                } else {
-                    binding.cancelInputSearchEditText.visibility = View.GONE
+                false -> {
+                    binding.historyTextView.visibility = View.GONE
+                    binding.clearHistoryButton.visibility = View.GONE
+                    binding.trackListRecyclerView.adapter = recyclerViewInteractor(emptyTrackList)
                 }
+            }
+            if (s?.isNotEmpty() == true) {
+                binding.cancelInputSearchEditText.visibility = View.VISIBLE
+                searchDebounce()
+
+            } else {
+                binding.cancelInputSearchEditText.visibility = View.GONE
             }
         })
         editText.setOnEditorActionListener { _, actionId, _ ->
             when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
-                    viewModel.doRequest(editText.text.toString(), this)
+                    viewModel.doRequest(editText.text.toString())
                 }
             }
             false
         }
 
 
-        binding.refrashButton.setOnClickListener {
-            // Повторный запрос при нажатии на кнопку "Refresh"
+        binding.refrashButton.setOnClickListener {// Повторный запрос при нажатии на кнопку "Refresh"
             binding.searchProblems.visibility = View.GONE
             binding.internetProblemText.visibility = View.GONE
             binding.refrashButton.visibility = View.GONE
             binding.historyTextView.visibility = View.GONE
-            viewModel.doRequest(editText.text.toString(), this)
+            viewModel.doRequest(editText.text.toString())
         }
 
         binding.cancelInputSearchEditText.setOnClickListener {
             editText.setText("")
             binding.searchProblems.visibility = View.GONE
-            //showHistory()
             inputMethod.hideSoftInputFromWindow(editText.windowToken, 0)
             viewModel.history()
         }

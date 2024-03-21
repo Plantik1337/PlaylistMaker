@@ -5,23 +5,22 @@ import android.content.Intent
 import android.net.Uri
 import com.example.playlistmaker.R
 
-class SettingsRepositoryImpl() : SettingsRepository {
-    override fun shareLink(context: Context) {
+class SettingsRepositoryImpl(private val context: Context) : SettingsRepository {
+
+    override fun shareLink() {
         val courseLinkUrl = context.getString(R.string.practicum)
-        val sendIntent = Intent().apply {
-            action = Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_TEXT, courseLinkUrl)
-            type = "text/plain"
-        }
-        context.startActivity(
-            Intent.createChooser(
-                sendIntent,
-                context.getString(R.string.Share_App)
-            )
-        )
+        val sendIntent =
+            Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, courseLinkUrl)
+                type = "text/plain"
+            }
+        val intent = Intent.createChooser(sendIntent, context.getString(R.string.Share_App))
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(intent)
     }
 
-    override fun supportContact(context: Context) {
+    override fun supportContact() {
         val sendIntent = Intent(Intent.ACTION_SENDTO).apply {
             data = Uri.parse("mailto:") // тип данных для отправки
             putExtra(Intent.EXTRA_EMAIL, context.getString(R.string.MyEmail))// почта
@@ -35,18 +34,16 @@ class SettingsRepositoryImpl() : SettingsRepository {
                 context.getString(R.string.MessageViaEmail)
             ) // Текст сообщения
         }
-        context.startActivity(
-            Intent.createChooser(
-                sendIntent,
-                context.getString(R.string.Contact_Us)
-            )
-        )
+        val intent = Intent.createChooser(sendIntent, context.getString(R.string.Contact_Us))
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(intent)
     }
 
-    override fun termOfUse(context: Context) {
+    override fun termOfUse() {
         val sendIntent = Intent(Intent.ACTION_VIEW)
         sendIntent.data =
             Uri.parse(context.getString(R.string.OfferLink)) // Ссылка на пользовательское соглашение
+        sendIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(sendIntent)
     }
 

@@ -8,9 +8,14 @@ import com.google.gson.reflect.TypeToken
 const val HISTORY_LIST = "HISTORY_LIST"
 
 
-class HistoryTransaction : HistoryRepository {
+class HistoryTransaction(
+    private val sharedPreferences: SharedPreferences,
+    private val gson: Gson
+) : HistoryRepository {
+
     private val emptyArrayList = ArrayList<Track>()
-    override fun read(sharedPreferences: SharedPreferences): ArrayList<Track> {
+
+    override fun read(): ArrayList<Track> {
 
         val json = sharedPreferences.getString(HISTORY_LIST, null)
         var myList = emptyArrayList
@@ -18,36 +23,36 @@ class HistoryTransaction : HistoryRepository {
             myList
         } else {
             val type = object : TypeToken<ArrayList<Track>>() {}.type
-            myList = Gson().fromJson(json, type)
+            myList = gson.fromJson(json, type)
             myList
         }
     }
 
-    override fun write(sharedPreferences: SharedPreferences, track: Track) {
+    override fun write(track: Track) {
         val first = 0
         val maxListSize = 11
         var myJson = sharedPreferences.getString(HISTORY_LIST, null)
         val myList: ArrayList<Track> = if (myJson.isNullOrBlank()) {
             arrayListOf()
         } else {
-            Gson().fromJson(myJson, object : TypeToken<ArrayList<Track>>() {}.type)
+            gson.fromJson(myJson, object : TypeToken<ArrayList<Track>>() {}.type)
         }
         myList.remove(track)
         myList.add(first, track)
         if (myList.size == maxListSize) {
             myList.removeAt(maxListSize - 1)
         }
-        myJson = Gson().toJson(myList)
+        myJson = gson.toJson(myList)
         sharedPreferences.edit()
             .putString(HISTORY_LIST, myJson)
             .apply()
     }
 
-    override fun clearHistory(sharedPreferences: SharedPreferences) {
+    override fun clearHistory() {
         sharedPreferences.edit().clear().apply()
     }
 
-    fun historyIsEmpty(sharedPreferences: SharedPreferences): Boolean {
+    fun historyIsEmpty(): Boolean {
         val myJson = sharedPreferences.getString(HISTORY_LIST, null)
         return when (myJson == null) {
             true -> true
@@ -55,8 +60,8 @@ class HistoryTransaction : HistoryRepository {
         }
     }
 
-    override fun returnFirst(sharedPreferences: SharedPreferences): Track {
-        val listOfData = read(sharedPreferences)
+    override fun returnFirst(): Track {
+        val listOfData = read()
         return listOfData[0]
     }
 }

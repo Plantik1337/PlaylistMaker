@@ -3,14 +3,28 @@ package com.example.playlistmaker
 import android.app.Application
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
+import com.example.playlistmaker.di.dataModuel
+import com.example.playlistmaker.di.repositoryModule
+import com.example.playlistmaker.di.viewModelModule
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
+import org.koin.core.logger.Level
 
 const val THEME_KEY = "THEME_KEY"
 
 class App : Application() {
 
-    var darkTheme = false
+    private var darkTheme = false
     override fun onCreate() {
         super.onCreate()
+
+        startKoin {
+            androidContext(this@App)
+            androidLogger(Level.NONE)//Для дебага
+            modules(listOf(dataModuel, repositoryModule, viewModelModule))
+        }
+
         val sharedPreferences: SharedPreferences = getSharedPreferences(THEME_KEY, MODE_PRIVATE)
         when (sharedPreferences.getString(THEME_KEY, null)) {
             "MODE_NIGHT_YES" -> {
