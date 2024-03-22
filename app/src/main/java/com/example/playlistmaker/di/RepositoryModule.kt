@@ -17,9 +17,9 @@ import org.koin.dsl.module
 
 val repositoryModule = module {
 
-    factory<PlayerRepository> {
-        PlayerRepositoryImpl(get())
-    }
+//    factory<PlayerRepository> {
+//        PlayerRepositoryImpl(get())
+//    }
 
     factory<SettingsInteractor> {
         SettingsInteractorImpl(

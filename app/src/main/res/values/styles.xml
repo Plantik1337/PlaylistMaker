@@ -66,6 +66,9 @@
     <style name="searchActivityTheme">
         <item name="android:background">@color/white</item>
     </style>
+    <style name="mediaLibraryActivityTheme">
+        <item name="android:background">@color/white</item>
+    </style>
 
     <style name="trackListStyle">
         <item name="background">@color/white</item>

@@ -20,4 +20,6 @@
     <string name="duration">Длительность</string>
     <string name="album">Альбом</string>
     <string name="year">Год</string>
+    <string name="FavoriteTracks">Favorite songs</string>
+    <string name="Playlists">Playlists</string>
 </resources>

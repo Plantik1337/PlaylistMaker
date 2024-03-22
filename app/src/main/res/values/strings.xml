@@ -24,4 +24,6 @@
     <string name="album">Альбом</string>
     <string name="year">Год</string>
     <string name="startCountingPlayer" translatable="false">0:00</string>
+    <string name="FavoriteTracks">Избранные треки</string>
+    <string name="Playlists">Плейлисты</string>
 </resources>
