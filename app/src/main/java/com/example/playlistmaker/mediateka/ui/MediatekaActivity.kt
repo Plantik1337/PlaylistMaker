@@ -1,4 +1,4 @@
-package com.example.playlistmaker.mediateka
+package com.example.playlistmaker.mediateka.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,7 +8,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 
 class MediatekaActivity : AppCompatActivity() {
 
-    private lateinit var binding: MediatekaViewPagerAdapter
+//    private lateinit var binding: MediatekaViewPagerAdapter
 
     private lateinit var tabMediator: TabLayoutMediator
 
@@ -18,13 +18,17 @@ class MediatekaActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.viewPager.adapter = MediatekaViewPagerAdapter(supportFragmentManager, lifecycle)
-        tabMediator = TabLayoutMediator(binding.tabLayout, binding.viewPager){tab, position ->
-            when(position){
-                0->tab.text = resources.getString(R.string.FavoriteTracks)
-                1 ->tab.text = resources.getString(R.string.Playlists)
+        tabMediator = TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+            when (position) {
+                0 -> tab.text = resources.getString(R.string.FavoriteTracks)
+                1 -> tab.text = resources.getString(R.string.Playlists)
             }
         }
         tabMediator.attach()
+
+        binding.backToMainActivity.setOnClickListener {
+            finish()
+        }
     }
 
     override fun onDestroy() {

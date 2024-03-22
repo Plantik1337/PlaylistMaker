@@ -98,6 +98,7 @@ class PlayerActivity : AppCompatActivity() {
         }
 
         play.setOnClickListener {
+            viewModel.stopPlayer()
             viewModel.playbackControl()
         }
 

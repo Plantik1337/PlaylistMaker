@@ -66,8 +66,9 @@
     <style name="searchActivityTheme">
         <item name="android:background">@color/white</item>
     </style>
-    <style name="mediaLibraryActivityTheme">
+    <style name="mediaLibraryActivityTheme" parent="TextAppearance.Design.Tab">
         <item name="android:background">@color/white</item>
+        <item name="tabTextColor">@color/DarkFun</item>
     </style>
 
     <style name="trackListStyle">
@@ -100,5 +101,8 @@
     </style>
     <style name="playerDataText">
         <item name="android:textColor">@color/black</item>
+    </style>
+    <style name="tabTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="textAllCaps">false</item>
     </style>
 </resources>

@@ -26,4 +26,7 @@
     <string name="startCountingPlayer" translatable="false">0:00</string>
     <string name="FavoriteTracks">Избранные треки</string>
     <string name="Playlists">Плейлисты</string>
+    <string name="aintCreatedPlaylist">Вы не создали \nни одного плейлиста</string>
+    <string name="newPlaylist">Новый плейлист</string>
+    <string name="meiaLibraryIsEmply">Ваша медиатека пуста</string>
 </resources>

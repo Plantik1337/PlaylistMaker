@@ -22,4 +22,7 @@
     <string name="year">Год</string>
     <string name="FavoriteTracks">Favorite songs</string>
     <string name="Playlists">Playlists</string>
+    <string name="aintCreatedPlaylist">You have not /ncreated any playlists</string>
+    <string name="newPlaylist">New Playlist</string>
+    <string name="meiaLibraryIsEmply">Your media library is empty</string>
 </resources>

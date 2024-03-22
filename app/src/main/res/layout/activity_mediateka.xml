@@ -5,7 +5,7 @@
     style="@style/mediaLibraryActivityTheme"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".mediateka.MediatekaActivity">
+    tools:context=".mediateka.ui.MediatekaActivity">
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -55,6 +55,7 @@
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
+            app:tabTextAppearance="@style/tabTextAppearance"
             style="@style/mediaLibraryActivityTheme"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
