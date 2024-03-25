@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:checkable="true"
+        android:id="@+id/searchFragment"
+        android:foreground="?attr/selectableItemBackground"
+        android:icon="@drawable/ic_vector"
+        android:title="@string/search" />
+    <item
+        android:checkable="true"
+        android:id="@+id/mediatekaFragment"
+        android:foreground="?attr/selectableItemBackground"
+        android:icon="@drawable/media_vector"
+        android:title="@string/media_library" />
+
+    <item
+        android:checkable="true"
+        android:id="@+id/settingsFragment"
+        android:foreground="?attr/selectableItemBackground"
+        android:icon="@drawable/settings_vector"
+        android:title="@string/settings" />
+</menu>

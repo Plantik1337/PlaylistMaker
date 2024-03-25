@@ -17,34 +17,22 @@
             android:orientation="horizontal"
             tools:ignore="MissingConstraints">
 
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/backToMainActivity"
-                style="@style/backButtonStyle"
-                android:layout_width="64dp"
-                android:layout_height="56dp"
-                android:contentDescription="@string/no"
-                android:foreground="?attr/selectableItemBackground"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:outlineProvider="none"
-                android:paddingStart="16dp"
-                app:icon="@drawable/arrow_back"
-                app:iconGravity="start"
-                app:iconPadding="10dp" />
-
             <TextView
+                android:textStyle="bold"
                 style="@style/title"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="61dp"
                 android:layout_gravity="center"
+                android:gravity="center_vertical"
+                android:paddingStart="18dp"
+                android:paddingEnd="16dp"
                 android:text="@string/settings"
                 android:textSize="@dimen/standart_text" />
         </LinearLayout>
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/themeSwitcher"
-            style="@style/settingsButton"
+            style="@style/settingsSwitch"
             android:layout_width="match_parent"
             android:contentDescription="@string/no"
             android:insetTop="0dp"

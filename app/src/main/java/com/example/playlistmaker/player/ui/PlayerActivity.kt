@@ -3,11 +3,14 @@ package com.example.playlistmaker.player.ui
 import android.graphics.Outline
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.ViewOutlineProvider
-import android.widget.ImageButton
 import android.widget.ImageView
-import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.search.data.Track
@@ -17,41 +20,82 @@ import org.koin.core.parameter.parametersOf
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class PlayerActivity : AppCompatActivity() {
+class PlayerActivity : Fragment() {
 
     private lateinit var play: ImageView
+    private lateinit var binding: ActivityPlayerBinding
 
-    private val viewModel: PlayerViewModel by viewModel {
-        parametersOf(intent.getStringExtra("previewUrl").toString())
+    companion object {
+        //const val TRACK_DATA = "TRACK_DATA"
+
+        const val TRACK_NAME = "TRACK_NAME"
+        const val ARTIST_NAME = "ARTIST_NAME"
+        const val TRACK_TIME_MILLIS = "TRACK_TIME_MILLIS"
+        const val ARTWORK_URL100 = "ARTWORK_URL100"
+        const val PREVIEW_URL = "PREVIEW_URL"
+        const val RELEASE_DATE = "RELEASE_DATE"
+        const val COUNTRY = "COUNTRY"
+        const val PRIMARY_GENRENAME = "PRIMARY_GENRENAME"
+        const val COLLECTION_NAME = "COLLECTION_NAME"
+        const val COLLECTION_EXPLICITNESS = "COLLECTION_EXPLICITNESS"
+
+        fun createArgs(
+            trackName: String,
+            artistName: String,
+            trackTimeMillis: String,
+            artworkUrl100: String,
+            previewUrl: String,
+            releaseDate: String,
+            country: String,
+            primaryGenreName: String,
+            collectionName: String,
+            collectionExplicitness: String
+        ): Bundle = bundleOf(
+            TRACK_NAME to trackName,
+            ARTIST_NAME to artistName,
+            TRACK_TIME_MILLIS to trackTimeMillis,
+            ARTWORK_URL100 to artworkUrl100,
+            PREVIEW_URL to previewUrl,
+            RELEASE_DATE to releaseDate,
+            COUNTRY to country,
+            PRIMARY_GENRENAME to primaryGenreName,
+            COLLECTION_NAME to collectionName,
+            COLLECTION_EXPLICITNESS to collectionExplicitness
+        )
     }
 
+    private val viewModel: PlayerViewModel by viewModel {
+        parametersOf(requireArguments().getString(PREVIEW_URL))
+    }
+    //intent.getStringExtra("previewUrl").toString()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val binding = ActivityPlayerBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = ActivityPlayerBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         val currentContent = Track(
-            intent.getStringExtra("trackName").toString(),
-            intent.getStringExtra("artistName").toString(),
-            intent.getStringExtra("trackTimeMillis").toString(),
-            intent.getStringExtra("artworkUrl100").toString(),
-            intent.getStringExtra("previewUrl").toString(),
-            intent.getStringExtra("releaseDate").toString(),
-            intent.getStringExtra("country").toString(),
-            intent.getStringExtra("primaryGenreName").toString(),
-            intent.getStringExtra("collectionName").toString(),
-            intent.getStringExtra("collectionExplicitness").toString()
+            trackName = requireArguments().getString(TRACK_NAME).toString(),
+            artistName = requireArguments().getString(ARTIST_NAME).toString(),
+            trackTimeMillis = requireArguments().getString(TRACK_TIME_MILLIS).toString(),
+            artworkUrl100 = requireArguments().getString(ARTWORK_URL100).toString(),
+            previewUrl = requireArguments().getString(PREVIEW_URL).toString(),
+            releaseDate = requireArguments().getString(RELEASE_DATE).toString(),
+            country = requireArguments().getString(COUNTRY).toString(),
+            primaryGenreName = requireArguments().getString(PRIMARY_GENRENAME).toString(),
+            collectionName = requireArguments().getString(COLLECTION_NAME).toString(),
+            collectionExplicitness = requireArguments().getString(COLLECTION_EXPLICITNESS)
+                .toString()
         )
 
-        val backButton = findViewById<ImageButton>(R.id.menu_button)
-        backButton.setOnClickListener {
-            viewModel.stopPlayer()
-            finish()
-        }
-
-        Log.i("Data", currentContent.toString())
-        play = findViewById(R.id.playPauseButton)
+        play = binding.playPauseButton
 
         binding.songNamePlayer.text = currentContent.trackName
         binding.autorName.text = currentContent.artistName
@@ -68,7 +112,8 @@ class PlayerActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.playerLiveData().observe(this) { screenState ->
+        viewModel.playerLiveData().observe(viewLifecycleOwner) { screenState ->
+            Log.i("Player State", screenState.toString())
             when (screenState) {
                 PlayerState.StateDefault -> {
                     play.isEnabled = false
@@ -91,14 +136,13 @@ class PlayerActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.currentTimeLiveData().observe(this) { time ->
+        viewModel.currentTimeLiveData().observe(viewLifecycleOwner) { time ->
             binding.trackTimeView.text = SimpleDateFormat(
                 "m:ss", Locale.getDefault()
             ).format(time)
         }
 
         play.setOnClickListener {
-            viewModel.stopPlayer()
             viewModel.playbackControl()
         }
 
@@ -124,9 +168,14 @@ class PlayerActivity : AppCompatActivity() {
         binding.genreData.text = currentContent.primaryGenreName
         binding.countryData.text = currentContent.country
 
+        binding.menuButton.setOnClickListener {
+            viewModel.stopPlayer()
+            findNavController().navigateUp()
+        }
+
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDetach() {
+        super.onDetach()
     }
 }

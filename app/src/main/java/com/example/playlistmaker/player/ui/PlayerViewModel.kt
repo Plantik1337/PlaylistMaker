@@ -25,14 +25,30 @@ class PlayerViewModel(previewUrl: String, private val player: PlayerRepository) 
 
     private var currentPositionUpdateRunnable: Runnable
 
-    init {
-        playerStatusLiveData.postValue(PlayerState.StateDefault)
+//    fun preparePlayer(){
+//        playerStatusLiveData.postValue(PlayerState.StateDefault)
+//
+//        player.setDataSource(previewUrl)
+//        player.prepareAsync()
+//        player.setOnPreparedListener {
+//            playerStatusLiveData.postValue(PlayerState.StatePrepared)
+//            isSongPlaying = false
+//        }
+//        player.setOnCompletionListener {
+//            playerStatusLiveData.postValue(PlayerState.StatePrepared)
+//            isSongPlaying = false
+//    }
 
+    init {
+        Log.i("dataSource",previewUrl)
+        playerStatusLiveData.postValue(PlayerState.StateDefault)
         player.setDataSource(previewUrl)
         player.prepareAsync()
         player.setOnPreparedListener {
             playerStatusLiveData.postValue(PlayerState.StatePrepared)
             isSongPlaying = false
+            Log.i("Player State", "Player is ready!")
+            //player.start()
         }
         player.setOnCompletionListener {
             playerStatusLiveData.postValue(PlayerState.StatePrepared)
@@ -53,15 +69,13 @@ class PlayerViewModel(previewUrl: String, private val player: PlayerRepository) 
     fun playbackControl() {
         when (isSongPlaying) {
             true -> {
-                isSongPlaying = false
-                player.pause()
+                stopPlayer()
                 playerStatusLiveData.postValue(PlayerState.StatePaused)
             }
 
             false -> {
-                isSongPlaying = true
+                startPlayer()
                 mainThreadHandler.post(currentPositionUpdateRunnable)
-                player.start()
                 playerStatusLiveData.postValue(PlayerState.StatePlaying)
             }
         }
@@ -70,6 +84,10 @@ class PlayerViewModel(previewUrl: String, private val player: PlayerRepository) 
     fun stopPlayer() {
         isSongPlaying = false
         player.pause()
+    }
+    fun startPlayer(){
+        isSongPlaying = true
+        player.start()
     }
 
     override fun onCleared() {

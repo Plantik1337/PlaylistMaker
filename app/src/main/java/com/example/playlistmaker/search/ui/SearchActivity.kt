@@ -1,18 +1,20 @@
 package com.example.playlistmaker.search.ui
 
-import android.content.Intent
+import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.os.PersistableBundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.search.data.Track
 import com.example.playlistmaker.databinding.ActivitySearchBinding
@@ -21,7 +23,10 @@ import com.example.playlistmaker.search.Statement
 import com.example.playlistmaker.search.ui.viewmodel.SearchViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchActivity : AppCompatActivity() {
+class SearchActivity : Fragment() {
+
+
+    private lateinit var binding: ActivitySearchBinding
     private lateinit var editText: EditText
     private var savedTextSearch: String? = ""
     private var isClickAllowed = true
@@ -43,49 +48,69 @@ class SearchActivity : AppCompatActivity() {
         return current
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = ActivitySearchBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
         editText = binding.searchEditText
 
-        val inputMethod = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-        val emptyTrackList = emptyList<Track>()
+        val inputMethod =
+            requireContext().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
 
-        binding.backToMainActivityFromSearchActivity.setOnClickListener {
-            finish()
-        }
+        val emptyTrackList = emptyList<Track>()
 
         fun recyclerViewInteractor(track: List<Track>): Adapter {
             val adapter = Adapter(track, object : RecyclerViewClickListener {
                 override fun onItemClick(position: Int) {
-
                     if (clickDebounce()) {
                         viewModel.writeToHistory(track[position])
-                        val playerActivity = Intent(
-                            this@SearchActivity, PlayerActivity::class.java
+                        findNavController().navigate(
+                            R.id.action_searchFragment_to_playerActivity,
+                            PlayerActivity.createArgs(
+                                trackName = track[position].trackName,
+                                artistName = track[position].artistName,
+                                trackTimeMillis = track[position].trackTimeMillis,
+                                artworkUrl100 = track[position].artworkUrl100,
+                                previewUrl = track[position].previewUrl,
+                                releaseDate = track[position].releaseDate,
+                                country = track[position].country,
+                                primaryGenreName = track[position].primaryGenreName,
+                                collectionName = track[position].collectionName,
+                                collectionExplicitness = track[position].collectionExplicitness
+                            )
                         )
-                        playerActivity.putExtra("trackName", track[position].trackName)
-                        playerActivity.putExtra("artistName", track[position].artistName)
-                        playerActivity.putExtra(
-                            "trackTimeMillis", track[position].trackTimeMillis
-                        )
-                        playerActivity.putExtra("artworkUrl100", track[position].artworkUrl100)
-                        playerActivity.putExtra("previewUrl", track[position].previewUrl)
-                        playerActivity.putExtra("releaseDate", track[position].releaseDate)
-                        playerActivity.putExtra("country", track[position].country)
-                        playerActivity.putExtra(
-                            "primaryGenreName", track[position].primaryGenreName
-                        )
-                        playerActivity.putExtra(
-                            "collectionName", track[position].collectionName
-                        )
-                        playerActivity.putExtra(
-                            "collectionExplicitness", track[position].collectionExplicitness
-                        )
-                        Log.i("Track", track[position].toString())
-                        startActivity(playerActivity)
+
+//                        val playerActivity = Intent(
+//                            this@SearchActivity, PlayerActivity::class.java
+//                        )
+//                        playerActivity.putExtra("trackName", track[position].trackName)
+//                        playerActivity.putExtra("artistName", track[position].artistName)
+//                        playerActivity.putExtra(
+//                            "trackTimeMillis", track[position].trackTimeMillis
+//                        )
+//                        playerActivity.putExtra("artworkUrl100", track[position].artworkUrl100)
+//                        playerActivity.putExtra("previewUrl", track[position].previewUrl)
+//                        playerActivity.putExtra("releaseDate", track[position].releaseDate)
+//                        playerActivity.putExtra("country", track[position].country)
+//                        playerActivity.putExtra(
+//                            "primaryGenreName", track[position].primaryGenreName
+//                        )
+//                        playerActivity.putExtra(
+//                            "collectionName", track[position].collectionName
+//                        )
+//                        playerActivity.putExtra(
+//                            "collectionExplicitness", track[position].collectionExplicitness
+//                        )
+//                        Log.i("Track", track[position].toString())
+//                        startActivity(playerActivity)
                     }
                 }
             })
@@ -103,7 +128,7 @@ class SearchActivity : AppCompatActivity() {
 
 
 
-        viewModel.getTracklistLiveData().observe(this) { screenState ->
+        viewModel.getTracklistLiveData().observe(viewLifecycleOwner) { screenState ->
             Log.i("Состояние", screenState.toString())
             when (screenState) {
 
@@ -220,22 +245,22 @@ class SearchActivity : AppCompatActivity() {
             savedTextSearch = savedInstanceState.getString(EDIT_TEXT, "")
             editText.setText(savedTextSearch)
         }
-        binding.trackListRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.trackListRecyclerView.layoutManager = LinearLayoutManager(requireContext())
     }
 
-    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
-        super.onSaveInstanceState(outState, outPersistentState)
-        savedTextSearch = editText.text.toString()
-        outState.putString(EDIT_TEXT, savedTextSearch)
-    }
-
-    override fun onRestoreInstanceState(
-        savedInstanceState: Bundle?, persistentState: PersistableBundle?
-    ) {
-        super.onRestoreInstanceState(savedInstanceState, persistentState)
-        savedTextSearch = savedInstanceState?.getString(EDIT_TEXT, "")
-        editText.setText(savedTextSearch)
-    }
+//    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+//        super.onSaveInstanceState(outState, outPersistentState)
+//        savedTextSearch = editText.text.toString()
+//        outState.putString(EDIT_TEXT, savedTextSearch)
+//    }
+//
+//    override fun onRestoreInstanceState(
+//        savedInstanceState: Bundle?, persistentState: PersistableBundle?
+//    ) {
+//        super.onRestoreInstanceState(savedInstanceState, persistentState)
+//        savedTextSearch = savedInstanceState?.getString(EDIT_TEXT, "")
+//        editText.setText(savedTextSearch)
+//    }
 
 }
 
