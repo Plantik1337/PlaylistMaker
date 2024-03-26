@@ -73,7 +73,7 @@
                 android:paddingTop="8dp"
                 android:paddingEnd="10dp"
                 android:src="@drawable/ic_cancel"
-                android:visibility="visible" />
+                android:visibility="gone" />
         </FrameLayout>
 
         <LinearLayout

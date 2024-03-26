@@ -22,6 +22,4 @@
     <style name="Theme.Settings" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:background">@color/white</item>
     </style>
-
-
 </resources>

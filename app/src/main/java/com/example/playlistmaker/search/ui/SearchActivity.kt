@@ -25,7 +25,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : Fragment() {
 
-
     private lateinit var binding: ActivitySearchBinding
     private lateinit var editText: EditText
     private var savedTextSearch: String? = ""
@@ -87,36 +86,11 @@ class SearchActivity : Fragment() {
                                 collectionExplicitness = track[position].collectionExplicitness
                             )
                         )
-
-//                        val playerActivity = Intent(
-//                            this@SearchActivity, PlayerActivity::class.java
-//                        )
-//                        playerActivity.putExtra("trackName", track[position].trackName)
-//                        playerActivity.putExtra("artistName", track[position].artistName)
-//                        playerActivity.putExtra(
-//                            "trackTimeMillis", track[position].trackTimeMillis
-//                        )
-//                        playerActivity.putExtra("artworkUrl100", track[position].artworkUrl100)
-//                        playerActivity.putExtra("previewUrl", track[position].previewUrl)
-//                        playerActivity.putExtra("releaseDate", track[position].releaseDate)
-//                        playerActivity.putExtra("country", track[position].country)
-//                        playerActivity.putExtra(
-//                            "primaryGenreName", track[position].primaryGenreName
-//                        )
-//                        playerActivity.putExtra(
-//                            "collectionName", track[position].collectionName
-//                        )
-//                        playerActivity.putExtra(
-//                            "collectionExplicitness", track[position].collectionExplicitness
-//                        )
-//                        Log.i("Track", track[position].toString())
-//                        startActivity(playerActivity)
                     }
                 }
             })
             return adapter
         }
-
 
         binding.clearHistoryButton.setOnClickListener {
             viewModel.clearHistory()
@@ -125,8 +99,6 @@ class SearchActivity : Fragment() {
             binding.trackListRecyclerView.adapter = recyclerViewInteractor(emptyTrackList)
             viewModel.history()
         }
-
-
 
         viewModel.getTracklistLiveData().observe(viewLifecycleOwner) { screenState ->
             Log.i("Состояние", screenState.toString())
@@ -226,7 +198,6 @@ class SearchActivity : Fragment() {
             false
         }
 
-
         binding.refrashButton.setOnClickListener {// Повторный запрос при нажатии на кнопку "Refresh"
             binding.searchProblems.visibility = View.GONE
             binding.internetProblemText.visibility = View.GONE
@@ -247,20 +218,9 @@ class SearchActivity : Fragment() {
         }
         binding.trackListRecyclerView.layoutManager = LinearLayoutManager(requireContext())
     }
-
-//    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
-//        super.onSaveInstanceState(outState, outPersistentState)
-//        savedTextSearch = editText.text.toString()
-//        outState.putString(EDIT_TEXT, savedTextSearch)
-//    }
-//
-//    override fun onRestoreInstanceState(
-//        savedInstanceState: Bundle?, persistentState: PersistableBundle?
-//    ) {
-//        super.onRestoreInstanceState(savedInstanceState, persistentState)
-//        savedTextSearch = savedInstanceState?.getString(EDIT_TEXT, "")
-//        editText.setText(savedTextSearch)
-//    }
+    override fun onDetach() {
+        super.onDetach()
+    }
 
 }
 
