@@ -67,6 +67,7 @@
                 style="@style/cancleInputButton"
                 android:layout_width="38dp"
                 android:layout_height="38dp"
+                android:background="@android:color/transparent"
                 android:layout_gravity="end"
                 android:contentDescription="@string/search"
                 android:paddingStart="0dp"
