@@ -5,13 +5,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.playlistmaker.databinding.SettingsScreenBinding
 import com.example.playlistmaker.settings.ui.viewmodel.SettingsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SettingsActivity : Fragment() {
+class SettingsFragment : Fragment() {
 
     private val viewModel: SettingsViewModel by viewModel<SettingsViewModel>()
 

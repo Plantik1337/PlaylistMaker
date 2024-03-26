@@ -18,12 +18,12 @@ import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.search.data.Track
 import com.example.playlistmaker.databinding.ActivitySearchBinding
-import com.example.playlistmaker.player.ui.PlayerActivity
+import com.example.playlistmaker.player.ui.PlayerFragment
 import com.example.playlistmaker.search.Statement
 import com.example.playlistmaker.search.ui.viewmodel.SearchViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchActivity : Fragment() {
+class SearchFragment : Fragment() {
 
     private lateinit var binding: ActivitySearchBinding
     private lateinit var editText: EditText
@@ -73,7 +73,7 @@ class SearchActivity : Fragment() {
                         viewModel.writeToHistory(track[position])
                         findNavController().navigate(
                             R.id.action_searchFragment_to_playerActivity,
-                            PlayerActivity.createArgs(
+                            PlayerFragment.createArgs(
                                 trackName = track[position].trackName,
                                 artistName = track[position].artistName,
                                 trackTimeMillis = track[position].trackTimeMillis,

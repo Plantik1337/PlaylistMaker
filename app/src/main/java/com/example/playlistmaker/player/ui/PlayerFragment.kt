@@ -20,7 +20,7 @@ import org.koin.core.parameter.parametersOf
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class PlayerActivity : Fragment() {
+class PlayerFragment : Fragment() {
 
     private lateinit var play: ImageView
     private lateinit var binding: ActivityPlayerBinding

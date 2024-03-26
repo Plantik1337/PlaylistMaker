@@ -1,6 +1,5 @@
 package com.example.playlistmaker.mediateka.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +9,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityMediatekaBinding
 import com.google.android.material.tabs.TabLayoutMediator
 
-class MediatekaActivity : Fragment() {
+class MediatekaFragment : Fragment() {
 
     private lateinit var tabMediator: TabLayoutMediator
     private lateinit var binding: ActivityMediatekaBinding
