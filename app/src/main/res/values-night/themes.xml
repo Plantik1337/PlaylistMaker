@@ -2,22 +2,24 @@
     <!-- Base application theme. -->
     <style name="Theme.PlaylistMaker" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_200</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorPrimary">@color/blue</item>
+        <item name="colorPrimaryVariant">@color/DarkFun</item>
+        <item name="colorOnPrimary">@color/DarkFun</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/black</item>
+        <item name="colorSecondary">@color/white</item>
         <item name="colorSecondaryVariant">@color/teal_200</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorOnSecondary">@color/DarkFun</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
-        <item name="android:background">@color/black</item>
+        <item name="android:background">@color/DarkFun</item>
     </style>
+
     <style name="Theme.mainMenu" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="android:background">@color/black</item>
+        <item name="android:background">@color/DarkFun</item>
     </style>
+
     <style name="Theme.Settings" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="android:background">@color/black</item>
+        <item name="android:background">@color/DarkFun</item>
     </style>
 </resources>

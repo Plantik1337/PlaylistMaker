@@ -13,9 +13,7 @@ class SearchViewModel(
 ) : ViewModel() {
 
     private val trackMutableLiveData = MutableLiveData<Statement>()
-
     fun getTracklistLiveData(): LiveData<Statement> = trackMutableLiveData
-
     init {
         history()
     }
@@ -48,5 +46,8 @@ class SearchViewModel(
 
     fun writeToHistory(track: Track) {
         interactor.write(track)
+    }
+    override fun onCleared() {
+        super.onCleared()
     }
 }

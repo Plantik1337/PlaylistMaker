@@ -5,7 +5,7 @@
     style="@style/searchActivityTheme"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".search.ui.SearchActivity">
+    tools:context=".search.ui.SearchFragment">
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -24,26 +24,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/backToMainActivityFromSearchActivity"
-                style="@style/backButtonSearchStyle"
-                android:layout_width="61dp"
-                android:layout_height="@dimen/squareImage"
-                android:contentDescription="@string/no"
-                android:foreground="?attr/selectableItemBackground"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:outlineProvider="none"
-                android:paddingStart="13dp"
-                android:paddingEnd="15dp"
-                app:icon="@drawable/arrow_back"
-                app:iconGravity="start" />
-
             <TextView
                 style="@style/title"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:layout_gravity="center"
+                android:gravity="center_vertical"
                 android:paddingStart="0dp"
                 android:paddingEnd="20dp"
                 android:text="@string/search"
@@ -78,14 +64,17 @@
 
             <ImageView
                 android:id="@+id/cancelInputSearchEditText"
+                style="@style/cancleInputButton"
                 android:layout_width="38dp"
                 android:layout_height="38dp"
+                android:background="@android:color/transparent"
                 android:layout_gravity="end"
+                android:contentDescription="@string/search"
+                android:paddingStart="0dp"
                 android:paddingTop="8dp"
                 android:paddingEnd="10dp"
                 android:src="@drawable/ic_cancel"
-                android:visibility="gone"
-                app:tint="@color/grey" />
+                android:visibility="gone" />
         </FrameLayout>
 
         <LinearLayout
@@ -98,10 +87,9 @@
                 style="@style/title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="0dp"
                 android:gravity="center_horizontal|top"
                 android:text="@string/historyMessage"
-                android:textAppearance="@font/ys_display_medium"
                 android:textSize="19sp"
                 android:textStyle="bold"
                 android:visibility="visible" />
@@ -110,7 +98,7 @@
                 android:id="@+id/trackListRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"/>
+                android:layout_weight="3" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/clearHistoryButton"
@@ -119,6 +107,7 @@
                 android:layout_height="36dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="24dp"
+                android:layout_weight="0.1"
                 android:foreground="?attr/selectableItemBackground"
                 android:insetTop="2dp"
                 android:insetBottom="4dp"
@@ -126,8 +115,7 @@
                 android:text="@string/clearHistory"
                 android:textSize="14sp"
                 android:visibility="visible"
-                app:cornerRadius="20dp"
-                android:layout_weight="0.1"/>
+                app:cornerRadius="20dp" />
         </LinearLayout>
     </LinearLayout>
 
@@ -146,8 +134,7 @@
             android:id="@+id/problemImage"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:layout_gravity="center"
-            android:src="@color/DarkFun" />
+            android:layout_gravity="center" />
 
         <TextView
             android:id="@+id/statusText"
@@ -193,10 +180,10 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:indeterminateTint="@color/blue"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:visibility="gone" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

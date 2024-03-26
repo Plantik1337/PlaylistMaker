@@ -11,8 +11,8 @@
     app:layout_constraintTop_toBottomOf="@+id/trackTimeView">
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".mediateka.ui.MediatekaActivity">
+    android:layout_height="wrap_content"
+    tools:context=".mediateka.ui.MediatekaFragment">
 
     <ImageButton
         android:id="@+id/menu_button"
