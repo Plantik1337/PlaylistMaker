@@ -101,7 +101,7 @@ class SearchFragment : Fragment() {
         }
 
         viewModel.getTracklistLiveData().observe(viewLifecycleOwner) { screenState ->
-            Log.i("Состояние", screenState.toString())
+            //Log.i("Состояние", screenState.toString())
             when (screenState) {
 
                 is Statement.HISTORY -> {

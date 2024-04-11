@@ -27,11 +27,7 @@ class SettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.themeSwitcher.isChecked = viewModel.isDarkMode()
-
-//        binding.backToMainActivity.setOnClickListener {// Выход с экрана настроек
-//            finish()
-//        }
+        binding.themeSwitcher.isChecked = viewModel.isDarkMode() //TODO исправить
 
         binding.themeSwitcher.setOnCheckedChangeListener { _, checked ->
             Log.i("switching theme", "${checked}")
