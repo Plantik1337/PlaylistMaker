@@ -5,6 +5,8 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.util.Log
 import com.example.playlistmaker.search.data.MusicResponse
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class NetworkClientImpl(
     private val appleServiceapit: AppleServiceapit,
@@ -30,33 +32,46 @@ class NetworkClientImpl(
         return false
     }
 
-    override fun callMusicResponse(exception: String): Response<MusicResponse> {
-        if (isNetworkAvalible()) {
-            val response = appleServiceapit.search(exception).execute()
+//    override fun callMusicResponse(exception: String): Response<MusicResponse> {
+//        if (isNetworkAvalible()) {
+//            val response = appleServiceapit.search(exception).execute()
+//
+//            return if (response.isSuccessful) {
+//                val musicResponse: MusicResponse? = response.body()
+//                if (musicResponse != null) {
+//                    if (musicResponse.results.isNotEmpty()) {
+//                        //Log.i(TAG, "${response.code()} ne pustoy")
+//                        Response.Success(musicResponse)
+//                    } else {
+//                        Log.i(TAG, "${response.code()} pustoy")
+//                        Response.Error("empty")
+//                    }
+//                } else {
+//                    Log.e(TAG, "${response.code()}")
+//                    Response.Error("Failed to get music response")
+//                }
+//            } else {
+//                val errorMessage = response.errorBody()?.string() ?: "Unknown error"
+//                Log.e(TAG, "${response.code()}")
+//                Response.Error(errorMessage)
+//            }
+//        } else {
+//            return Response.Error("-1")
+//        }
+//    }
 
-            return if (response.isSuccessful) {
-                val musicResponse: MusicResponse? = response.body()
-                if (musicResponse != null) {
-                    if (musicResponse.results.isNotEmpty()) {
-                        //Log.i(TAG, "${response.code()} ne pustoy")
-                        Response.Success(musicResponse)
-                    } else {
-                        Log.i(TAG, "${response.code()} pustoy")
-                        Response.Error("empty")
-                    }
-                } else {
-                    Log.e(TAG, "${response.code()}")
-                    Response.Error("Failed to get music response")
-                }
-            } else {
-                val errorMessage = response.errorBody()?.string() ?: "Unknown error"
-                Log.e(TAG, "${response.code()}")
-                Response.Error(errorMessage)
-            }
-        } else {
+    override suspend fun callMusicResponse(exception: String): Response {
+        if(isNetworkAvalible() == false){
             return Response.Error("-1")
         }
+        return withContext(Dispatchers.IO){
+            try {
+                val response = appleServiceapit.search(exception)
+                Response.Success(response)
+            }catch (e: Throwable){
+                Response.Error("500")
+            }
+        }
     }
-
 
 }

@@ -14,6 +14,7 @@ import android.widget.EditText
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.search.data.Track
@@ -21,6 +22,9 @@ import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.player.ui.PlayerFragment
 import com.example.playlistmaker.search.Statement
 import com.example.playlistmaker.search.ui.viewmodel.SearchViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
@@ -29,7 +33,9 @@ class SearchFragment : Fragment() {
     private lateinit var editText: EditText
     private var savedTextSearch: String? = ""
     private var isClickAllowed = true
-    private val handler = Handler(Looper.getMainLooper())
+    private var isSearchEnable: Boolean = false
+
+    private var searchJob: Job? = null
     private val viewModel: SearchViewModel by viewModel<SearchViewModel>()
 
     companion object {
@@ -42,7 +48,11 @@ class SearchFragment : Fragment() {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+            viewLifecycleOwner.lifecycleScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY)
+                isClickAllowed = true
+            }
+            //handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
         }
         return current
     }
@@ -101,7 +111,7 @@ class SearchFragment : Fragment() {
         }
 
         viewModel.getTracklistLiveData().observe(viewLifecycleOwner) { screenState ->
-            //Log.i("Состояние", screenState.toString())
+            Log.i("Состояние", screenState.toString())
             when (screenState) {
 
                 is Statement.HISTORY -> {
@@ -143,28 +153,31 @@ class SearchFragment : Fragment() {
                 }
 
                 is Statement.Success -> {
-                    //binding.statusText
+
                     binding.searchProgressBar.visibility = View.GONE
                     Log.i("успешный запрос", screenState.trackList.toString())
                     binding.trackListRecyclerView.visibility = View.VISIBLE
                     binding.trackListRecyclerView.adapter =
                         recyclerViewInteractor(screenState.trackList)
+                    if (screenState.trackList.isEmpty()) {
+                        viewModel.history()
+                    }
                 }
 
                 Statement.Loading -> {
                     binding.searchProgressBar.visibility = View.VISIBLE
                 }
+
+                else -> {}
             }
 
         }
 
-        val searchRunnable = Runnable {
-            viewModel.doRequest(editText.text.toString())
-        }
-
         fun searchDebounce() {
-            handler.removeCallbacks(searchRunnable)
-            handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+            searchJob = lifecycleScope.launch {
+                delay(SEARCH_DEBOUNCE_DELAY)
+                viewModel.doRequest(editText.text.toString())
+            }
         }
 
         editText.addTextChangedListener(onTextChanged = { s: CharSequence?, _: Int, _: Int, _: Int ->
@@ -181,14 +194,16 @@ class SearchFragment : Fragment() {
                     binding.trackListRecyclerView.adapter = recyclerViewInteractor(emptyTrackList)
                 }
             }
-            if (s?.isNotEmpty() == true) {
+            if (s?.isNotEmpty() == true && s.isNotBlank()) {
                 binding.cancelInputSearchEditText.visibility = View.VISIBLE
+                Log.i("Начался запрос в сеть", "Есть такое")
                 searchDebounce()
 
             } else {
                 binding.cancelInputSearchEditText.visibility = View.GONE
             }
         })
+
         editText.setOnEditorActionListener { _, actionId, _ ->
             when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
@@ -211,6 +226,7 @@ class SearchFragment : Fragment() {
             binding.searchProblems.visibility = View.GONE
             inputMethod.hideSoftInputFromWindow(editText.windowToken, 0)
             viewModel.history()
+            searchJob?.cancel()
         }
         if (savedInstanceState != null) {
             savedTextSearch = savedInstanceState.getString(EDIT_TEXT, "")
@@ -218,6 +234,7 @@ class SearchFragment : Fragment() {
         }
         binding.trackListRecyclerView.layoutManager = LinearLayoutManager(requireContext())
     }
+
     override fun onDetach() {
         super.onDetach()
     }
