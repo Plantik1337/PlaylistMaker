@@ -5,7 +5,7 @@ interface PlayerRepository {
 
     fun prepareAsync()
 
-    fun getCurrentPosition(): Int
+    fun getCurrentPosition(): String
 
     fun setOnPreparedListener(onPreparedListener: () -> Unit)
 
@@ -16,4 +16,6 @@ interface PlayerRepository {
     fun pause()
 
     fun release()
+
+    fun isPlayeing(): Boolean
 }

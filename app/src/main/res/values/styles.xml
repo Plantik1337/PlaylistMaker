@@ -36,11 +36,28 @@
     </style>
 
     <style name="title" parent="Widget.AppCompat.TextView">
+        <item name="android:textAppearance">@font/ys_display_medium</item>
         <item name="android:textColor">@color/black</item>
     </style>
 
-    <style name="settingsButton">
+    <style name="settingsSwitch" parent="Widget.AppCompat.CompoundButton.Switch">
+        <item name="android:thumbTint">@color/grey</item>
+        <item name="android:trackTint">@color/white</item>
         <item name="android:textColor">@color/black</item>
+        <item name="android:backgroundTint">@color/DarkFun</item>
+        <item name="iconTint">@color/white</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">18dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_height">64dp</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+    </style>
+
+    <style name="settingsButton">
+        <item name="android:thumbTint">@color/white</item>
+        <item name="android:trackTint">@color/grey</item>
+        <item name="android:textColor">@color/DarkFun</item>
         <item name="android:backgroundTint">@color/white</item>
         <item name="iconTint">@color/grey</item>
         <item name="android:paddingStart">16dp</item>
@@ -58,6 +75,10 @@
         <item name="drawableTint">@color/grey</item>
     </style>
 
+    <style name="cancleInputButton">
+        <item name="tint">@color/grey</item>
+    </style>
+
     <style name="backButtonSearchStyle">
         <item name="backgroundTint">@color/white</item>
         <item name="iconTint">@color/black</item>
@@ -66,6 +87,7 @@
     <style name="searchActivityTheme">
         <item name="android:background">@color/white</item>
     </style>
+
     <style name="mediaLibraryActivityTheme" parent="TextAppearance.Design.Tab">
         <item name="android:background">@color/white</item>
         <item name="tabTextColor">@color/DarkFun</item>
@@ -74,17 +96,21 @@
     <style name="trackListStyle">
         <item name="background">@color/white</item>
     </style>
+
     <style name="arrowTrackListStyle">
         <item name="android:tint">@color/grey</item>
     </style>
+
     <style name="songNameTrackListStyle">
         <item name="android:textColor">@color/black</item>
         <item name="android:textAppearance">@font/ys_display_regular</item>
     </style>
+
     <style name="littleTextStyle">
         <item name="android:textColor">@color/grey</item>
         <item name="android:textAppearance">@font/ys_display_regular</item>
     </style>
+
     <style name="refrashButton">
         <item name="android:textSize">14sp</item>
         <item name="android:backgroundTint">@color/DarkFun</item>
@@ -96,12 +122,15 @@
     <style name="button_menu">
         <item name="tint">@color/grey</item>
     </style>
+
     <style name="playButton">
         <item name="tint">@color/black</item>
     </style>
+
     <style name="playerDataText">
         <item name="android:textColor">@color/black</item>
     </style>
+
     <style name="tabTextAppearance" parent="TextAppearance.Design.Tab">
         <item name="textAllCaps">false</item>
     </style>
