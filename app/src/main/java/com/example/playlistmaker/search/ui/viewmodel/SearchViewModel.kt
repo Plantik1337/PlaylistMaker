@@ -1,11 +1,15 @@
 package com.example.playlistmaker.search.ui.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.search.data.Track
 import com.example.playlistmaker.search.Statement
 import com.example.playlistmaker.search.domain.Interactor
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 
 class SearchViewModel(
@@ -14,28 +18,34 @@ class SearchViewModel(
 
     private val trackMutableLiveData = MutableLiveData<Statement>()
     fun getTracklistLiveData(): LiveData<Statement> = trackMutableLiveData
+
+    private var jobFlow: Job? = null
+
     init {
         history()
     }
 
-
     fun doRequest(expression: String) {
         trackMutableLiveData.postValue(Statement.Loading)
-        Thread {
-            val responseData = interactor.doRequest(expression)
-            when {
-                responseData is Statement.Error -> {
-                    trackMutableLiveData.postValue(Statement.Error(responseData.errorMessage))
-                }
 
-                responseData is Statement.Success -> {
-                    trackMutableLiveData.postValue(Statement.Success(responseData.trackList))
+        //jobFlow?.cancel()
+
+        jobFlow = viewModelScope.launch {
+            interactor
+                .doRequest(expression)
+                .collect { pair ->
+                    processResult(pair)
+                    Log.i("Flow thing", pair.toString())
                 }
-            }
-        }.start()
+        }
+    }
+
+    private fun processResult(state: Statement) {
+        trackMutableLiveData.postValue(state)
     }
 
     fun history() {
+        jobFlow?.cancel()
         trackMutableLiveData.postValue(Statement.HISTORY(interactor.read()))
     }
 
@@ -47,6 +57,7 @@ class SearchViewModel(
     fun writeToHistory(track: Track) {
         interactor.write(track)
     }
+
     override fun onCleared() {
         super.onCleared()
     }

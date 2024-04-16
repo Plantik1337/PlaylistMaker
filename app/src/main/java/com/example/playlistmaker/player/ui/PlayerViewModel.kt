@@ -16,66 +16,17 @@ class PlayerViewModel(previewUrl: String, private val player: PlayerRepository) 
         private const val DELAY = 300L
     }
 
-    //private var isSongPlaying: Boolean = false
-
     private var timerJob: Job? = null
 
     private val playerStatusLiveData = MutableLiveData<PlayerState>(PlayerState.StateDefault())
 
     fun playerLiveData(): LiveData<PlayerState> = playerStatusLiveData
-    //fun currentTimeLiveData(): LiveData<Int> = currentTimeMutableLiveData
-
-    //private var mainThreadHandler = Handler(Looper.getMainLooper())
-
-    //private var currentPositionUpdateRunnable: Runnable
-
-//    fun preparePlayer(){
-//        playerStatusLiveData.postValue(PlayerState.StateDefault)
-//
-//        player.setDataSource(previewUrl)
-//        player.prepareAsync()
-//        player.setOnPreparedListener {
-//            playerStatusLiveData.postValue(PlayerState.StatePrepared)
-//            isSongPlaying = false
-//        }
-//        player.setOnCompletionListener {
-//            playerStatusLiveData.postValue(PlayerState.StatePrepared)
-//            isSongPlaying = false
-//    }
 
     init {
-
         initMediaPlayer(previewUrl)
-
-//        Log.i("dataSource", previewUrl)
-//        playerStatusLiveData.postValue(PlayerState.StateDefault)
-//        player.setDataSource(previewUrl)
-//        player.prepareAsync()
-//        player.setOnPreparedListener {
-//            playerStatusLiveData.postValue(PlayerState.StatePrepared)
-//            isSongPlaying = false
-//            Log.i("Player State", "Player is ready!")
-//            //player.start()
-//        }
-//        player.setOnCompletionListener {
-//            playerStatusLiveData.postValue(PlayerState.StatePrepared)
-//            isSongPlaying = false
-//        }
-
-//        currentPositionUpdateRunnable = object : Runnable {
-//            override fun run() {
-//                if (isSongPlaying) {
-//                    currentTimeMutableLiveData.postValue(player.getCurrentPosition())
-//                    mainThreadHandler.postDelayed(this, DELAY)
-//                    //Log.i("Time", player.getCurrentPosition().toString())
-//                }
-//            }
-//        }
     }
 
     private fun initMediaPlayer(previewUrl: String) {
-        //Log.i("dataSource", previewUrl)
-        //playerStatusLiveData.postValue(PlayerState.StateDefault())
         player.setDataSource(previewUrl)
         player.prepareAsync()
         player.setOnPreparedListener {
@@ -83,6 +34,7 @@ class PlayerViewModel(previewUrl: String, private val player: PlayerRepository) 
             Log.i("Player State", "Player is ready!")
         }
         player.setOnCompletionListener {
+            timerJob?.cancel()
             playerStatusLiveData.postValue(PlayerState.StatePrepared())
         }
     }
@@ -114,6 +66,7 @@ class PlayerViewModel(previewUrl: String, private val player: PlayerRepository) 
     }
 
     override fun onCleared() {
+        timerJob?.cancel()
         player.release()
         super.onCleared()
     }

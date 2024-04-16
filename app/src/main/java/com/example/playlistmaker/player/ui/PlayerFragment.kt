@@ -22,11 +22,9 @@ import java.util.Locale
 
 class PlayerFragment : Fragment() {
 
-    //private lateinit var play: ImageView
     private lateinit var binding: ActivityPlayerBinding
 
     companion object {
-        //const val TRACK_DATA = "TRACK_DATA"
 
         const val TRACK_NAME = "TRACK_NAME"
         const val ARTIST_NAME = "ARTIST_NAME"
@@ -67,7 +65,6 @@ class PlayerFragment : Fragment() {
     private val viewModel: PlayerViewModel by viewModel {
         parametersOf(requireArguments().getString(PREVIEW_URL))
     }
-    //intent.getStringExtra("previewUrl").toString()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -112,33 +109,14 @@ class PlayerFragment : Fragment() {
             }
         }
 
-//        viewModel.playerLiveData().observe(viewLifecycleOwner) { screenState ->
-//            Log.i("Player State", screenState.toString())
-//            when (screenState) {
-//                PlayerState.StateDefault -> {
-//                    play.isEnabled = false
-//                }
-//
-//                PlayerState.StatePaused -> {
-//                    binding.playPauseButton.setImageResource(R.drawable.baseline_play_circle_24)
-//                }
-//
-//                PlayerState.StatePlaying -> {
-//                    binding.playPauseButton.setImageResource((R.drawable.baseline_pause_circle_24))
-//                }
-//
-//                PlayerState.StatePrepared -> {
-//                    play.isEnabled = true
-//                    Log.i("Time is...", binding.trackTimeView.toString())
-//                    binding.playPauseButton.setImageResource(R.drawable.baseline_play_circle_24)
-//                    binding.trackTimeView.text = getString(R.string.startCountingPlayer)
-//                }
-//            }
-//        }
-
         viewModel.playerLiveData().observe(viewLifecycleOwner) {
+
+            Log.i("Статус плеера","${it} - циферки ${it.progress} ")
+
             play.isEnabled = it.isPlayButtonEnabled
+
             binding.trackTimeView.text = it.progress
+
             when (it.buttonText) {
                 "PLAY" -> {
                     binding.playPauseButton.setImageResource(R.drawable.baseline_play_circle_24)
@@ -149,13 +127,6 @@ class PlayerFragment : Fragment() {
                 }
             }
         }
-
-
-//        viewModel.currentTimeLiveData().observe(viewLifecycleOwner) { time ->
-//            binding.trackTimeView.text = SimpleDateFormat(
-//                "m:ss", Locale.getDefault()
-//            ).format(time)
-//        }
 
         play.setOnClickListener {
             viewModel.playbackControl()
