@@ -7,9 +7,9 @@ import com.example.playlistmaker.search.data.network.Response
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
+
 class InteractorImlp(
-    private val history: HistoryRepository,
-    private val networkClient: NetworkClient
+    private val history: HistoryRepository, private val networkClient: NetworkClient
 ) : Interactor {
 
     override fun read(): List<Track> {

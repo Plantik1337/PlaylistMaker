@@ -110,8 +110,13 @@ class PlayerFragment : Fragment() {
         }
 
         viewModel.playerLiveData().observe(viewLifecycleOwner) {
+
+            Log.i("Статус плеера","${it} - циферки ${it.progress} ")
+
             play.isEnabled = it.isPlayButtonEnabled
+
             binding.trackTimeView.text = it.progress
+
             when (it.buttonText) {
                 "PLAY" -> {
                     binding.playPauseButton.setImageResource(R.drawable.baseline_play_circle_24)

@@ -194,7 +194,7 @@ class SearchFragment : Fragment() {
                     binding.trackListRecyclerView.adapter = recyclerViewInteractor(emptyTrackList)
                 }
             }
-            if (s?.isNotEmpty() == true && s.isNotBlank()) {
+            if (!s.isNullOrBlank()) {
                 binding.cancelInputSearchEditText.visibility = View.VISIBLE
                 Log.i("Начался запрос в сеть", "Есть такое")
                 searchDebounce()

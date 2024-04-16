@@ -23,7 +23,6 @@ class PlayerViewModel(previewUrl: String, private val player: PlayerRepository) 
     fun playerLiveData(): LiveData<PlayerState> = playerStatusLiveData
 
     init {
-
         initMediaPlayer(previewUrl)
     }
 
@@ -35,6 +34,7 @@ class PlayerViewModel(previewUrl: String, private val player: PlayerRepository) 
             Log.i("Player State", "Player is ready!")
         }
         player.setOnCompletionListener {
+            timerJob?.cancel()
             playerStatusLiveData.postValue(PlayerState.StatePrepared())
         }
     }
@@ -66,6 +66,7 @@ class PlayerViewModel(previewUrl: String, private val player: PlayerRepository) 
     }
 
     override fun onCleared() {
+        timerJob?.cancel()
         player.release()
         super.onCleared()
     }

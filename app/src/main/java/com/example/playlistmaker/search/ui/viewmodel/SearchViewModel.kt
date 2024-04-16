@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.search.data.Track
 import com.example.playlistmaker.search.Statement
 import com.example.playlistmaker.search.domain.Interactor
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 
@@ -18,16 +19,18 @@ class SearchViewModel(
     private val trackMutableLiveData = MutableLiveData<Statement>()
     fun getTracklistLiveData(): LiveData<Statement> = trackMutableLiveData
 
+    private var jobFlow: Job? = null
+
     init {
         history()
     }
 
-    private var latestString: String? = null
-
     fun doRequest(expression: String) {
         trackMutableLiveData.postValue(Statement.Loading)
 
-        viewModelScope.launch {
+        //jobFlow?.cancel()
+
+        jobFlow = viewModelScope.launch {
             interactor
                 .doRequest(expression)
                 .collect { pair ->
@@ -42,6 +45,7 @@ class SearchViewModel(
     }
 
     fun history() {
+        jobFlow?.cancel()
         trackMutableLiveData.postValue(Statement.HISTORY(interactor.read()))
     }
 

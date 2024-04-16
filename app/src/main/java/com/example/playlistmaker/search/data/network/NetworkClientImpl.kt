@@ -32,35 +32,7 @@ class NetworkClientImpl(
         return false
     }
 
-//    override fun callMusicResponse(exception: String): Response<MusicResponse> {
-//        if (isNetworkAvalible()) {
-//            val response = appleServiceapit.search(exception).execute()
-//
-//            return if (response.isSuccessful) {
-//                val musicResponse: MusicResponse? = response.body()
-//                if (musicResponse != null) {
-//                    if (musicResponse.results.isNotEmpty()) {
-//                        //Log.i(TAG, "${response.code()} ne pustoy")
-//                        Response.Success(musicResponse)
-//                    } else {
-//                        Log.i(TAG, "${response.code()} pustoy")
-//                        Response.Error("empty")
-//                    }
-//                } else {
-//                    Log.e(TAG, "${response.code()}")
-//                    Response.Error("Failed to get music response")
-//                }
-//            } else {
-//                val errorMessage = response.errorBody()?.string() ?: "Unknown error"
-//                Log.e(TAG, "${response.code()}")
-//                Response.Error(errorMessage)
-//            }
-//        } else {
-//            return Response.Error("-1")
-//        }
-//    }
-
-    override suspend fun callMusicResponse(exception: String): Response {
+    override suspend fun callMusicResponse(exception: String): Response<MusicResponse> {
         if(isNetworkAvalible() == false){
             return Response.Error("-1")
         }
