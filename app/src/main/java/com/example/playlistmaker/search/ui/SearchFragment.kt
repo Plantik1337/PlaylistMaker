@@ -52,7 +52,6 @@ class SearchFragment : Fragment() {
                 delay(CLICK_DEBOUNCE_DELAY)
                 isClickAllowed = true
             }
-            //handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
         }
         return current
     }

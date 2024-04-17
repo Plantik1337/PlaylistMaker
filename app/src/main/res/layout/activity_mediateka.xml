@@ -8,6 +8,7 @@
     tools:context=".mediateka.ui.MediatekaFragment">
 
     <LinearLayout
+        style="@style/mediaLibraryActivityTheme"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -16,6 +17,7 @@
 
 
         <LinearLayout
+            style="@style/mediaLibraryActivityTheme"
             android:id="@+id/topLinerlayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -38,19 +40,22 @@
         </LinearLayout>
 
         <LinearLayout
+            style="@style/mediaLibraryActivityTheme"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
             <com.google.android.material.tabs.TabLayout
+                style="@style/tabTextAppearance"
                 android:id="@+id/tabLayout"
-                style="@style/mediaLibraryActivityTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:tabIndicatorColor="@android:color/transparent"
-                app:tabIndicatorFullWidth="false"
-                app:tabMode="fixed"
-                app:tabTextAppearance="@style/tabTextAppearance" />
+                app:tabUnboundedRipple="false"
+                app:tabIndicatorFullWidth="true"
+                app:tabSelectedTextAppearance="@style/tabTextAppearance.Selected"
+                app:tabSelectedTextColor="@color/blue"
+                app:tabIndicatorHeight="4dp"
+                android:hapticFeedbackEnabled="true" />
 
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/viewPager"

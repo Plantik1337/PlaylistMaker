@@ -89,7 +89,6 @@
     </style>
 
     <style name="mediaLibraryActivityTheme" parent="TextAppearance.Design.Tab">
-        <item name="android:background">@color/white</item>
         <item name="tabTextColor">@color/DarkFun</item>
     </style>
 
@@ -132,6 +131,10 @@
     </style>
 
     <style name="tabTextAppearance" parent="TextAppearance.Design.Tab">
-        <item name="textAllCaps">false</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+    <style name="tabTextAppearance.Selected">
+        <item name="android:textColor">@color/blue</item>
     </style>
 </resources>
