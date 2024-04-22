@@ -65,6 +65,5 @@ class MediatekaFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        tabMediator.detach()
     }
 }

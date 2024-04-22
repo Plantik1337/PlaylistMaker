@@ -2,8 +2,6 @@ package com.example.playlistmaker.search.ui
 
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -22,6 +20,8 @@ import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.player.ui.PlayerFragment
 import com.example.playlistmaker.search.Statement
 import com.example.playlistmaker.search.ui.viewmodel.SearchViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -32,8 +32,6 @@ class SearchFragment : Fragment() {
     private lateinit var binding: ActivitySearchBinding
     private lateinit var editText: EditText
     private var savedTextSearch: String? = ""
-    private var isClickAllowed = true
-    private var isSearchEnable: Boolean = false
 
     private var searchJob: Job? = null
     private val viewModel: SearchViewModel by viewModel<SearchViewModel>()
@@ -42,18 +40,6 @@ class SearchFragment : Fragment() {
         const val EDIT_TEXT = "EDIT_TEXT"
         private const val CLICK_DEBOUNCE_DELAY = 1000L
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
-    }
-
-    private fun clickDebounce(): Boolean {
-        val current = isClickAllowed
-        if (isClickAllowed) {
-            isClickAllowed = false
-            viewLifecycleOwner.lifecycleScope.launch {
-                delay(CLICK_DEBOUNCE_DELAY)
-                isClickAllowed = true
-            }
-        }
-        return current
     }
 
     override fun onCreateView(
@@ -78,23 +64,31 @@ class SearchFragment : Fragment() {
         fun recyclerViewInteractor(track: List<Track>): Adapter {
             val adapter = Adapter(track, object : RecyclerViewClickListener {
                 override fun onItemClick(position: Int) {
-                    if (clickDebounce()) {
-                        viewModel.writeToHistory(track[position])
-                        findNavController().navigate(
-                            R.id.action_searchFragment_to_playerActivity,
-                            PlayerFragment.createArgs(
-                                trackName = track[position].trackName,
-                                artistName = track[position].artistName,
-                                trackTimeMillis = track[position].trackTimeMillis,
-                                artworkUrl100 = track[position].artworkUrl100,
-                                previewUrl = track[position].previewUrl,
-                                releaseDate = track[position].releaseDate,
-                                country = track[position].country,
-                                primaryGenreName = track[position].primaryGenreName,
-                                collectionName = track[position].collectionName,
-                                collectionExplicitness = track[position].collectionExplicitness
-                            )
+
+                    binding.trackListRecyclerView.isEnabled = false
+
+                    Log.i("Click!", track[position].trackName)
+
+                    viewModel.writeToHistory(track[position])
+                    findNavController().navigate(
+                        R.id.action_searchFragment_to_playerActivity,
+                        PlayerFragment.createArgs(
+                            trackName = track[position].trackName,
+                            artistName = track[position].artistName,
+                            trackTimeMillis = track[position].trackTimeMillis,
+                            artworkUrl100 = track[position].artworkUrl100,
+                            previewUrl = track[position].previewUrl,
+                            releaseDate = track[position].releaseDate,
+                            country = track[position].country,
+                            primaryGenreName = track[position].primaryGenreName,
+                            collectionName = track[position].collectionName,
+                            collectionExplicitness = track[position].collectionExplicitness
                         )
+                    )
+                    CoroutineScope(Dispatchers.Main).launch {
+                        delay(CLICK_DEBOUNCE_DELAY)
+                        binding.trackListRecyclerView.isEnabled = true
+                        Log.i("Статус нажатия", "Можешь нажимать")
                     }
                 }
             })
@@ -235,6 +229,7 @@ class SearchFragment : Fragment() {
     }
 
     override fun onDetach() {
+        searchJob?.cancel()
         super.onDetach()
     }
 

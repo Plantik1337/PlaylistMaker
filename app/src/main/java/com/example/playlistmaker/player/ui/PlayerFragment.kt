@@ -2,12 +2,10 @@ package com.example.playlistmaker.player.ui
 
 import android.graphics.Outline
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewOutlineProvider
-import android.widget.ImageView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -70,7 +68,7 @@ class PlayerFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = ActivityPlayerBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -110,9 +108,6 @@ class PlayerFragment : Fragment() {
         }
 
         viewModel.playerLiveData().observe(viewLifecycleOwner) {
-
-            Log.i("Статус плеера","${it} - циферки ${it.progress} ")
-
             play.isEnabled = it.isPlayButtonEnabled
 
             binding.trackTimeView.text = it.progress
