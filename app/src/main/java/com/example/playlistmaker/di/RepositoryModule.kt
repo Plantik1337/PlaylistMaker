@@ -2,6 +2,13 @@ package com.example.playlistmaker.di
 
 import android.content.Context
 import android.media.MediaPlayer
+import androidx.room.Room
+import com.example.playlistmaker.mediateka.data.AppDatabase
+import com.example.playlistmaker.mediateka.data.FavoriteRepositoryImpl
+import com.example.playlistmaker.mediateka.data.convertors.TrackDbConvertor
+import com.example.playlistmaker.mediateka.domain.FavoriteInteractor
+import com.example.playlistmaker.mediateka.domain.FavoriteInteractorImpl
+import com.example.playlistmaker.mediateka.domain.FavoriteRepository
 import com.example.playlistmaker.player.PlayerRepository
 import com.example.playlistmaker.player.PlayerRepositoryImpl
 import com.example.playlistmaker.search.data.HistoryTransaction
@@ -41,4 +48,12 @@ val repositoryModule = module {
             gson = get()
         )
     }
+    factory<TrackDbConvertor> { TrackDbConvertor() }
+
+    single<FavoriteInteractor>{FavoriteInteractorImpl(favoriteRepository = get())}
+
+    factory<FavoriteRepository> {
+        FavoriteRepositoryImpl(appDatabase = get(), trackDbConvertor = get())
+    }
+
 }

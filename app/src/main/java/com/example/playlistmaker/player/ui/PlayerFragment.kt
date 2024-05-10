@@ -2,10 +2,12 @@ package com.example.playlistmaker.player.ui
 
 import android.graphics.Outline
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewOutlineProvider
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -13,6 +15,7 @@ import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.search.data.Track
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
+import kotlinx.coroutines.coroutineScope
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import java.text.SimpleDateFormat
@@ -24,6 +27,7 @@ class PlayerFragment : Fragment() {
 
     companion object {
 
+        const val TRACK_ID = "TRACK_ID"
         const val TRACK_NAME = "TRACK_NAME"
         const val ARTIST_NAME = "ARTIST_NAME"
         const val TRACK_TIME_MILLIS = "TRACK_TIME_MILLIS"
@@ -36,6 +40,7 @@ class PlayerFragment : Fragment() {
         const val COLLECTION_EXPLICITNESS = "COLLECTION_EXPLICITNESS"
 
         fun createArgs(
+            trackId: Int,
             trackName: String,
             artistName: String,
             trackTimeMillis: String,
@@ -47,6 +52,7 @@ class PlayerFragment : Fragment() {
             collectionName: String,
             collectionExplicitness: String
         ): Bundle = bundleOf(
+            TRACK_ID to trackId,
             TRACK_NAME to trackName,
             ARTIST_NAME to artistName,
             TRACK_TIME_MILLIS to trackTimeMillis,
@@ -77,6 +83,7 @@ class PlayerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val currentContent = Track(
+            trackId = requireArguments().getInt(TRACK_ID),
             trackName = requireArguments().getString(TRACK_NAME).toString(),
             artistName = requireArguments().getString(ARTIST_NAME).toString(),
             trackTimeMillis = requireArguments().getString(TRACK_TIME_MILLIS).toString(),
@@ -89,6 +96,33 @@ class PlayerFragment : Fragment() {
             collectionExplicitness = requireArguments().getString(COLLECTION_EXPLICITNESS)
                 .toString()
         )
+
+        viewModel.isExists(currentContent.trackId)
+
+        viewModel.isTrackLiked().observe(viewLifecycleOwner) {
+            when (it) {
+                true -> {
+                    //ContextCompat.getDrawable(requireContext(), android.R.color.transparent)
+                    Log.i("Нажатие","Обсервер нашёлся, должен быть красным")
+                    binding.likeButton.drawable.setTint(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.heartRed
+                        )
+                    )
+                }
+
+                false -> {
+                    Log.i("Нажатие","Обсервер нашёлся, должен быть серым")
+                    binding.likeButton.drawable.setTint(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.grey
+                        )
+                    )
+                }
+            }
+        }
 
         val play = binding.playPauseButton
 
@@ -154,6 +188,11 @@ class PlayerFragment : Fragment() {
             findNavController().navigateUp()
         }
 
+        binding.likeButton.setOnClickListener {
+            //Log.i("Click", "Лайк")
+            viewModel.likeClickInteractor(track = currentContent)
+
+        }
     }
 
     override fun onDetach() {

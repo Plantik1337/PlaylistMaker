@@ -73,6 +73,7 @@ class SearchFragment : Fragment() {
                     findNavController().navigate(
                         R.id.action_searchFragment_to_playerActivity,
                         PlayerFragment.createArgs(
+                            trackId = track[position].trackId,
                             trackName = track[position].trackName,
                             artistName = track[position].artistName,
                             trackTimeMillis = track[position].trackTimeMillis,

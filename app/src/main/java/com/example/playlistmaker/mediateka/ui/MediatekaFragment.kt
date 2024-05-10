@@ -1,7 +1,6 @@
 package com.example.playlistmaker.mediateka.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,9 +9,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityMediatekaBinding
-import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import org.koin.core.component.getScopeId
+
 
 class MediatekaFragment : Fragment() {
 
@@ -29,12 +27,6 @@ class MediatekaFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        binding.tabLayout.apply {
-            tabGravity = TabLayout.GRAVITY_FILL
-            tabMode = TabLayout.MODE_FIXED
-            isHapticFeedbackEnabled = true
-        }
 
         binding.viewPager.adapter = MediatekaViewPagerAdapter(childFragmentManager, lifecycle)
 
@@ -54,6 +46,11 @@ class MediatekaFragment : Fragment() {
 
                 else -> ""
             }
+
+            tab.view.background =
+                ContextCompat.getDrawable(requireContext(), android.R.color.transparent)
+
+
             tabElementView.background =
                 ContextCompat.getDrawable(requireContext(), android.R.color.transparent)
             tabElementView.setTextAppearance(R.style.tabTextAppearance)

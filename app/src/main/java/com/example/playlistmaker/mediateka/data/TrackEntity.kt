@@ -1,12 +1,12 @@
-package com.example.playlistmaker.search.data
+package com.example.playlistmaker.mediateka.data
 
-data class MusicResponse(
-    val resultCount: String,
-    val results: List<Track>
-)
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-data class Track(
-    val trackId: Int,
+@Entity(tableName = "track_table")
+data class TrackEntity(
+    @PrimaryKey
+    val id: Int,
     val trackName: String,
     val artistName: String,
     val trackTimeMillis: String,
@@ -16,5 +16,5 @@ data class Track(
     val country: String,
     val primaryGenreName: String,
     val collectionName: String,
-    val collectionExplicitness: String,
+    val collectionExplicitness: String
 )

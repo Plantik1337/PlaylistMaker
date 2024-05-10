@@ -2,13 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/mediaLibraryActivityTheme"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".mediateka.ui.MediatekaFragment">
 
     <LinearLayout
-        style="@style/mediaLibraryActivityTheme"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -17,7 +15,6 @@
 
 
         <LinearLayout
-            style="@style/mediaLibraryActivityTheme"
             android:id="@+id/topLinerlayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -40,22 +37,19 @@
         </LinearLayout>
 
         <LinearLayout
-            style="@style/mediaLibraryActivityTheme"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
             <com.google.android.material.tabs.TabLayout
-                style="@style/tabTextAppearance"
                 android:id="@+id/tabLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:tabUnboundedRipple="false"
-                app:tabIndicatorFullWidth="true"
-                app:tabSelectedTextAppearance="@style/tabTextAppearance.Selected"
+                app:tabIndicatorColor="@color/blue"
+                app:tabMode="fixed"
+                app:tabUnboundedRipple="true"
                 app:tabSelectedTextColor="@color/blue"
-                app:tabIndicatorHeight="4dp"
-                android:hapticFeedbackEnabled="true" />
+                app:tabIndicatorHeight="10dp" />
 
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/viewPager"

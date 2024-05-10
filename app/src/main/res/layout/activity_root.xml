@@ -7,7 +7,6 @@
     style="@style/searchActivityTheme">
 
     <androidx.fragment.app.FragmentContainerView
-        style="@style/searchActivityTheme"
         android:id="@+id/rootFragmentContainerView"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="0dp"
