@@ -6,7 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FavoriteFragmentBinding
 import com.example.playlistmaker.mediateka.ui.MediatekaAdapter
@@ -14,7 +16,6 @@ import com.example.playlistmaker.mediateka.ui.RecyclerViewClickListener
 import com.example.playlistmaker.mediateka.viewmodel.FavoriteViewModel
 import com.example.playlistmaker.player.ui.PlayerFragment
 import com.example.playlistmaker.search.data.Track
-import com.example.playlistmaker.search.ui.SearchFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -50,43 +51,51 @@ class FavoriteFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.favoriteFragmentRV.layoutManager = LinearLayoutManager(requireContext())
         viewModel.showLog()
 
+        viewModel.getTracks()
 
-        fun recyclerViewInteractor(tracks: List<Track>): MediatekaAdapter{
-            val adapter = MediatekaAdapter(tracks, object : RecyclerViewClickListener{
-                override fun onItemClick(position: Int) {
-                    binding.favoriteFragmentRV. isEnabled = false
-
-                    Log.i("Click!", tracks[position].trackName)
-
-                    findNavController().navigate(
-                        R.id.action_favoriteFragment_to_playerActivity,
-                        PlayerFragment.createArgs(
-                            trackId = tracks[position].trackId,
-                            trackName = tracks[position].trackName,
-                            artistName = tracks[position].artistName,
-                            trackTimeMillis = tracks[position].trackTimeMillis,
-                            artworkUrl100 = tracks[position].artworkUrl100,
-                            previewUrl = tracks[position].previewUrl,
-                            releaseDate = tracks[position].releaseDate,
-                            country = tracks[position].country,
-                            primaryGenreName = tracks[position].primaryGenreName,
-                            collectionName = tracks[position].collectionName,
-                            collectionExplicitness = tracks[position].collectionExplicitness
-                        )
-                    )
-                    CoroutineScope(Dispatchers.Main).launch {
-                        delay(400L)
-                        binding.favoriteFragmentRV.isEnabled = true
-                        Log.i("Статус нажатия", "Можешь нажимать")
-                    }
-                }
-            })
-            return adapter
+        viewModel.tracksLiveData().observe(viewLifecycleOwner) { trackList ->
+            binding.favoriteFragmentRV.adapter = recyclerViewInteractor(trackList)
         }
+
         //binding.favoriteFragmentRV.adapter
         //
+    }
+
+    private fun recyclerViewInteractor(tracks: List<Track>): MediatekaAdapter {
+        val adapter = MediatekaAdapter(tracks, object : RecyclerViewClickListener {
+            override fun onItemClick(position: Int) {
+
+                binding.favoriteFragmentRV.isEnabled = false
+
+                Log.i("Click!", tracks[position].trackName)
+
+                findNavController().navigate(
+                    R.id.action_favoriteFragment_to_playerFragment,
+                    PlayerFragment.createArgs(
+                        trackId = tracks[position].trackId,
+                        trackName = tracks[position].trackName,
+                        artistName = tracks[position].artistName,
+                        trackTimeMillis = tracks[position].trackTimeMillis,
+                        artworkUrl100 = tracks[position].artworkUrl100,
+                        previewUrl = tracks[position].previewUrl,
+                        releaseDate = tracks[position].releaseDate,
+                        country = tracks[position].country,
+                        primaryGenreName = tracks[position].primaryGenreName,
+                        collectionName = tracks[position].collectionName,
+                        collectionExplicitness = tracks[position].collectionExplicitness
+                    )
+                )
+                CoroutineScope(Dispatchers.Main).launch {
+                    delay(400L)
+                    binding.favoriteFragmentRV.isEnabled = true
+                    Log.i("Статус нажатия", "Можешь нажимать")
+                }
+            }
+        })
+        return adapter
     }
 
 

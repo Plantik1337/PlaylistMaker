@@ -4,5 +4,5 @@ import com.example.playlistmaker.search.data.Track
 import kotlinx.coroutines.flow.Flow
 
 interface FavoriteInteractor {
-    fun favotiteTracks(): Flow<List<Track>>
+    fun favoriteTracks(): Flow<List<Track>>
 }

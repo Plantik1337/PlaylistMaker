@@ -18,15 +18,6 @@ interface TrackDao {
     suspend fun deleteById(trackId:Int)
 
     //@Query("SELECT * FROM track_table WHERE EXISTS(SELECT * FROM track_table WHERE id = :trackId)")
-    @Query("SELECT EXISTS(SELECT * FROM track_table WHERE id = :trackId)")
+    @Query("SELECT EXISTS(SELECT 1 FROM track_table WHERE id = :trackId)")
     suspend fun isExists(trackId: Int): Boolean
-
-//    @Delete(entity = TrackEntity::class)
-//    suspend fun deleteTrack(trackEntity: TrackEntity)
-//
-//    @Query("DELETE FROM track_table WHERE id = :trackId")
-//    suspend fun deleteTrackById(trackId: Int)
-//
-//    @Query("SELECT COUNT(*) FROM track_table WHERE id =:trackId")
-//    suspend fun checkTrackExists(trackId: Int): Int
 }

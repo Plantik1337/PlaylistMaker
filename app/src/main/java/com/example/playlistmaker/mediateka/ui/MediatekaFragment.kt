@@ -7,26 +7,29 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.ActivityMediatekaBinding
+import com.example.playlistmaker.databinding.FragmentMediatekaBinding
 import com.google.android.material.tabs.TabLayoutMediator
 
 
 class MediatekaFragment : Fragment() {
 
     private lateinit var tabMediator: TabLayoutMediator
-    private lateinit var binding: ActivityMediatekaBinding
+    private lateinit var binding: FragmentMediatekaBinding
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = ActivityMediatekaBinding.inflate(inflater, container, false)
+        binding = FragmentMediatekaBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val navController = findNavController()
 
         binding.viewPager.adapter = MediatekaViewPagerAdapter(childFragmentManager, lifecycle)
 

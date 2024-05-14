@@ -1,16 +1,15 @@
-package com.example.playlistmaker.player
+package com.example.playlistmaker.player.domain
 
 import android.media.MediaPlayer
-import com.example.playlistmaker.mediateka.domain.FavoriteRepository
+import android.util.Log
+import com.example.playlistmaker.player.data.PlayerDatabaseRepository
 import com.example.playlistmaker.search.data.Track
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.flow
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class PlayerRepositoryImpl(
     private val mediaPlayer: MediaPlayer,
-    private val favoriteRepository: FavoriteRepository
+    private val playerDatabaseRepository: PlayerDatabaseRepository
 ) : PlayerRepository {
     override fun setDataSource(url: String) {
         mediaPlayer.setDataSource(url)
@@ -67,15 +66,17 @@ class PlayerRepositoryImpl(
     }
 
     override suspend fun likeTrack(track: Track) {
-        favoriteRepository.likeTrack(track)
+        playerDatabaseRepository.likeTrack(track)
     }
 
     override suspend fun deleteTrack(trackId: Int) {
-        favoriteRepository.deleteTrack(trackId)
+        playerDatabaseRepository.deleteTrack(trackId)
     }
 
     override suspend fun isExists(trackId: Int): Boolean {
-        return favoriteRepository.isExists(trackId)
+        val tmp = playerDatabaseRepository.isExists(trackId)
+        Log.e("Репозиторий","${tmp}")
+        return tmp
     }
 
 }

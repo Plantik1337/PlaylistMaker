@@ -25,28 +25,8 @@ class FavoriteRepositoryImpl(
 //        )
 //    }
 
-     override suspend fun likeTrack(track: Track)  {
-        appDatabase.trackDao().insertTrack(convertToEntity(track))
-        //appDatabase.trackDao().insertTrack()
-//        flow<Track> {
-//            appDatabase.trackDao().insertTrack(convertToEntity(track))
-//        }
-    }
 
-    override suspend fun deleteTrack(trackId: Int) {
-//        flow<Int> {
-//            appDatabase.trackDao().deleteTrackById(trackId)
-//        }
-        appDatabase.trackDao().deleteById(trackId)
-    }
 
-    override suspend fun isExists(trackId: Int): Boolean {
-        return appDatabase.trackDao().isExists(trackId)
-    }
-
-    private fun convertToEntity(track: Track): TrackEntity{
-        return track.let {trackDbConvertor.map(track) }
-    }
 
     private fun convertFromEntity(tracks: List<TrackEntity>): List<Track> {
         return tracks.map { track -> trackDbConvertor.map(track) }

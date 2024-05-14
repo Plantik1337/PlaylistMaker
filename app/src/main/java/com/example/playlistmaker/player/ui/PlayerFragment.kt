@@ -14,8 +14,10 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.search.data.Track
-import com.example.playlistmaker.databinding.ActivityPlayerBinding
-import kotlinx.coroutines.coroutineScope
+import com.example.playlistmaker.databinding.FragmentPlayerBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import java.text.SimpleDateFormat
@@ -23,7 +25,7 @@ import java.util.Locale
 
 class PlayerFragment : Fragment() {
 
-    private lateinit var binding: ActivityPlayerBinding
+    private lateinit var binding: FragmentPlayerBinding
 
     companion object {
 
@@ -75,7 +77,7 @@ class PlayerFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = ActivityPlayerBinding.inflate(inflater, container, false)
+        binding = FragmentPlayerBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -97,13 +99,17 @@ class PlayerFragment : Fragment() {
                 .toString()
         )
 
-        viewModel.isExists(currentContent.trackId)
+
+        CoroutineScope(Dispatchers.Main).launch {
+            viewModel.isExists(currentContent.trackId)
+        }
+
 
         viewModel.isTrackLiked().observe(viewLifecycleOwner) {
             when (it) {
                 true -> {
                     //ContextCompat.getDrawable(requireContext(), android.R.color.transparent)
-                    Log.i("Нажатие","Обсервер нашёлся, должен быть красным")
+                    Log.i("Нажатие", "Обсервер нашёлся, должен быть красным")
                     binding.likeButton.drawable.setTint(
                         ContextCompat.getColor(
                             requireContext(),
@@ -113,7 +119,7 @@ class PlayerFragment : Fragment() {
                 }
 
                 false -> {
-                    Log.i("Нажатие","Обсервер нашёлся, должен быть серым")
+                    Log.i("Нажатие", "Обсервер нашёлся, должен быть серым")
                     binding.likeButton.drawable.setTint(
                         ContextCompat.getColor(
                             requireContext(),

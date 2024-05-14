@@ -5,6 +5,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.playlistmaker.mediateka.data.AppDatabase
 import com.example.playlistmaker.mediateka.data.FavoriteRepositoryImpl
+import com.example.playlistmaker.mediateka.data.convertors.TrackDbConvertor
 import com.example.playlistmaker.mediateka.domain.FavoriteRepository
 import com.example.playlistmaker.search.data.network.AppleServiceapit
 import com.example.playlistmaker.search.data.network.NetworkClientImpl
@@ -31,6 +32,8 @@ val dataModuel = module {
     single<NetworkClient> {
         NetworkClientImpl(appleServiceapit = get(), context = get())
     }
+
+    factory<TrackDbConvertor> { TrackDbConvertor() }
 
     factory { MediaPlayer() }
 
