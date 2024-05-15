@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
@@ -66,14 +67,14 @@ class FavoriteFragment : Fragment() {
 
     private fun recyclerViewInteractor(tracks: List<Track>): MediatekaAdapter {
         val adapter = MediatekaAdapter(tracks, object : RecyclerViewClickListener {
-            override fun onItemClick(position: Int) {
 
+            override fun onItemClick(position: Int) {
                 binding.favoriteFragmentRV.isEnabled = false
 
                 Log.i("Click!", tracks[position].trackName)
 
                 findNavController().navigate(
-                    R.id.action_favoriteFragment_to_playerFragment,
+                    R.id.action_mediatekaFragment_to_playerFragment,
                     PlayerFragment.createArgs(
                         trackId = tracks[position].trackId,
                         trackName = tracks[position].trackName,
@@ -88,6 +89,7 @@ class FavoriteFragment : Fragment() {
                         collectionExplicitness = tracks[position].collectionExplicitness
                     )
                 )
+
                 CoroutineScope(Dispatchers.Main).launch {
                     delay(400L)
                     binding.favoriteFragmentRV.isEnabled = true

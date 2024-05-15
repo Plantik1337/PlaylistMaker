@@ -11,9 +11,11 @@ import org.koin.dsl.module
 
 val viewModelModule = module {
 
-    viewModel { (previewUrl: String) ->
+    viewModel { (trackId: Int, previewUrl: String) ->
         PlayerViewModel(
-            previewUrl = previewUrl, player = get()
+            trackId = trackId,
+            previewUrl = previewUrl,
+            player = get()
         )//Player
     }
     viewModel {

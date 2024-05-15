@@ -21,8 +21,6 @@ interface PlayerRepository {
 
     fun isPlayeing(): Boolean
 
-    fun isLiked(trackId: Int): Boolean
-
     suspend fun likeTrack(track: Track)
 
     suspend fun deleteTrack(trackId: Int)

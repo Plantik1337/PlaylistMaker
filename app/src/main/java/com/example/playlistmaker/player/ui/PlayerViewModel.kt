@@ -5,13 +5,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.di.viewModelModule
 import com.example.playlistmaker.player.domain.PlayerRepository
 import com.example.playlistmaker.search.data.Track
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class PlayerViewModel(previewUrl: String, private val player: PlayerRepository) :
+class PlayerViewModel(trackId: Int, previewUrl: String, private val player: PlayerRepository) :
     ViewModel() {
 
     companion object {
@@ -29,13 +30,10 @@ class PlayerViewModel(previewUrl: String, private val player: PlayerRepository) 
     private val isTrackLikedML = MutableLiveData<Boolean>()
     fun isTrackLiked(): LiveData<Boolean> = isTrackLikedML
 
-    //var trackNum = 1
-    //val previewUrl = track.previewUrl
-
     init {
         initMediaPlayer(previewUrl)
         viewModelScope.launch {
-            //isTrackLikedML.postValue(player.isExists(trackId =))
+            isExists(trackId)
         }
         //isTrackLikedML.postValue(player.isLiked(track.trackId))
         //trackNum = trackId
@@ -97,7 +95,7 @@ class PlayerViewModel(previewUrl: String, private val player: PlayerRepository) 
     }
 
     suspend fun isExists(trackInt: Int): Boolean {
-        //isTrackLikedML.postValue(player.isExists(trackId = trackInt))
+        isTrackLikedML.postValue(player.isExists(trackId = trackInt))
         // Log.i("Трек существует ?", "${isTrackLikedML.value}")
 
         return player.isExists(trackId = trackInt)

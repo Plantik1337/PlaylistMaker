@@ -20,8 +20,7 @@ val dataModuel = module {
 
     single<AppleServiceapit> {
         Retrofit.Builder().baseUrl("https://itunes.apple.com")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+            .addConverterFactory(GsonConverterFactory.create()).build()
             .create(AppleServiceapit::class.java)
     }
 
@@ -39,10 +38,8 @@ val dataModuel = module {
 
     single {
         Room.databaseBuilder(
-            androidContext(),
-            AppDatabase::class.java,
-            "database.db"
-        ).build()
+            androidContext(), AppDatabase::class.java, "database.db"
+        ).fallbackToDestructiveMigration().build()
     }
 
 }

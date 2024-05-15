@@ -1,5 +1,6 @@
 package com.example.playlistmaker.mediateka.data
 
+import android.icu.text.DateFormat
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -7,6 +8,7 @@ import androidx.room.PrimaryKey
 data class TrackEntity(
     @PrimaryKey
     val id: Int,
+    val addTime: Long,
     val trackName: String,
     val artistName: String,
     val trackTimeMillis: String,

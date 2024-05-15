@@ -7,6 +7,7 @@ class TrackDbConvertor {
     fun map(track: Track): TrackEntity {
         return TrackEntity(
             id = track.trackId,
+            addTime = System.currentTimeMillis(),
             trackName = track.trackName,
             artistName = track.artistName,
             trackTimeMillis = track.trackTimeMillis,

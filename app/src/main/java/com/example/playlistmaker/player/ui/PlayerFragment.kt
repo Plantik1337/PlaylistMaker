@@ -69,7 +69,10 @@ class PlayerFragment : Fragment() {
     }
 
     private val viewModel: PlayerViewModel by viewModel {
-        parametersOf(requireArguments().getString(PREVIEW_URL))
+        parametersOf(
+            requireArguments().getInt(TRACK_ID),
+            requireArguments().getString(PREVIEW_URL)
+        )
     }
 
     override fun onCreateView(
@@ -99,6 +102,8 @@ class PlayerFragment : Fragment() {
                 .toString()
         )
 
+
+        viewModel.isTrackLiked()
 
         CoroutineScope(Dispatchers.Main).launch {
             viewModel.isExists(currentContent.trackId)

@@ -52,19 +52,6 @@ class PlayerRepositoryImpl(
         return mediaPlayer.isPlaying
     }
 
-    override fun isLiked(trackId: Int): Boolean {
-//        return when {
-//            favoriteRepository.isFavorite(trackId).equals(true) -> {
-//                true
-//            }
-//
-//            else -> {
-//                false
-//            }
-//        }
-        return true
-    }
-
     override suspend fun likeTrack(track: Track) {
         playerDatabaseRepository.likeTrack(track)
     }
