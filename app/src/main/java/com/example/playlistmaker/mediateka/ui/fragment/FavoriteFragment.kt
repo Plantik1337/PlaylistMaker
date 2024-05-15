@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isEmpty
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -57,12 +58,18 @@ class FavoriteFragment : Fragment() {
 
         viewModel.getTracks()
 
-        viewModel.tracksLiveData().observe(viewLifecycleOwner) { trackList ->
-            binding.favoriteFragmentRV.adapter = recyclerViewInteractor(trackList)
-        }
 
-        //binding.favoriteFragmentRV.adapter
-        //
+
+        viewModel.tracksLiveData().observe(viewLifecycleOwner) { trackList ->
+            if (trackList.isEmpty()) {
+                binding.emptyListMessage.visibility = View.VISIBLE
+                binding.favoriteFragmentRV.visibility = View.GONE
+            } else {
+                binding.emptyListMessage.visibility = View.GONE
+                binding.favoriteFragmentRV.visibility = View.VISIBLE
+                binding.favoriteFragmentRV.adapter = recyclerViewInteractor(trackList)
+            }
+        }
     }
 
     private fun recyclerViewInteractor(tracks: List<Track>): MediatekaAdapter {

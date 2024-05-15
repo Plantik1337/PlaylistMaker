@@ -31,8 +31,6 @@ class FavoriteViewModel(private val interactor: FavoriteInteractor) : ViewModel(
                 trackListML.postValue(trackList)
             }
         }
-        //trackListML.postValue(interactor.favoriteTracks())
-         //interactor.favoriteTracks()
     }
 
     override fun onCleared() {
