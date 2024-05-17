@@ -29,50 +29,16 @@ class PlayerFragment : Fragment() {
 
     companion object {
 
-        const val TRACK_ID = "TRACK_ID"
-        const val TRACK_NAME = "TRACK_NAME"
-        const val ARTIST_NAME = "ARTIST_NAME"
-        const val TRACK_TIME_MILLIS = "TRACK_TIME_MILLIS"
-        const val ARTWORK_URL100 = "ARTWORK_URL100"
-        const val PREVIEW_URL = "PREVIEW_URL"
-        const val RELEASE_DATE = "RELEASE_DATE"
-        const val COUNTRY = "COUNTRY"
-        const val PRIMARY_GENRENAME = "PRIMARY_GENRENAME"
-        const val COLLECTION_NAME = "COLLECTION_NAME"
-        const val COLLECTION_EXPLICITNESS = "COLLECTION_EXPLICITNESS"
+        const val TRACK_KEY = "TRACK_KEY"
 
-        fun createArgs(
-            trackId: Int,
-            trackName: String,
-            artistName: String,
-            trackTimeMillis: String,
-            artworkUrl100: String,
-            previewUrl: String,
-            releaseDate: String,
-            country: String,
-            primaryGenreName: String,
-            collectionName: String,
-            collectionExplicitness: String
-        ): Bundle = bundleOf(
-            TRACK_ID to trackId,
-            TRACK_NAME to trackName,
-            ARTIST_NAME to artistName,
-            TRACK_TIME_MILLIS to trackTimeMillis,
-            ARTWORK_URL100 to artworkUrl100,
-            PREVIEW_URL to previewUrl,
-            RELEASE_DATE to releaseDate,
-            COUNTRY to country,
-            PRIMARY_GENRENAME to primaryGenreName,
-            COLLECTION_NAME to collectionName,
-            COLLECTION_EXPLICITNESS to collectionExplicitness
+        fun createArgs(track: Track): Bundle = bundleOf(
+            TRACK_KEY to track
         )
     }
 
     private val viewModel: PlayerViewModel by viewModel {
-        parametersOf(
-            requireArguments().getInt(TRACK_ID),
-            requireArguments().getString(PREVIEW_URL)
-        )
+        val track = requireArguments().getParcelable(TRACK_KEY, Track::class.java)!!
+        parametersOf(track.trackId, track.previewUrl)
     }
 
     override fun onCreateView(
@@ -87,20 +53,7 @@ class PlayerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val currentContent = Track(
-            trackId = requireArguments().getInt(TRACK_ID),
-            trackName = requireArguments().getString(TRACK_NAME).toString(),
-            artistName = requireArguments().getString(ARTIST_NAME).toString(),
-            trackTimeMillis = requireArguments().getString(TRACK_TIME_MILLIS).toString(),
-            artworkUrl100 = requireArguments().getString(ARTWORK_URL100).toString(),
-            previewUrl = requireArguments().getString(PREVIEW_URL).toString(),
-            releaseDate = requireArguments().getString(RELEASE_DATE).toString(),
-            country = requireArguments().getString(COUNTRY).toString(),
-            primaryGenreName = requireArguments().getString(PRIMARY_GENRENAME).toString(),
-            collectionName = requireArguments().getString(COLLECTION_NAME).toString(),
-            collectionExplicitness = requireArguments().getString(COLLECTION_EXPLICITNESS)
-                .toString()
-        )
+        val currentContent = requireArguments().getParcelable(TRACK_KEY, Track::class.java)!!
 
 
         viewModel.isTrackLiked()

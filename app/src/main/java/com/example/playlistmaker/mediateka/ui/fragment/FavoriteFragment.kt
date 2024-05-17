@@ -83,17 +83,7 @@ class FavoriteFragment : Fragment() {
                 findNavController().navigate(
                     R.id.action_mediatekaFragment_to_playerFragment,
                     PlayerFragment.createArgs(
-                        trackId = tracks[position].trackId,
-                        trackName = tracks[position].trackName,
-                        artistName = tracks[position].artistName,
-                        trackTimeMillis = tracks[position].trackTimeMillis,
-                        artworkUrl100 = tracks[position].artworkUrl100,
-                        previewUrl = tracks[position].previewUrl,
-                        releaseDate = tracks[position].releaseDate,
-                        country = tracks[position].country,
-                        primaryGenreName = tracks[position].primaryGenreName,
-                        collectionName = tracks[position].collectionName,
-                        collectionExplicitness = tracks[position].collectionExplicitness
+                        track = tracks[position]
                     )
                 )
 

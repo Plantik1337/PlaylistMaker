@@ -73,17 +73,7 @@ class SearchFragment : Fragment() {
                     findNavController().navigate(
                         R.id.action_searchFragment_to_playerActivity,
                         PlayerFragment.createArgs(
-                            trackId = track[position].trackId,
-                            trackName = track[position].trackName,
-                            artistName = track[position].artistName,
-                            trackTimeMillis = track[position].trackTimeMillis,
-                            artworkUrl100 = track[position].artworkUrl100,
-                            previewUrl = track[position].previewUrl,
-                            releaseDate = track[position].releaseDate,
-                            country = track[position].country,
-                            primaryGenreName = track[position].primaryGenreName,
-                            collectionName = track[position].collectionName,
-                            collectionExplicitness = track[position].collectionExplicitness
+                            track = track[position]
                         )
                     )
                     CoroutineScope(Dispatchers.Main).launch {
