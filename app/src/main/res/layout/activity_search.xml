@@ -98,7 +98,7 @@
                 android:id="@+id/trackListRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="3" />
+                android:layout_weight="10" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/clearHistoryButton"
@@ -106,7 +106,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="36dp"
                 android:layout_gravity="center"
-                android:layout_marginTop="24dp"
                 android:layout_weight="0.1"
                 android:foreground="?attr/selectableItemBackground"
                 android:insetTop="2dp"

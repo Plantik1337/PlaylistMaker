@@ -6,11 +6,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.example.playlistmaker.databinding.SettingsScreenBinding
 import com.example.playlistmaker.settings.ui.viewmodel.SettingsViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import org.koin.androidx.scope.ScopeFragment
+import org.koin.androidx.scope.fragmentScope
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsFragment : Fragment() {
+
+    companion object {
+        const val THEME_SWITHER_DEBOUNCE_DELAY = 3000L
+    }
 
     private val viewModel: SettingsViewModel by viewModel<SettingsViewModel>()
 
@@ -30,8 +41,16 @@ class SettingsFragment : Fragment() {
         binding.themeSwitcher.isChecked = viewModel.isDarkMode() //TODO исправить
 
         binding.themeSwitcher.setOnCheckedChangeListener { _, checked ->
+            binding.themeSwitcher.isEnabled = false
             Log.i("switching theme", "${checked}")
             viewModel.themeSwitch(checked)
+
+
+
+            viewLifecycleOwner.lifecycleScope.launch {
+                delay(THEME_SWITHER_DEBOUNCE_DELAY)
+                binding.themeSwitcher.isEnabled = true
+            }
         }
 
         binding.shareButton.setOnClickListener {//Поделиться

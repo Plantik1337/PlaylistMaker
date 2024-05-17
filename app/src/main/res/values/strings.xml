@@ -29,4 +29,6 @@
     <string name="aintCreatedPlaylist">Вы не создали \nни одного плейлиста</string>
     <string name="newPlaylist">Новый плейлист</string>
     <string name="meiaLibraryIsEmply">Ваша медиатека пуста</string>
+    <string name="country">Страна</string>
+    <string name="genre">Жанр</string>
 </resources>

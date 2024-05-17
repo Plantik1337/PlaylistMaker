@@ -7,7 +7,6 @@
     style="@style/searchActivityTheme">
 
     <androidx.fragment.app.FragmentContainerView
-        style="@style/searchActivityTheme"
         android:id="@+id/rootFragmentContainerView"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="0dp"
@@ -26,5 +25,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/bottom_nav_menu" />
+        app:menu="@menu/bottom_nav_menu"
+        app:itemBackground="@android:color/transparent"
+        app:itemTextAppearanceActive="@color/teal_700" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -106,6 +106,7 @@
         app:tint="@color/grey" />
 
     <ImageView
+        android:id="@+id/likeButton"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginStart="20dp"
@@ -189,7 +190,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Жанр"
+                android:text="@string/genre"
                 android:textColor="@color/grey"
                 app:layout_constraintStart_toEndOf="@id/left_guideline"
                 app:layout_constraintTop_toBottomOf="@id/yearOfRelise" />
@@ -208,7 +209,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Страна"
+                android:text="@string/country"
                 android:textColor="@color/grey"
                 app:layout_constraintStart_toEndOf="@id/left_guideline"
                 app:layout_constraintTop_toBottomOf="@id/genre" />

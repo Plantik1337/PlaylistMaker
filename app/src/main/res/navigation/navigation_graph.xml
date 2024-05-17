@@ -10,38 +10,44 @@
         android:id="@+id/settingsFragment"
         android:name="com.example.playlistmaker.settings.ui.SettingsFragment"
         android:label="settings_screen"
-        tools:layout="@layout/settings_screen"/>
+        tools:layout="@layout/settings_screen" />
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.example.playlistmaker.search.ui.SearchFragment"
         android:label="activity_search"
-        tools:layout="@layout/activity_search" >
+        tools:layout="@layout/activity_search">
         <action
             android:id="@+id/action_searchFragment_to_playerActivity"
-            app:destination="@id/playerActivity" />
+            app:destination="@id/playerFragment" />
     </fragment>
     <fragment
         android:id="@+id/mediatekaFragment"
         android:name="com.example.playlistmaker.mediateka.ui.MediatekaFragment"
-        android:label="activity_mediateka"
-        tools:layout="@layout/activity_mediateka" >
+        android:label="fragment_mediateka"
+        tools:layout="@layout/fragment_mediateka">
         <action
             android:id="@+id/action_mediatekaFragment_to_favoriteFragment"
             app:destination="@id/favoriteFragment" />
         <action
             android:id="@+id/action_mediatekaFragment_to_playlistFragment"
             app:destination="@id/playlistFragment" />
+        <action
+            android:id="@+id/action_mediatekaFragment_to_playerFragment"
+            app:destination="@id/playerFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/playerActivity"
-        android:name="com.example.playlistmaker.player.ui.PlayerFragment"
-        android:label="PlayerActivity" />
     <fragment
         android:id="@+id/favoriteFragment"
         android:name="com.example.playlistmaker.mediateka.ui.fragment.FavoriteFragment"
-        android:label="FavoriteFragment" />
+        android:label="FavoriteFragment"
+        tools:layout="@layout/favorite_fragment"/>
+    <fragment
+        android:id="@+id/playerFragment"
+        android:name="com.example.playlistmaker.player.ui.PlayerFragment"
+        android:label="PlayerActivity"
+        tools:layout="@layout/fragment_player" />
     <fragment
         android:id="@+id/playlistFragment"
+        tools:layout="@layout/playlist_fragment"
         android:name="com.example.playlistmaker.mediateka.ui.fragment.PlaylistFragment"
         android:label="PlaylistFragment" />
 </navigation>

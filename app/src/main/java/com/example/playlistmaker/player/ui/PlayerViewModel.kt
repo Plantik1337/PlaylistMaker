@@ -5,16 +5,21 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.playlistmaker.player.PlayerRepository
+import com.example.playlistmaker.di.viewModelModule
+import com.example.playlistmaker.player.domain.PlayerRepository
+import com.example.playlistmaker.search.data.Track
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class PlayerViewModel(previewUrl: String, private val player: PlayerRepository) : ViewModel() {
+class PlayerViewModel(trackId: Int, previewUrl: String, private val player: PlayerRepository) :
+    ViewModel() {
 
     companion object {
         private const val DELAY = 300L
     }
+
+    //private val myTrack = track
 
     private var timerJob: Job? = null
 
@@ -22,9 +27,18 @@ class PlayerViewModel(previewUrl: String, private val player: PlayerRepository) 
 
     fun playerLiveData(): LiveData<PlayerState> = playerStatusLiveData
 
+    private val isTrackLikedML = MutableLiveData<Boolean>()
+    fun isTrackLiked(): LiveData<Boolean> = isTrackLikedML
+
     init {
         initMediaPlayer(previewUrl)
+        viewModelScope.launch {
+            isExists(trackId)
+        }
+        //isTrackLikedML.postValue(player.isLiked(track.trackId))
+        //trackNum = trackId
     }
+
 
     private fun initMediaPlayer(previewUrl: String) {
         player.setDataSource(previewUrl)
@@ -80,8 +94,36 @@ class PlayerViewModel(previewUrl: String, private val player: PlayerRepository) 
         }
     }
 
+    suspend fun isExists(trackInt: Int): Boolean {
+        isTrackLikedML.postValue(player.isExists(trackId = trackInt))
+        // Log.i("Трек существует ?", "${isTrackLikedML.value}")
+
+        return player.isExists(trackId = trackInt)
+    }
+
+    fun likeClickInteractor(track: Track) {
+
+        viewModelScope.launch {
+            when (isExists(track.trackId)) {
+                true -> {
+                    player.deleteTrack(track.trackId)
+                    isTrackLikedML.postValue(false)
+                    Log.i("Нажатие", "удаляем трек")
+                }
+
+                false -> {
+                    player.likeTrack(track)
+                    isTrackLikedML.postValue(true)
+                    Log.i("Нажатие", "добавляем трек")
+                }
+            }
+
+        }
+    }
+
 
 }
+
 
 sealed class PlayerState(
     val isPlayButtonEnabled: Boolean,
