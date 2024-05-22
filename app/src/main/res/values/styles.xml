@@ -119,7 +119,7 @@
     </style>
 
     <style name="button_menu">
-        <item name="tint">@color/grey</item>
+        <item name="tint">@color/black</item>
     </style>
 
     <style name="playButton">
@@ -135,5 +135,11 @@
     </style>
     <style name="tabTextAppearance.Selected">
         <item name="android:textColor">@color/blue</item>
+    </style>
+    <style name="editTextCreatePlaylist">
+        <item name="android:textColorHint">@color/black</item>
+    </style>
+    <style name="createLittleTextStyle">
+        <item name="android:background">@color/white</item>
     </style>
 </resources>
