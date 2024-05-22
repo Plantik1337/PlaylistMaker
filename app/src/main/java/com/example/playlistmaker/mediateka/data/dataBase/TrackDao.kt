@@ -1,10 +1,10 @@
-package com.example.playlistmaker.mediateka.data
+package com.example.playlistmaker.mediateka.data.dataBase
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.example.playlistmaker.mediateka.data.dataBase.TrackEntity
 
 @Dao
 interface TrackDao {

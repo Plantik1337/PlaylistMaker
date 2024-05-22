@@ -4,11 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.PlaylistFragmentBinding
-import com.example.playlistmaker.mediateka.viewmodel.PlaylistViewModel
+import com.example.playlistmaker.mediateka.data.Playlist
+import com.example.playlistmaker.mediateka.domain.PlaylistInteractor
+import com.example.playlistmaker.mediateka.ui.PlaylistAdapter
+import com.example.playlistmaker.mediateka.ui.RecyclerViewClickListener
+import com.example.playlistmaker.mediateka.ui.viewmodel.PlaylistViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -41,10 +47,41 @@ class PlaylistFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         binding.newPlaylistButton.setOnClickListener {
             findNavController().navigate(R.id.action_mediatekaFragment_to_createPlaylistFragment)
         }
-        viewModel.showLog()
-        //
+
+        val recyclerView = binding.rvPlaylists
+
+        recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
+
+        viewModel.playlistLiveData().observe(viewLifecycleOwner) { playlists ->
+            if (playlists.isEmpty()) {
+                binding.problemImage.isVisible = true
+                binding.problemTextView.isVisible = true
+                binding.rvPlaylists.isVisible = false
+            } else {
+                binding.rvPlaylists.isVisible = true
+                binding.problemImage.isVisible = false
+                binding.problemTextView.isVisible = false
+
+                binding.rvPlaylists.adapter = recyclerViewInteractor(playlists)
+            }
+        }
+        viewModel.getPlaylists()
+
+        //recyclerView.adapter = PlaylistAdapter()
+
+        //viewModel.showLog()
+    }
+
+    private fun recyclerViewInteractor(playlists: List<Playlist>): PlaylistAdapter {
+        val adapter = PlaylistAdapter(playlists, object : RecyclerViewClickListener {
+            override fun onItemClick(position: Int) {
+                //Ничего не происходит по нажатию
+            }
+        })
+        return adapter
     }
 }

@@ -142,4 +142,7 @@
     <style name="createLittleTextStyle">
         <item name="android:background">@color/white</item>
     </style>
+    <style name="playlistListTextStyle">
+        <item name="android:textColor">@color/DarkFun</item>
+    </style>
 </resources>

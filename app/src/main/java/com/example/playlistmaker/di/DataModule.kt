@@ -2,11 +2,9 @@ package com.example.playlistmaker.di
 
 import android.media.MediaPlayer
 import androidx.room.Room
-import androidx.room.RoomDatabase
-import com.example.playlistmaker.mediateka.data.AppDatabase
-import com.example.playlistmaker.mediateka.data.FavoriteRepositoryImpl
+import com.example.playlistmaker.mediateka.data.dataBase.AppDatabase
+import com.example.playlistmaker.mediateka.data.convertors.PlaylistConvertor
 import com.example.playlistmaker.mediateka.data.convertors.TrackDbConvertor
-import com.example.playlistmaker.mediateka.domain.FavoriteRepository
 import com.example.playlistmaker.search.data.network.AppleServiceapit
 import com.example.playlistmaker.search.data.network.NetworkClientImpl
 import com.example.playlistmaker.search.data.network.NetworkClient
@@ -33,6 +31,8 @@ val dataModuel = module {
     }
 
     factory<TrackDbConvertor> { TrackDbConvertor() }
+
+    factory<PlaylistConvertor> { PlaylistConvertor(gson = get()) }
 
     factory { MediaPlayer() }
 

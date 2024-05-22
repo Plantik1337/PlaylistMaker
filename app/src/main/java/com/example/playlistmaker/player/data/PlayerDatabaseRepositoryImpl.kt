@@ -1,7 +1,7 @@
 package com.example.playlistmaker.player.data
 
-import com.example.playlistmaker.mediateka.data.AppDatabase
-import com.example.playlistmaker.mediateka.data.TrackEntity
+import com.example.playlistmaker.mediateka.data.dataBase.AppDatabase
+import com.example.playlistmaker.mediateka.data.dataBase.TrackEntity
 import com.example.playlistmaker.mediateka.data.convertors.TrackDbConvertor
 import com.example.playlistmaker.search.data.Track
 

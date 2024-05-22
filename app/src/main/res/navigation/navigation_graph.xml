@@ -22,7 +22,7 @@
     </fragment>
     <fragment
         android:id="@+id/mediatekaFragment"
-        android:name="com.example.playlistmaker.mediateka.ui.MediatekaFragment"
+        android:name="com.example.playlistmaker.mediateka.ui.fragment.MediatekaFragment"
         android:label="fragment_mediateka"
         tools:layout="@layout/fragment_mediateka">
         <action

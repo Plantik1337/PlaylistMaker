@@ -1,6 +1,6 @@
 package com.example.playlistmaker.mediateka.data.convertors
 
-import com.example.playlistmaker.mediateka.data.TrackEntity
+import com.example.playlistmaker.mediateka.data.dataBase.TrackEntity
 import com.example.playlistmaker.search.data.Track
 
 class TrackDbConvertor {
