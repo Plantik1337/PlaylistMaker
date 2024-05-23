@@ -106,24 +106,35 @@ class CreatePlaylistFragment : Fragment() {
                 if (uri != null) {
                     selectedImageUri = uri
                     binding.imageButton.setImageURI(uri)
+
+                    binding.imageButton.clipToOutline = true
+                    binding.imageButton.outlineProvider = object : ViewOutlineProvider() {
+                        override fun getOutline(view: View, outline: Outline) {
+                            val cornerRadius = 30
+                            outline.setRoundRect(
+                                0, 0, view.width, view.height, cornerRadius.toFloat()
+                            )
+                        }
+                    }
                 } else {
                     Log.d("PhotoPicker", "No media selected")
                 }
             }
 
+
         binding.imageButton.setOnClickListener {
-            pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            pickMedia.launch(
+                PickVisualMediaRequest(
+                    ActivityResultContracts
+                        .PickVisualMedia
+                        .ImageOnly
+                )
+            )
             hasImage = true
-            binding.imageButton.clipToOutline = true
-            binding.imageButton.outlineProvider = object : ViewOutlineProvider() {
-                override fun getOutline(view: View, outline: Outline) {
-                    val cornerRadius = 30
-                    outline.setRoundRect(0, 0, view.width, view.height, cornerRadius.toFloat())
-                }
-            }
         }
 
-        requireActivity().onBackPressedDispatcher.addCallback(requireActivity(),
+        requireActivity().onBackPressedDispatcher.addCallback(
+            requireActivity(),
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     if (hasImage || hasName || hasDescription) {
@@ -177,7 +188,8 @@ class CreatePlaylistFragment : Fragment() {
                                 },
                                 imageURI = imagePath ?: "",
                                 trackIdList = emptyList(),
-                                numberOfTracks = 0
+                                numberOfTracks = 0,
+                                key = 0
                             )
                         )
                         Toast.makeText(

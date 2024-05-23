@@ -24,6 +24,13 @@ class PlaylistViewModel(private val interactor: PlaylistInteractor) : ViewModel(
         }
     }
 
+    fun deletePlaylist(key: Int){
+        viewModelScope.launch {
+            interactor.deletePlaylist(key)
+            playlistMutableLiveData.postValue(interactor.getPlaylists())
+        }
+    }
+
     override fun onCleared() {
         super.onCleared()
     }

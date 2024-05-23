@@ -2,6 +2,7 @@ package com.example.playlistmaker.player.domain
 
 import android.media.MediaPlayer
 import android.util.Log
+import com.example.playlistmaker.mediateka.data.Playlist
 import com.example.playlistmaker.player.data.PlayerDatabaseRepository
 import com.example.playlistmaker.search.data.Track
 import java.text.SimpleDateFormat
@@ -62,8 +63,25 @@ class PlayerRepositoryImpl(
 
     override suspend fun isExists(trackId: Int): Boolean {
         val tmp = playerDatabaseRepository.isExists(trackId)
-        Log.e("Репозиторий","${tmp}")
+        Log.e("Репозиторий", "${tmp}")
         return tmp
     }
+
+    override suspend fun getPlaylists(): List<Playlist> {
+        return playerDatabaseRepository.getPlaylists()
+    }
+
+    override suspend fun isTrackExistInPlaylist(key: Int, trackId: String): Boolean {
+        var isExists = false
+        val playlistTrackIds = playerDatabaseRepository.isTrackExistInPlaylist(key)
+        playlistTrackIds.forEach {
+            when (it == trackId) {
+                true -> isExists = true
+                false -> {}
+            }
+        }
+        return isExists
+    }
+
 
 }

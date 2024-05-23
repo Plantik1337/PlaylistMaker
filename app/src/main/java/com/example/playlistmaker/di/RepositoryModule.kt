@@ -73,7 +73,8 @@ val repositoryModule = module {
     factory<PlayerDatabaseRepository> {
         PlayerDatabaseRepositoryImpl(
             appDatabase = get(),
-            trackDbConvertor = get()
+            trackDbConvertor = get(),
+            playlistConvertor = get()
         )
     }
 

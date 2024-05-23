@@ -17,7 +17,6 @@ interface TrackDao {
     @Query("DELETE FROM track_table WHERE id = :trackId")
     suspend fun deleteById(trackId:Int)
 
-    //@Query("SELECT * FROM track_table WHERE EXISTS(SELECT * FROM track_table WHERE id = :trackId)")
     @Query("SELECT EXISTS(SELECT 1 FROM track_table WHERE id = :trackId)")
     suspend fun isExists(trackId: Int): Boolean
 }

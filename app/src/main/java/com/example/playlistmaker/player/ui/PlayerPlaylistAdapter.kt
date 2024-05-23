@@ -1,4 +1,4 @@
-package com.example.playlistmaker.mediateka.ui
+package com.example.playlistmaker.player.ui
 
 import android.graphics.Outline
 import android.view.LayoutInflater
@@ -11,31 +11,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.mediateka.data.Playlist
+import com.example.playlistmaker.mediateka.ui.RecyclerViewClickListener
 import java.io.File
 
-class PlaylistAdapter(
-    private var playlists: List<Playlist>,
-    private val clickListener: RecyclerViewClickListener
-) : RecyclerView.Adapter<PlaylistAdapter.PlaylistViewHolder>() {
+class PlayerPlaylistAdapter(
+    private var playlists: List<Playlist>, private val clickListener: RecyclerViewClickListener
+) : RecyclerView.Adapter<PlayerPlaylistAdapter.ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistViewHolder {
-        val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.v_playlist_element, parent, false)
-        return PlaylistViewHolder(view, clickListener)
-    }
-
-    override fun onBindViewHolder(holder: PlaylistViewHolder, position: Int) {
-        holder.bind(playlists[position])
-    }
-
-    override fun getItemCount(): Int = playlists.size
-
-
-    class PlaylistViewHolder(itemView: View, private val clickListener: RecyclerViewClickListener) :
+    class ViewHolder(itemView: View, private val clickListener: RecyclerViewClickListener) :
         RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
-        private val albumImage: ImageView = itemView.findViewById(R.id.playlistimageView)
-        private val playlistName: TextView = itemView.findViewById(R.id.playlistName)
+        private val albumImage: ImageView = itemView.findViewById(R.id.playlistiv)
+        private val playlistName: TextView = itemView.findViewById(R.id.playlistNametv)
         private val numberOfTracks: TextView = itemView.findViewById(R.id.numberOfTracks)
 
         init {
@@ -54,20 +41,14 @@ class PlaylistAdapter(
                 val imageFile = File(playlist.imageURI)
                 if (imageFile.exists()) {
 
-                    Glide.with(itemView)
-                        .load(imageFile)
-                        .into(albumImage)
+                    Glide.with(itemView).load(imageFile).into(albumImage)
 
                     albumImage.clipToOutline = true
                     albumImage.outlineProvider = object : ViewOutlineProvider() {
                         override fun getOutline(view: View, outline: Outline) {
                             val cornerRadius = 15
                             outline.setRoundRect(
-                                0,
-                                0,
-                                view.width,
-                                view.height,
-                                cornerRadius.toFloat()
+                                0, 0, view.width, view.height, cornerRadius.toFloat()
                             )
                         }
                     }
@@ -90,5 +71,20 @@ class PlaylistAdapter(
             }
         }
     }
-}
 
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view =
+            LayoutInflater
+                .from(parent.context)
+                .inflate(R.layout.v_playlist_line, parent, false)
+        return ViewHolder(view, clickListener)
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bind(playlists[position])
+    }
+
+    override fun getItemCount(): Int = playlists.size
+
+
+}

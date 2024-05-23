@@ -14,9 +14,15 @@ interface PlaylistDao {
     @Query("SELECT * FROM playlists_table")
     suspend fun getPlaylists(): List<PlaylistEntity>
 
+    @Query("DELETE FROM playlists_table WHERE `key` =:playlistId")
+    suspend fun deletPlaylistByKey(playlistId: Int)
+
     @Query("UPDATE playlists_table SET trackIdList =:newTrackString  WHERE `key` = :playlistId")
     suspend fun updateTrackList(newTrackString: String, playlistId: Int)
 
     @Query("UPDATE playlists_table SET numberOfTracks = :numberOfTracks WHERE `key` = :playlistId")
     suspend fun updateNumberOfTracks(numberOfTracks: Int, playlistId: Int)
+
+    @Query("SELECT trackIdList FROM playlists_table WHERE `key` =:playlistKey")
+    suspend fun isExistsInPlaylist(playlistKey: Int): String
 }

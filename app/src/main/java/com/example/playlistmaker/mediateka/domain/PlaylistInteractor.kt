@@ -4,4 +4,6 @@ import com.example.playlistmaker.mediateka.data.Playlist
 
 interface PlaylistInteractor {
     suspend fun getPlaylists(): List<Playlist>
+
+    suspend fun deletePlaylist(key: Int)
 }

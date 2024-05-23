@@ -1,11 +1,13 @@
 package com.example.playlistmaker.player.ui
 
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.di.viewModelModule
+import com.example.playlistmaker.mediateka.data.Playlist
 import com.example.playlistmaker.player.domain.PlayerRepository
 import com.example.playlistmaker.search.data.Track
 import kotlinx.coroutines.Job
@@ -19,15 +21,18 @@ class PlayerViewModel(trackId: Int, previewUrl: String, private val player: Play
         private const val DELAY = 300L
     }
 
-    //private val myTrack = track
-
     private var timerJob: Job? = null
 
     private val playerStatusLiveData = MutableLiveData<PlayerState>(PlayerState.StateDefault())
 
     fun playerLiveData(): LiveData<PlayerState> = playerStatusLiveData
+    fun playlistLiveData(): LiveData<List<Playlist>> = playlistMl
+
+    fun isExistInPlaylistLiveData(): LiveData<Boolean> = isExistInPlaylistML
 
     private val isTrackLikedML = MutableLiveData<Boolean>()
+    private val playlistMl = MutableLiveData<List<Playlist>>()
+    private val isExistInPlaylistML = MutableLiveData<Boolean>()
     fun isTrackLiked(): LiveData<Boolean> = isTrackLikedML
 
     init {
@@ -35,8 +40,6 @@ class PlayerViewModel(trackId: Int, previewUrl: String, private val player: Play
         viewModelScope.launch {
             isExists(trackId)
         }
-        //isTrackLikedML.postValue(player.isLiked(track.trackId))
-        //trackNum = trackId
     }
 
 
@@ -50,6 +53,12 @@ class PlayerViewModel(trackId: Int, previewUrl: String, private val player: Play
         player.setOnCompletionListener {
             timerJob?.cancel()
             playerStatusLiveData.postValue(PlayerState.StatePrepared())
+        }
+    }
+
+    fun getPlaylistList() {
+        viewModelScope.launch {
+            playlistMl.postValue(player.getPlaylists())
         }
     }
 
@@ -99,6 +108,12 @@ class PlayerViewModel(trackId: Int, previewUrl: String, private val player: Play
         // Log.i("Трек существует ?", "${isTrackLikedML.value}")
 
         return player.isExists(trackId = trackInt)
+    }
+
+    fun isExistsInPlaylist(key: Int, trackId: String) {
+        viewModelScope.launch {
+            isExistInPlaylistML.postValue(player.isTrackExistInPlaylist(key, trackId))
+        }
     }
 
     fun likeClickInteractor(track: Track) {

@@ -1,6 +1,7 @@
 package com.example.playlistmaker.mediateka.ui.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,11 +12,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.PlaylistFragmentBinding
 import com.example.playlistmaker.mediateka.data.Playlist
-import com.example.playlistmaker.mediateka.domain.PlaylistInteractor
 import com.example.playlistmaker.mediateka.ui.PlaylistAdapter
 import com.example.playlistmaker.mediateka.ui.RecyclerViewClickListener
 import com.example.playlistmaker.mediateka.ui.viewmodel.PlaylistViewModel
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -54,7 +53,9 @@ class PlaylistFragment : Fragment() {
 
         val recyclerView = binding.rvPlaylists
 
-        recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
+        val spanCount: Int = 2
+
+        recyclerView.layoutManager = GridLayoutManager(requireContext(), spanCount)
 
         viewModel.playlistLiveData().observe(viewLifecycleOwner) { playlists ->
             if (playlists.isEmpty()) {
@@ -79,7 +80,8 @@ class PlaylistFragment : Fragment() {
     private fun recyclerViewInteractor(playlists: List<Playlist>): PlaylistAdapter {
         val adapter = PlaylistAdapter(playlists, object : RecyclerViewClickListener {
             override fun onItemClick(position: Int) {
-                //Ничего не происходит по нажатию
+                Log.i("Нажатие","${playlists[position]}")
+                viewModel.deletePlaylist(playlists[position].key)
             }
         })
         return adapter

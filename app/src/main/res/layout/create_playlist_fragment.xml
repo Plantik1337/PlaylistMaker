@@ -40,6 +40,7 @@
         android:layout_marginTop="30dp"
         android:backgroundTint="@android:color/transparent"
         android:elevation="0dp"
+        android:scaleType="centerCrop"
         android:src="@drawable/rounded_dotted_rectangle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

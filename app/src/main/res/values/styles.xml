@@ -145,4 +145,7 @@
     <style name="playlistListTextStyle">
         <item name="android:textColor">@color/DarkFun</item>
     </style>
+    <style name="botomSheetRectangleStyle">
+        <item name="android:background">@color/white</item>
+    </style>
 </resources>

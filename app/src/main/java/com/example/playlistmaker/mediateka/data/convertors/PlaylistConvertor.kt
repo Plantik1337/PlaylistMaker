@@ -27,6 +27,7 @@ class PlaylistConvertor(private val gson: Gson) {
 
     fun map(playlistEntity: PlaylistEntity): Playlist {
         return Playlist(
+            key = playlistEntity.key,
             playlistName = playlistEntity.playlistName,
             description = playlistEntity.description,
             imageURI = playlistEntity.imageURI,
@@ -35,11 +36,11 @@ class PlaylistConvertor(private val gson: Gson) {
         )
     }
 
-    private fun toEntityTrackIdList(trackIdList: List<String>): String {
+    fun toEntityTrackIdList(trackIdList: List<String>): String {
         return gson.toJson(trackIdList)
     }
 
-    private fun fromEntityTrackIdList(trackIdListString: String): List<String> {
+    fun fromEntityTrackIdList(trackIdListString: String): List<String> {
         val listType = object : TypeToken<List<String>>() {}.type
         return gson.fromJson(trackIdListString, listType)
     }

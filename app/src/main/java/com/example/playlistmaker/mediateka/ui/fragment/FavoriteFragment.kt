@@ -58,8 +58,6 @@ class FavoriteFragment : Fragment() {
 
         viewModel.getTracks()
 
-
-
         viewModel.tracksLiveData().observe(viewLifecycleOwner) { trackList ->
             if (trackList.isEmpty()) {
                 binding.emptyListMessage.visibility = View.VISIBLE
