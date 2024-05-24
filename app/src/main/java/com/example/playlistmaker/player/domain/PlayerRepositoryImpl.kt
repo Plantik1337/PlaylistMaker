@@ -71,16 +71,29 @@ class PlayerRepositoryImpl(
         return playerDatabaseRepository.getPlaylists()
     }
 
-    override suspend fun isTrackExistInPlaylist(key: Int, trackId: String): Boolean {
+    override suspend fun isTrackExistInPlaylist(
+        playlistId: Int,
+        playlistName: String,
+        trackId: String
+    ): String {
         var isExists = false
-        val playlistTrackIds = playerDatabaseRepository.isTrackExistInPlaylist(key)
+        val playlistTrackIds = playerDatabaseRepository.isTrackExistInPlaylist(playlistId)
         playlistTrackIds.forEach {
             when (it == trackId) {
                 true -> isExists = true
                 false -> {}
             }
         }
-        return isExists
+
+        if (isExists) {
+            return "Трек уже добавлен в плейлист ${playlistName}"
+        } else {
+            val newTrackList = playlistTrackIds + trackId
+            playerDatabaseRepository.updateNumberOfTrack(newTrackList.size, playlistId)
+            playerDatabaseRepository.updateTrackList(playlistId, newTrackList)
+            return "Добавлено в плейлист ${playlistName}"
+        }
+
     }
 
 

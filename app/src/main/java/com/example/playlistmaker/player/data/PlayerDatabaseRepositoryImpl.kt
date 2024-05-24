@@ -35,6 +35,15 @@ class PlayerDatabaseRepositoryImpl(
         )
     }
 
+    override suspend fun updateTrackList(playlistId: Int, newTrackList: List<String>) {
+        appDatabase.playlistDao()
+            .updateTrackList(playlistConvertor.toEntityTrackIdList(newTrackList), playlistId)
+    }
+
+    override suspend fun updateNumberOfTrack(newNumber: Int, playlistId: Int) {
+        appDatabase.playlistDao().updateNumberOfTracks(newNumber, playlistId)
+    }
+
     private fun convertFromPlatlistEntity(playlistEntity: List<PlaylistEntity>): List<Playlist> {
         return playlistEntity.map { playlistEntities -> playlistConvertor.map(playlistEntities) }
     }

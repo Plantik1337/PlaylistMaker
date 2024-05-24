@@ -27,13 +27,13 @@ class PlayerViewModel(trackId: Int, previewUrl: String, private val player: Play
 
     fun playerLiveData(): LiveData<PlayerState> = playerStatusLiveData
     fun playlistLiveData(): LiveData<List<Playlist>> = playlistMl
-
-    fun isExistInPlaylistLiveData(): LiveData<Boolean> = isExistInPlaylistML
+    fun isTrackLiked(): LiveData<Boolean> = isTrackLikedML
+    fun isExistInPlaylistLiveData(): LiveData<String> = isExistInPlaylistML
 
     private val isTrackLikedML = MutableLiveData<Boolean>()
     private val playlistMl = MutableLiveData<List<Playlist>>()
-    private val isExistInPlaylistML = MutableLiveData<Boolean>()
-    fun isTrackLiked(): LiveData<Boolean> = isTrackLikedML
+    private val isExistInPlaylistML = MutableLiveData<String>()
+
 
     init {
         initMediaPlayer(previewUrl)
@@ -110,9 +110,9 @@ class PlayerViewModel(trackId: Int, previewUrl: String, private val player: Play
         return player.isExists(trackId = trackInt)
     }
 
-    fun isExistsInPlaylist(key: Int, trackId: String) {
+    fun isExistsInPlaylist(key: Int, plalistName: String, trackId: String) {
         viewModelScope.launch {
-            isExistInPlaylistML.postValue(player.isTrackExistInPlaylist(key, trackId))
+            isExistInPlaylistML.postValue(player.isTrackExistInPlaylist(key, plalistName, trackId))
         }
     }
 

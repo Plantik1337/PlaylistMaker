@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewOutlineProvider
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -73,6 +74,12 @@ class PlayerFragment : Fragment() {
             requireArguments().getParcelable<Track>(TRACK_KEY)!!
         }
 
+        val bottomSheetContainer = binding.bottomSheet
+
+        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer).apply {
+            state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
         binding.playlistrv.layoutManager = LinearLayoutManager(requireContext())
 
         viewModel.isTrackLiked()
@@ -86,6 +93,7 @@ class PlayerFragment : Fragment() {
                 override fun onItemClick(position: Int) {
                     viewModel.isExistsInPlaylist(
                         playlists[position].key,
+                        plalistName = playlists[position].playlistName,
                         trackId = currentContent.trackId.toString()
                     )
                 }
@@ -117,6 +125,17 @@ class PlayerFragment : Fragment() {
                 }
             }
         }
+
+        viewModel.isExistInPlaylistLiveData().observe(viewLifecycleOwner) {
+            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+
+        }
+
+        binding.newPlaylistButton.setOnClickListener {
+            findNavController().navigate(R.id.action_playerFragment_to_createPlaylistFragment)
+        }
+
 
         val play = binding.playPauseButton
 
@@ -192,11 +211,7 @@ class PlayerFragment : Fragment() {
             viewModel.likeClickInteractor(track = currentContent)
 
         }
-        val bottomSheetContainer = binding.bottomSheet
 
-        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer).apply {
-            state = BottomSheetBehavior.STATE_HIDDEN
-        }
 
         binding.playlistimageView.setOnClickListener {
             viewModel.getPlaylistList()

@@ -134,7 +134,7 @@ class CreatePlaylistFragment : Fragment() {
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(
-            requireActivity(),
+            viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     if (hasImage || hasName || hasDescription) {
@@ -144,7 +144,8 @@ class CreatePlaylistFragment : Fragment() {
                             .setPositiveButton("Заввершить") { _, _ ->
                                 // Завершаем Activity при нажатии на "Да"
                                 findNavController().navigateUp()
-                            }.setNegativeButton("Отмена", null).show()
+                            }.setNegativeButton("Отмена", null)
+                            .show()
                     } else {
                         findNavController().navigateUp()
                     }

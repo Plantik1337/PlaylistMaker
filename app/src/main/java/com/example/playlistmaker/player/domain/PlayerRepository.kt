@@ -30,5 +30,9 @@ interface PlayerRepository {
 
     suspend fun getPlaylists(): List<Playlist>
 
-    suspend fun isTrackExistInPlaylist(playlistId: Int, trackId: String): Boolean
+    suspend fun isTrackExistInPlaylist(
+        playlistId: Int,
+        playlistName: String,
+        trackId: String
+    ): String
 }
