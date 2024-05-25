@@ -98,7 +98,7 @@ class CreatePlaylistFragment : Fragment() {
         })
 
         binding.backButton.setOnClickListener {
-            findNavController().navigateUp()
+            onBackPressed()
         }
 
         val pickMedia =
@@ -125,32 +125,30 @@ class CreatePlaylistFragment : Fragment() {
         binding.imageButton.setOnClickListener {
             pickMedia.launch(
                 PickVisualMediaRequest(
-                    ActivityResultContracts
-                        .PickVisualMedia
-                        .ImageOnly
+                    ActivityResultContracts.PickVisualMedia.ImageOnly
                 )
             )
             hasImage = true
         }
 
-        requireActivity().onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner,
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    if (hasImage || hasName || hasDescription) {
-                        AlertDialog.Builder(requireContext())
-                            .setTitle("Завершить создание плейлиста?")
-                            .setMessage("Все несохраненные данные будут потеряны!")
-                            .setPositiveButton("Заввершить") { _, _ ->
-                                // Завершаем Activity при нажатии на "Да"
-                                findNavController().navigateUp()
-                            }.setNegativeButton("Отмена", null)
-                            .show()
-                    } else {
-                        findNavController().navigateUp()
-                    }
+//                    if (hasImage || hasName || hasDescription) {
+//                        AlertDialog.Builder(requireContext())
+//                            .setTitle("Завершить создание плейлиста?")
+//                            .setMessage("Все несохраненные данные будут потеряны!")
+//                            .setPositiveButton("Заввершить") { _, _ ->
+//                                // Завершаем Activity при нажатии на "Да"
+//                                findNavController().navigateUp()
+//                            }.setNegativeButton("Отмена", null).show()
+//                    } else {
+//                        findNavController().navigateUp()
+//                    }
+                    onBackPressed()
                 }
-            })
+            }
+        )
 
         fun saveImageToInternalStorage(context: Context, uri: Uri): String? {
             return try {
@@ -209,6 +207,20 @@ class CreatePlaylistFragment : Fragment() {
                     ).show()
                 }
             }
+        }
+    }
+
+    private fun onBackPressed(){
+        if (hasImage || hasName || hasDescription) {
+            AlertDialog.Builder(requireContext())
+                .setTitle("Завершить создание плейлиста?")
+                .setMessage("Все несохраненные данные будут потеряны!")
+                .setPositiveButton("Завершить") { _, _ ->
+                    // Завершаем Activity при нажатии на "Да"
+                    findNavController().navigateUp()
+                }.setNegativeButton("Отмена", null).show()
+        } else {
+            findNavController().navigateUp()
         }
     }
 

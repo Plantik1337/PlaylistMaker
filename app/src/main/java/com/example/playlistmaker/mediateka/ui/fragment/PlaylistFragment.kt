@@ -72,16 +72,12 @@ class PlaylistFragment : Fragment() {
         }
         viewModel.getPlaylists()
 
-        //recyclerView.adapter = PlaylistAdapter()
-
-        //viewModel.showLog()
     }
 
     private fun recyclerViewInteractor(playlists: List<Playlist>): PlaylistAdapter {
         val adapter = PlaylistAdapter(playlists, object : RecyclerViewClickListener {
             override fun onItemClick(position: Int) {
-                Log.i("Нажатие","${playlists[position]}")
-                viewModel.deletePlaylist(playlists[position].key)
+                //ничего не делает
             }
         })
         return adapter
