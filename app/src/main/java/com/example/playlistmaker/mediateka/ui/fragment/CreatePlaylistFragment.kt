@@ -71,7 +71,7 @@ class CreatePlaylistFragment : Fragment() {
         }
 
         binding.PlaylistName.addTextChangedListener(onTextChanged = { s: CharSequence?, _: Int, _: Int, _: Int ->
-            if (s?.isNotEmpty() == true && s.isNotBlank()) {
+            if (s!!.isNotBlank()) {
                 hasName = true
                 canCreate()
                 binding.PlaylistName.isSelected = true
@@ -85,7 +85,7 @@ class CreatePlaylistFragment : Fragment() {
         })
 
         binding.PlaylistDescription.addTextChangedListener(onTextChanged = { s: CharSequence?, _: Int, _: Int, _: Int ->
-            if (s?.isNotEmpty() == true && s.isNotBlank()) {
+            if (s!!.isNotBlank()) {
                 hasDescription = true
                 binding.PlaylistDescription.isSelected = true
                 binding.descriptionLittleText.isVisible = true
