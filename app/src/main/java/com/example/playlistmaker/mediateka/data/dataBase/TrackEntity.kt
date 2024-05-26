@@ -1,6 +1,5 @@
-package com.example.playlistmaker.mediateka.data
+package com.example.playlistmaker.mediateka.data.dataBase
 
-import android.icu.text.DateFormat
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 

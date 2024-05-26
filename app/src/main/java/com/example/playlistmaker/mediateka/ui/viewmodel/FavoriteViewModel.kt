@@ -1,4 +1,4 @@
-package com.example.playlistmaker.mediateka.viewmodel
+package com.example.playlistmaker.mediateka.ui.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -8,7 +8,6 @@ import com.example.playlistmaker.mediateka.domain.FavoriteInteractor
 import com.example.playlistmaker.search.data.Track
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 class FavoriteViewModel(private val interactor: FavoriteInteractor) : ViewModel() {

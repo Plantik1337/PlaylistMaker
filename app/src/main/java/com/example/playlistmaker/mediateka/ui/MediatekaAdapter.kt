@@ -1,6 +1,5 @@
 package com.example.playlistmaker.mediateka.ui
 
-import android.annotation.SuppressLint
 import android.graphics.Outline
 import android.view.LayoutInflater
 import android.view.View
@@ -86,8 +85,4 @@ class MediatekaAdapter(
 
         }
     }
-}
-
-interface RecyclerViewClickListener {
-    fun onItemClick(position: Int)
 }

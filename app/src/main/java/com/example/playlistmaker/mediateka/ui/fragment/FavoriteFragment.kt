@@ -15,7 +15,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FavoriteFragmentBinding
 import com.example.playlistmaker.mediateka.ui.MediatekaAdapter
 import com.example.playlistmaker.mediateka.ui.RecyclerViewClickListener
-import com.example.playlistmaker.mediateka.viewmodel.FavoriteViewModel
+import com.example.playlistmaker.mediateka.ui.viewmodel.FavoriteViewModel
 import com.example.playlistmaker.player.ui.PlayerFragment
 import com.example.playlistmaker.search.data.Track
 import kotlinx.coroutines.CoroutineScope
@@ -57,8 +57,6 @@ class FavoriteFragment : Fragment() {
         viewModel.showLog()
 
         viewModel.getTracks()
-
-
 
         viewModel.tracksLiveData().observe(viewLifecycleOwner) { trackList ->
             if (trackList.isEmpty()) {

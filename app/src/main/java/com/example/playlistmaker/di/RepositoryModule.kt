@@ -1,11 +1,19 @@
 package com.example.playlistmaker.di
 
 import android.content.Context
+import com.example.playlistmaker.mediateka.data.CreatePlaylistRepositoryImpl
 import com.example.playlistmaker.mediateka.data.FavoriteRepositoryImpl
+import com.example.playlistmaker.mediateka.data.PlaylistRepository
+import com.example.playlistmaker.mediateka.data.PlaylistRepositoryImpl
 import com.example.playlistmaker.mediateka.data.convertors.TrackDbConvertor
+import com.example.playlistmaker.mediateka.domain.CreatePlaylistInteractor
+import com.example.playlistmaker.mediateka.domain.CreatePlaylistInteractorImpl
+import com.example.playlistmaker.mediateka.domain.CreatePlaylistRepository
 import com.example.playlistmaker.mediateka.domain.FavoriteInteractor
 import com.example.playlistmaker.mediateka.domain.FavoriteInteractorImpl
 import com.example.playlistmaker.mediateka.domain.FavoriteRepository
+import com.example.playlistmaker.mediateka.domain.PlaylistInteractor
+import com.example.playlistmaker.mediateka.domain.PlaylistInteractorImpl
 import com.example.playlistmaker.player.data.PlayerDatabaseRepository
 import com.example.playlistmaker.player.data.PlayerDatabaseRepositoryImpl
 import com.example.playlistmaker.player.domain.PlayerRepository
@@ -20,12 +28,9 @@ import com.example.playlistmaker.settings.domain.Impl.SettingsInteractorImpl
 import com.example.playlistmaker.settings.domain.SettingsInteractor
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
+import kotlin.math.sin
 
 val repositoryModule = module {
-
-//    factory<PlayerRepository> {
-//        PlayerRepositoryImpl(get())
-//    }
 
     factory<SettingsInteractor> {
         SettingsInteractorImpl(
@@ -58,15 +63,43 @@ val repositoryModule = module {
         )
     }
 
-    factory<PlayerRepository> { PlayerRepositoryImpl(
-        mediaPlayer = get(),
-        playerDatabaseRepository = get()
-    ) }
+    factory<PlayerRepository> {
+        PlayerRepositoryImpl(
+            mediaPlayer = get(),
+            playerDatabaseRepository = get()
+        )
+    }
 
     factory<PlayerDatabaseRepository> {
         PlayerDatabaseRepositoryImpl(
             appDatabase = get(),
-            trackDbConvertor = get()
+            trackDbConvertor = get(),
+            playlistConvertor = get()
+        )
+    }
+
+    single<CreatePlaylistInteractor> {
+        CreatePlaylistInteractorImpl(
+            createPlaylistRepository = get()
+        )
+    }
+    factory<CreatePlaylistRepository> {
+        CreatePlaylistRepositoryImpl(
+            appDatabase = get(),
+            convertor = get()
+        )
+    }
+
+    single<PlaylistInteractor> {
+        PlaylistInteractorImpl(
+            repository = get()
+        )
+    }
+
+    factory<PlaylistRepository> {
+        PlaylistRepositoryImpl(
+            appDatabase = get(),
+            convertor = get()
         )
     }
 

@@ -1,20 +1,26 @@
 package com.example.playlistmaker.player.ui
 
 import android.graphics.Outline
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewOutlineProvider
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.search.data.Track
 import com.example.playlistmaker.databinding.FragmentPlayerBinding
+import com.example.playlistmaker.mediateka.data.Playlist
+import com.example.playlistmaker.mediateka.ui.RecyclerViewClickListener
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,6 +28,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import java.text.SimpleDateFormat
 import java.util.Locale
+
 
 class PlayerFragment : Fragment() {
 
@@ -37,8 +44,15 @@ class PlayerFragment : Fragment() {
     }
 
     private val viewModel: PlayerViewModel by viewModel {
-        val track = requireArguments().getParcelable(TRACK_KEY, Track::class.java)!!
-        parametersOf(track.trackId, track.previewUrl)
+        val track = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requireArguments().getParcelable(TRACK_KEY, Track::class.java)!!
+        } else {
+            @Suppress("DEPRECATION")
+            requireArguments().getParcelable(TRACK_KEY) as Track?
+        }
+        track?.let {
+            parametersOf(it.trackId, it.previewUrl)
+        } ?: throw IllegalArgumentException("Track cannot be null")
     }
 
     override fun onCreateView(
@@ -53,8 +67,20 @@ class PlayerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val currentContent = requireArguments().getParcelable(TRACK_KEY, Track::class.java)!!
+        val currentContent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requireArguments().getParcelable(TRACK_KEY, Track::class.java)!!
+        } else {
+            @Suppress("DEPRECATION")
+            requireArguments().getParcelable<Track>(TRACK_KEY)!!
+        }
 
+        val bottomSheetContainer = binding.bottomSheet
+
+        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer).apply {
+            state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
+        binding.playlistrv.layoutManager = LinearLayoutManager(requireContext())
 
         viewModel.isTrackLiked()
 
@@ -62,6 +88,18 @@ class PlayerFragment : Fragment() {
             viewModel.isExists(currentContent.trackId)
         }
 
+        fun recyclerViewInteractor(playlists: List<Playlist>): PlayerPlaylistAdapter {
+            val adapter = PlayerPlaylistAdapter(playlists, object : RecyclerViewClickListener {
+                override fun onItemClick(position: Int) {
+                    viewModel.isExistsInPlaylist(
+                        playlists[position].key,
+                        plalistName = playlists[position].playlistName,
+                        trackId = currentContent.trackId.toString()
+                    )
+                }
+            })
+            return adapter
+        }
 
         viewModel.isTrackLiked().observe(viewLifecycleOwner) {
             when (it) {
@@ -87,6 +125,17 @@ class PlayerFragment : Fragment() {
                 }
             }
         }
+
+        viewModel.isExistInPlaylistLiveData().observe(viewLifecycleOwner) {
+            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+
+        }
+
+        binding.newPlaylistButton.setOnClickListener {
+            findNavController().navigate(R.id.action_playerFragment_to_createPlaylistFragment)
+        }
+
 
         val play = binding.playPauseButton
 
@@ -119,6 +168,11 @@ class PlayerFragment : Fragment() {
                     binding.playPauseButton.setImageResource((R.drawable.baseline_pause_circle_24))
                 }
             }
+        }
+
+        viewModel.playlistLiveData().observe(viewLifecycleOwner) {
+            Log.i("список плейлистов", "${it}")
+            binding.playlistrv.adapter = recyclerViewInteractor(it)
         }
 
         play.setOnClickListener {
@@ -157,6 +211,50 @@ class PlayerFragment : Fragment() {
             viewModel.likeClickInteractor(track = currentContent)
 
         }
+
+
+        binding.playlistimageView.setOnClickListener {
+            viewModel.getPlaylistList()
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+
+                    BottomSheetBehavior.STATE_COLLAPSED -> {
+
+                    }
+
+                    BottomSheetBehavior.STATE_DRAGGING -> {
+
+                    }
+
+                    BottomSheetBehavior.STATE_EXPANDED -> {
+
+                    }
+
+                    BottomSheetBehavior.STATE_HALF_EXPANDED -> {
+
+                    }
+
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+
+                    }
+
+                    BottomSheetBehavior.STATE_SETTLING -> {
+
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+
+            }
+        })
+
+
     }
 
     override fun onDetach() {

@@ -1,10 +1,10 @@
-package com.example.playlistmaker.mediateka.data
+package com.example.playlistmaker.mediateka.data.dataBase
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.example.playlistmaker.mediateka.data.dataBase.TrackEntity
 
 @Dao
 interface TrackDao {
@@ -17,7 +17,6 @@ interface TrackDao {
     @Query("DELETE FROM track_table WHERE id = :trackId")
     suspend fun deleteById(trackId:Int)
 
-    //@Query("SELECT * FROM track_table WHERE EXISTS(SELECT * FROM track_table WHERE id = :trackId)")
     @Query("SELECT EXISTS(SELECT 1 FROM track_table WHERE id = :trackId)")
     suspend fun isExists(trackId: Int): Boolean
 }

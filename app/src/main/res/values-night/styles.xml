@@ -137,4 +137,16 @@
     <style name="tabTextAppearance.Selected">
         <item name="android:textColor">@color/blue</item>
     </style>
+    <style name="editTextCreatePlaylist">
+        <item name="android:textColorHint">@color/white</item>
+    </style>
+    <style name="createLittleTextStyle">
+        <item name="android:background">@color/DarkFun</item>
+    </style>
+    <style name="playlistListTextStyle">
+        <item name="android:textColor">@color/white</item>
+    </style>
+    <style name="botomSheetRectangleStyle">
+        <item name="android:background">@color/DarkFun</item>
+    </style>
 </resources>

@@ -8,7 +8,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
         <com.google.android.material.button.MaterialButton
             android:id="@+id/newPlaylistButton"
             style="@style/refrashButton"
@@ -30,6 +29,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvPlaylists"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="70dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/newPlaylistButton" />
+
+
         <ImageView
             android:id="@+id/problemImage"
             android:layout_width="120dp"
@@ -37,12 +49,13 @@
             android:layout_gravity="center"
             android:layout_marginTop="35dp"
             android:src="@drawable/search_problems_vector"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/newPlaylistButton" />
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/problemTextView"
             style="@style/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -53,8 +66,10 @@
             android:text="@string/aintCreatedPlaylist"
             android:textAppearance="@font/ys_display_medium"
             android:textSize="19sp"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/problemImage" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

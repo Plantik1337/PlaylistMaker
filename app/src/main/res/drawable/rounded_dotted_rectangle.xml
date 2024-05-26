@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item>
+
+
+        <shape android:shape="rectangle">
+            <size
+                android:width="310dp"
+                android:height="310dp" />
+
+            <stroke
+                android:width="2dp"
+                android:color="@color/grey"
+                android:dashWidth="30dp"
+                android:dashGap="31dp" />
+
+            <corners android:radius="10dp" />
+
+        </shape>
+    </item>
+    <item android:gravity="center">
+        <vector
+            android:width="80dp"
+            android:height="80dp"
+            android:viewportWidth="80"
+            android:viewportHeight="80">
+
+            <path
+                android:fillColor="#AEAFB4"
+                android:pathData="M67.1667 21.1667V33.625C67.1667 33.625 58.875 33.6667 58.8333 33.625V21.1667H46.3333C46.3333 21.1667 46.375 12.875 46.3333 12.8334H58.8333V0.333374H67.1667V12.8334H79.6667V21.1667H67.1667ZM54.6667 37.8334V25.3334H42.1667V12.8334H8.83333C4.25 12.8334 0.5 16.5834 0.5 21.1667V71.1667C0.5 75.75 4.25 79.5 8.83333 79.5H58.8333C63.4167 79.5 67.1667 75.75 67.1667 71.1667V37.8334H54.6667ZM8.83333 71.1667L21.3333 54.5L29.6667 67L42.1667 50.3334L58.8333 71.1667H8.83333Z" />
+        </vector>
+    </item>
+</layer-list>
