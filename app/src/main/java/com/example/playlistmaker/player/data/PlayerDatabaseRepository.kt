@@ -12,9 +12,9 @@ interface PlayerDatabaseRepository {
 
     suspend fun getPlaylists(): List<Playlist>
 
-    suspend fun isTrackExistInPlaylist(playlistId: Int): List<String>
+    suspend fun isTrackExistInPlaylist(playlistId: Int): List<Track>
 
-    suspend fun updateTrackList(playlistId: Int, newTrackList: List<String>)
+    suspend fun updateTrackList(playlistId: Int, newTrackList: List<Track>)
 
     suspend fun updateNumberOfTrack(newNumber: Int, playlistId: Int)
 }

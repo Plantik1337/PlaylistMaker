@@ -33,7 +33,7 @@ class MediatekaAdapter(
 
     class TrackViewHolder(itemView: View, private val clickListener: RecyclerViewClickListener) :
         RecyclerView.ViewHolder(itemView),
-        View.OnClickListener {
+        View.OnClickListener, View.OnLongClickListener {
         private val albumImage: ImageView = itemView.findViewById(R.id.albumImageView)
         private val trackName: TextView = itemView.findViewById(R.id.trackNameTextView)
         private val artistName: TextView = itemView.findViewById(R.id.artistNameTextView)
@@ -83,6 +83,15 @@ class MediatekaAdapter(
                 Locale.getDefault()
             ).format(track.trackTimeMillis.toLong())
 
+        }
+
+        override fun onLongClick(p0: View?): Boolean {
+            val position = adapterPosition
+            return if (position != RecyclerView.NO_POSITION) {
+                clickListener.onItemLongClick(position)
+            } else {
+                false
+            }
         }
     }
 }

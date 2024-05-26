@@ -26,13 +26,13 @@ interface PlayerRepository {
 
     suspend fun deleteTrack(trackId: Int)
 
-    suspend fun isExists(trackId: Int): Boolean
+    suspend fun isExists(track: Track): Boolean
 
     suspend fun getPlaylists(): List<Playlist>
 
     suspend fun isTrackExistInPlaylist(
         playlistId: Int,
         playlistName: String,
-        trackId: String
+        track: Track
     ): String
 }

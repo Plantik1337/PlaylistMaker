@@ -51,7 +51,7 @@ class PlayerFragment : Fragment() {
             requireArguments().getParcelable(TRACK_KEY) as Track?
         }
         track?.let {
-            parametersOf(it.trackId, it.previewUrl)
+            parametersOf(it, it.previewUrl)
         } ?: throw IllegalArgumentException("Track cannot be null")
     }
 
@@ -85,7 +85,7 @@ class PlayerFragment : Fragment() {
         viewModel.isTrackLiked()
 
         CoroutineScope(Dispatchers.Main).launch {
-            viewModel.isExists(currentContent.trackId)
+            viewModel.isExists(currentContent)
         }
 
         fun recyclerViewInteractor(playlists: List<Playlist>): PlayerPlaylistAdapter {
@@ -94,7 +94,7 @@ class PlayerFragment : Fragment() {
                     viewModel.isExistsInPlaylist(
                         playlists[position].key,
                         plalistName = playlists[position].playlistName,
-                        trackId = currentContent.trackId.toString()
+                        track = currentContent
                     )
                 }
             })

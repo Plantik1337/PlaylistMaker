@@ -1,12 +1,10 @@
 package com.example.playlistmaker.player.ui
 
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.playlistmaker.di.viewModelModule
 import com.example.playlistmaker.mediateka.data.Playlist
 import com.example.playlistmaker.player.domain.PlayerRepository
 import com.example.playlistmaker.search.data.Track
@@ -14,7 +12,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class PlayerViewModel(trackId: Int, previewUrl: String, private val player: PlayerRepository) :
+class PlayerViewModel(track: Track, previewUrl: String, private val player: PlayerRepository) :
     ViewModel() {
 
     companion object {
@@ -38,7 +36,7 @@ class PlayerViewModel(trackId: Int, previewUrl: String, private val player: Play
     init {
         initMediaPlayer(previewUrl)
         viewModelScope.launch {
-            isExists(trackId)
+            isExists(track)
         }
     }
 
@@ -103,23 +101,23 @@ class PlayerViewModel(trackId: Int, previewUrl: String, private val player: Play
         }
     }
 
-    suspend fun isExists(trackInt: Int): Boolean {
-        isTrackLikedML.postValue(player.isExists(trackId = trackInt))
+    suspend fun isExists(track: Track): Boolean {
+        isTrackLikedML.postValue(player.isExists(track = track))
         // Log.i("Трек существует ?", "${isTrackLikedML.value}")
 
-        return player.isExists(trackId = trackInt)
+        return player.isExists(track = track)
     }
 
-    fun isExistsInPlaylist(key: Int, plalistName: String, trackId: String) {
+    fun isExistsInPlaylist(key: Int, plalistName: String, track: Track) {
         viewModelScope.launch {
-            isExistInPlaylistML.postValue(player.isTrackExistInPlaylist(key, plalistName, trackId))
+            isExistInPlaylistML.postValue(player.isTrackExistInPlaylist(key, plalistName, track))
         }
     }
 
     fun likeClickInteractor(track: Track) {
 
         viewModelScope.launch {
-            when (isExists(track.trackId)) {
+            when (isExists(track)) {
                 true -> {
                     player.deleteTrack(track.trackId)
                     isTrackLikedML.postValue(false)

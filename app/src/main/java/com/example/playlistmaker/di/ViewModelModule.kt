@@ -3,8 +3,8 @@ package com.example.playlistmaker.di
 import com.example.playlistmaker.mediateka.ui.viewmodel.CreatePlaylistViewModel
 import com.example.playlistmaker.mediateka.ui.viewmodel.FavoriteViewModel
 import com.example.playlistmaker.mediateka.ui.viewmodel.PlaylistViewModel
-import com.example.playlistmaker.player.domain.PlayerRepositoryImpl
 import com.example.playlistmaker.player.ui.PlayerViewModel
+import com.example.playlistmaker.search.data.Track
 import com.example.playlistmaker.search.ui.viewmodel.SearchViewModel
 import com.example.playlistmaker.settings.ui.viewmodel.SettingsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -12,9 +12,9 @@ import org.koin.dsl.module
 
 val viewModelModule = module {
 
-    viewModel { (trackId: Int, previewUrl: String) ->
+    viewModel { (track: Track, previewUrl: String) ->
         PlayerViewModel(
-            trackId = trackId,
+            track = track,
             previewUrl = previewUrl,
             player = get()
         )//Player

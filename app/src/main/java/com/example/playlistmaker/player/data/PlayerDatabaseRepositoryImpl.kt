@@ -29,13 +29,13 @@ class PlayerDatabaseRepositoryImpl(
         return convertFromPlatlistEntity(appDatabase.playlistDao().getPlaylists())
     }
 
-    override suspend fun isTrackExistInPlaylist(playlistId: Int): List<String> {
+    override suspend fun isTrackExistInPlaylist(playlistId: Int): List<Track> {
         return playlistConvertor.fromEntityTrackIdList(
             appDatabase.playlistDao().isExistsInPlaylist(playlistId)
         )
     }
 
-    override suspend fun updateTrackList(playlistId: Int, newTrackList: List<String>) {
+    override suspend fun updateTrackList(playlistId: Int, newTrackList: List<Track>) {
         appDatabase.playlistDao()
             .updateTrackList(playlistConvertor.toEntityTrackIdList(newTrackList), playlistId)
     }
