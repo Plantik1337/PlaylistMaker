@@ -116,6 +116,7 @@
             app:layout_constraintTop_toBottomOf="@id/infoLiner">
 
             <ImageButton
+                android:id="@+id/shareButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/aLittleWhite"
@@ -123,6 +124,7 @@
                 android:src="@drawable/share_vector" />
 
             <ImageButton
+                android:id="@+id/openExpandOptions"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
@@ -167,5 +169,101 @@
             app:layout_constraintTop_toBottomOf="@id/slideriv" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        style="@style/botomSheetRectangleStyle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:behavior_hideable="true"
+        app:behavior_peekHeight="230dp"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:importantForAccessibility="no"
+            android:scaleType="centerCrop"
+            android:src="@drawable/botom_sheet_rectangle" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="66dp">
+
+            <ImageView
+                android:id="@+id/playlistiv"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:layout_marginStart="8dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/placeholder"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/playlistNametv"
+                style="@style/songNameTrackListStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/Playlists"
+                android:textSize="18sp"
+                app:layout_constraintStart_toEndOf="@id/playlistiv"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/numberOfTracks"
+                style="@style/littleTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="3dp"
+                android:text="треков"
+                android:textSize="13sp"
+                app:layout_constraintStart_toEndOf="@id/playlistiv"
+                app:layout_constraintTop_toBottomOf="@id/playlistNametv" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/shareBottomSheetButton"
+            style="@style/settingsButton"
+            android:layout_width="match_parent"
+            android:layout_height="61dp"
+            android:gravity="start|center"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:outlineProvider="none"
+            android:textAlignment="textStart"
+            android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle"
+            android:text="@string/Share_App" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/editPlaylistButton"
+            style="@style/settingsButton"
+            android:layout_width="match_parent"
+            android:layout_height="61dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:outlineProvider="none"
+            android:textAlignment="textStart"
+            android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle"
+            android:gravity="start|center"
+            android:text="Редактировать информацию" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/deletePlaylistButton"
+            style="@style/settingsButton"
+            android:layout_width="match_parent"
+            android:layout_height="61dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:outlineProvider="none"
+            android:textAlignment="textStart"
+            android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle"
+            android:gravity="start|center"
+            android:text="Удалить плейлист" />
+    </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

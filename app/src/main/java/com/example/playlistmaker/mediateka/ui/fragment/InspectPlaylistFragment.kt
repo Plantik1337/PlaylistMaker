@@ -1,13 +1,19 @@
 package com.example.playlistmaker.mediateka.ui.fragment
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.os.Message
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
+import androidx.core.view.get
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -16,9 +22,16 @@ import com.example.playlistmaker.databinding.ViewPlaylistFragmentBinding
 import com.example.playlistmaker.mediateka.data.Playlist
 import com.example.playlistmaker.mediateka.ui.MediatekaAdapter
 import com.example.playlistmaker.mediateka.ui.RecyclerViewClickListener
+import com.example.playlistmaker.mediateka.ui.viewmodel.InspectPlaylistViewModel
 import com.example.playlistmaker.player.ui.PlayerFragment
 import com.example.playlistmaker.search.data.Track
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.dialog.MaterialDialogs
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -31,6 +44,10 @@ class InspectPlaylistFragment : Fragment() {
         fun createArgs(playlist: Playlist): Bundle = bundleOf(
             PLAYLIST to playlist
         )
+    }
+
+    private val viewModel: InspectPlaylistViewModel by viewModel {
+        parametersOf()
     }
 
     override fun onCreateView(
@@ -58,19 +75,38 @@ class InspectPlaylistFragment : Fragment() {
             }
         }
 
+
         val bottomSheetContainer = binding.bottomSheet
 
         val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer).apply {
             state = BottomSheetBehavior.STATE_COLLAPSED
         }
 
+        binding.playlistrv.layoutManager = LinearLayoutManager(requireContext())
+
+        var actualTrackList = emptyList<Track>()
+
+        viewModel.trackLsitLiveData().observe(viewLifecycleOwner) {
+            Log.i("плейлист", it.toString())
+            actualTrackList = it
+            binding.playlistrv.adapter = recyclerViewInteractor(it, currentPlaylist)
+            binding.totalTime.text = getTotalTime(it)
+        }
+        viewModel.getTrackList(currentPlaylist.trackIdList)
+
         binding.playlistName.text = currentPlaylist.playlistName
         binding.description.text = currentPlaylist.description
 
-        binding.playlistrv.layoutManager = LinearLayoutManager(requireContext())
-        binding.playlistrv.adapter = recyclerViewInteractor(currentPlaylist.trackIdList)
+        binding.shareButton.setOnClickListener {
+            val stringTosend: String =
+                "${binding.playlistName.text.toString()}\n" +
+                        "${binding.description.text}\n" +
+                        "${binding.totalTracks.text} " +
+                        "${binding.totalTime.text}\n" +
+                        "${tracklistToString(actualTrackList)}\n"
+            shareIntent(stringTosend)
+        }
 
-        binding.totalTime.text = getTotalTime(tracks = currentPlaylist.trackIdList)
         binding.totalTracks.text = getTotalNumberOfTracks(currentPlaylist.numberOfTracks)
 
         binding.backButton.setOnClickListener {
@@ -119,7 +155,7 @@ class InspectPlaylistFragment : Fragment() {
         super.onDetach()
     }
 
-    private fun recyclerViewInteractor(tracks: List<Track>): MediatekaAdapter {
+    private fun recyclerViewInteractor(tracks: List<Track>, playlist: Playlist): MediatekaAdapter {
         val adapter = MediatekaAdapter(tracks, object : RecyclerViewClickListener {
 
             override fun onItemClick(position: Int) {
@@ -132,15 +168,34 @@ class InspectPlaylistFragment : Fragment() {
             }
 
             override fun onItemLongClick(position: Int): Boolean {
-                Toast.makeText(
-                    requireContext(),
-                    "Long clicked item at position $position",
-                    Toast.LENGTH_LONG
-                ).show()
+                deleteTrack(tracks[position], tracks, playlist)
                 return true
             }
+
+
         })
         return adapter
+    }
+
+    private fun deleteTrack(trackToDelete: Track, tracks: List<Track>, playlist: Playlist) {
+        if (isAdded) {
+            AlertDialog.Builder(requireContext())
+                .setTitle("Удалить трек")
+                .setMessage("Вы уверены, что хотите удалить трек из плейлиста?")
+                .setPositiveButton("Да") { _, _ ->
+
+                    val updatedList = tracks.toMutableList()
+                    updatedList.remove(trackToDelete)
+                    val numericOnly = binding.totalTracks.text.replace(Regex("[^0-9]"), "").toInt()
+                    val newTotalTracks = numericOnly - 1
+                    binding.totalTracks.text = getTotalNumberOfTracks(newTotalTracks)
+                    binding.totalTime.text = getTotalTime(updatedList)
+
+                    binding.playlistrv.adapter = recyclerViewInteractor(updatedList, playlist)
+                    //Удаляем трек
+                    viewModel.deleteTrack(trackToDelete.trackId, playlistKey = playlist.key)
+                }.setNegativeButton("Нет", null).show()
+        }
     }
 
     private fun getTotalTime(tracks: List<Track>): String {
@@ -173,5 +228,33 @@ class InspectPlaylistFragment : Fragment() {
                 else -> "${number} треков"
             }
         }
+    }
+
+    private fun shareIntent(message: String) {
+        val sendIntent =
+            Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, message)
+                type = "text/plain"
+
+            }
+        val intent = Intent.createChooser(sendIntent, message)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        requireContext().startActivity(intent)
+    }
+
+    private fun tracklistToString(list: List<Track>): String {
+        var counter = 1
+        var prumaryString = ""
+        list.forEach {
+            prumaryString += "${counter} - ${it.artistName} - ${it.trackName} (${
+                SimpleDateFormat(
+                    "mm:ss",
+                    Locale.getDefault()
+                ).format(it.trackTimeMillis.toLong())
+            })\n"
+            counter++
+        }
+        return prumaryString
     }
 }

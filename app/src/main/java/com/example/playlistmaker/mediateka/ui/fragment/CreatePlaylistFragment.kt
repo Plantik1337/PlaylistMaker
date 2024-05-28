@@ -134,17 +134,6 @@ class CreatePlaylistFragment : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-//                    if (hasImage || hasName || hasDescription) {
-//                        AlertDialog.Builder(requireContext())
-//                            .setTitle("Завершить создание плейлиста?")
-//                            .setMessage("Все несохраненные данные будут потеряны!")
-//                            .setPositiveButton("Заввершить") { _, _ ->
-//                                // Завершаем Activity при нажатии на "Да"
-//                                findNavController().navigateUp()
-//                            }.setNegativeButton("Отмена", null).show()
-//                    } else {
-//                        findNavController().navigateUp()
-//                    }
                     onBackPressed()
                 }
             }

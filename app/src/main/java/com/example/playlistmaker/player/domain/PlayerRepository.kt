@@ -26,7 +26,7 @@ interface PlayerRepository {
 
     suspend fun deleteTrack(trackId: Int)
 
-    suspend fun isExists(track: Track): Boolean
+    suspend fun isExists(trackId: Int): Boolean
 
     suspend fun getPlaylists(): List<Playlist>
 
@@ -35,4 +35,6 @@ interface PlayerRepository {
         playlistName: String,
         track: Track
     ): String
+
+    suspend fun insertTrackToLocal(track: Track)
 }

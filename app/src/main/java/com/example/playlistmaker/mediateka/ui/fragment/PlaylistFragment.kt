@@ -81,6 +81,10 @@ class PlaylistFragment : Fragment() {
                     InspectPlaylistFragment.createArgs(playlists[position])
                 )
             }
+
+            override fun onItemLongClick(position: Int): Boolean {
+                return true
+            }
         })
         return adapter
     }

@@ -85,7 +85,7 @@ class PlayerFragment : Fragment() {
         viewModel.isTrackLiked()
 
         CoroutineScope(Dispatchers.Main).launch {
-            viewModel.isExists(currentContent)
+            viewModel.isExists(currentContent.trackId)
         }
 
         fun recyclerViewInteractor(playlists: List<Playlist>): PlayerPlaylistAdapter {
@@ -96,6 +96,10 @@ class PlayerFragment : Fragment() {
                         plalistName = playlists[position].playlistName,
                         track = currentContent
                     )
+                }
+
+                override fun onItemLongClick(position: Int): Boolean {
+                    return true
                 }
             })
             return adapter

@@ -61,8 +61,8 @@ class PlayerRepositoryImpl(
         playerDatabaseRepository.deleteTrack(trackId)
     }
 
-    override suspend fun isExists(track: Track): Boolean {
-        val tmp = playerDatabaseRepository.isExists(track.trackId)
+    override suspend fun isExists(trackId: Int): Boolean {
+        val tmp = playerDatabaseRepository.isExists(trackId)
         Log.e("Репозиторий", "${tmp}")
         return tmp
     }
@@ -79,7 +79,7 @@ class PlayerRepositoryImpl(
         var isExists = false
         val playlistTrackIds = playerDatabaseRepository.isTrackExistInPlaylist(playlistId)
         playlistTrackIds.forEach {
-            when (it.trackId == track.trackId) {
+            when (it == track.trackId.toString()) {
                 true -> isExists = true
                 false -> {}
             }
@@ -88,12 +88,17 @@ class PlayerRepositoryImpl(
         if (isExists) {
             return "Трек уже добавлен в плейлист ${playlistName}"
         } else {
-            val newTrackList: List<Track> = playlistTrackIds + track
+            playerDatabaseRepository.insertTrackToLocal(track)
+            val newTrackList: List<String> = playlistTrackIds + track.trackId.toString()
             playerDatabaseRepository.updateNumberOfTrack(newTrackList.size, playlistId)
             playerDatabaseRepository.updateTrackList(playlistId, newTrackList)
             return "Добавлено в плейлист ${playlistName}"
         }
 
+    }
+
+    override suspend fun insertTrackToLocal(track: Track) {
+        playerDatabaseRepository
     }
 
 

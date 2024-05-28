@@ -1,4 +1,4 @@
-package com.example.playlistmaker.mediateka.data
+package com.example.playlistmaker.mediateka.data.dataBase
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

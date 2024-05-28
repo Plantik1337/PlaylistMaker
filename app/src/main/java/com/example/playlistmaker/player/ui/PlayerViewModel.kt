@@ -36,7 +36,7 @@ class PlayerViewModel(track: Track, previewUrl: String, private val player: Play
     init {
         initMediaPlayer(previewUrl)
         viewModelScope.launch {
-            isExists(track)
+            isExists(track.trackId)
         }
     }
 
@@ -101,11 +101,11 @@ class PlayerViewModel(track: Track, previewUrl: String, private val player: Play
         }
     }
 
-    suspend fun isExists(track: Track): Boolean {
-        isTrackLikedML.postValue(player.isExists(track = track))
+    suspend fun isExists(trackId: Int): Boolean {
+        isTrackLikedML.postValue(player.isExists(trackId))
         // Log.i("Трек существует ?", "${isTrackLikedML.value}")
 
-        return player.isExists(track = track)
+        return player.isExists(trackId)
     }
 
     fun isExistsInPlaylist(key: Int, plalistName: String, track: Track) {
@@ -117,7 +117,7 @@ class PlayerViewModel(track: Track, previewUrl: String, private val player: Play
     fun likeClickInteractor(track: Track) {
 
         viewModelScope.launch {
-            when (isExists(track)) {
+            when (isExists(trackId = track.trackId)) {
                 true -> {
                     player.deleteTrack(track.trackId)
                     isTrackLikedML.postValue(false)

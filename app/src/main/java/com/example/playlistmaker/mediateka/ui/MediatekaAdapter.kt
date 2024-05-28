@@ -41,6 +41,7 @@ class MediatekaAdapter(
 
         init {
             itemView.setOnClickListener(this)
+            itemView.setOnLongClickListener(this)
         }
 
         override fun onClick(v: View) {
@@ -49,7 +50,14 @@ class MediatekaAdapter(
                 clickListener.onItemClick(position)
             }
         }
-
+        override fun onLongClick(p0: View?): Boolean {
+            val position = adapterPosition
+            return if (position != RecyclerView.NO_POSITION) {
+                clickListener.onItemLongClick(position)
+            } else {
+                false
+            }
+        }
         fun bind(track: Track) {
             val maxSymbols = 30
             if (track.trackName.length > maxSymbols) {
@@ -85,13 +93,6 @@ class MediatekaAdapter(
 
         }
 
-        override fun onLongClick(p0: View?): Boolean {
-            val position = adapterPosition
-            return if (position != RecyclerView.NO_POSITION) {
-                clickListener.onItemLongClick(position)
-            } else {
-                false
-            }
-        }
+
     }
 }

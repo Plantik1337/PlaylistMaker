@@ -9,7 +9,7 @@ data class Playlist(
     val playlistName: String,
     val description: String?,
     val imageURI: String?,
-    val trackIdList: List<Track>,
+    val trackIdList: List<String>,
     val numberOfTracks: Int
 
 ) : Parcelable {
@@ -18,7 +18,7 @@ data class Playlist(
         parcel.readString() ?: "",
         parcel.readString(),
         parcel.readString(),
-        parcel.createTypedArrayList(Track.CREATOR) ?: emptyList(),
+        parcel.createStringArrayList() ?: emptyList(),
         parcel.readInt()
     )
 
@@ -31,7 +31,7 @@ data class Playlist(
         parcel.writeString(playlistName)
         parcel.writeString(description)
         parcel.writeString(imageURI)
-        parcel.writeTypedList(trackIdList)
+        parcel.writeStringList(trackIdList)
         parcel.writeInt(numberOfTracks)
     }
 
