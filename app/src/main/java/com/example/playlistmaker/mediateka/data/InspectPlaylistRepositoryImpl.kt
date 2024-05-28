@@ -61,6 +61,10 @@ class InspectPlaylistRepositoryImpl(
         return convertFromEntity(tracksEntity)
     }
 
+    override suspend fun updateNumberofPlaylist(number: Int, playlistKey: Int) {
+        appDatabase.playlistDao().updateNumberOfTracks(number, playlistKey)
+    }
+
     private fun convertFromEntity(trackList: List<LocalTrackEntity>): List<Track> {
         return trackList.map { convertor.fromLocalTrackEntity(it) }
     }

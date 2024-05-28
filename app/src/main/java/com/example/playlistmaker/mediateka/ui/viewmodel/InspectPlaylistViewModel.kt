@@ -7,7 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.mediateka.data.InspectPlaylistRepository
 import com.example.playlistmaker.search.data.Track
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class InspectPlaylistViewModel(private val repository: InspectPlaylistRepository) : ViewModel() {
 
@@ -23,9 +25,19 @@ class InspectPlaylistViewModel(private val repository: InspectPlaylistRepository
 
     fun deleteTrack(id: Int, playlistKey: Int) {
         viewModelScope.launch {
-            Log.i("Статус удаления","Пытаюсь удалить")
+            Log.i("Статус удаления", "Пытаюсь удалить")
             repository.deleteTrack(id, playlistKey)
         }
+    }
 
+    fun deleteTracksAndPlaylist(trackIdList: List<String>, playlistKey: Int) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                trackIdList.forEach { trackId ->
+                    repository.deleteTrack(trackId.toInt(), playlistKey)
+                }
+                repository.deletePlaylist(playlistKey)
+            }
+        }
     }
 }

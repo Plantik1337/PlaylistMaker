@@ -28,9 +28,12 @@ import com.example.playlistmaker.search.data.Track
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.dialog.MaterialDialogs
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.definition.indexKey
 import org.koin.core.parameter.parametersOf
 import java.io.File
 import java.text.SimpleDateFormat
@@ -38,6 +41,8 @@ import java.util.Locale
 
 class InspectPlaylistFragment : Fragment() {
     private lateinit var binding: ViewPlaylistFragmentBinding
+
+    private lateinit var actualTrackList: MutableList<Track>
 
     companion object {
         const val PLAYLIST = "PLAYLIST"
@@ -60,6 +65,8 @@ class InspectPlaylistFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        actualTrackList = mutableListOf()
+
         val currentPlaylist: Playlist = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             requireArguments().getParcelable(PLAYLIST, Playlist::class.java)!!
         } else {
@@ -69,83 +76,96 @@ class InspectPlaylistFragment : Fragment() {
         if (currentPlaylist.imageURI?.isNotBlank() == true) {
             val imageFile = File(currentPlaylist.imageURI)
             if (imageFile.exists()) {
-                Glide.with(this)
-                    .load(imageFile)
-                    .into(binding.albumImageView)
+                Glide.with(this).load(imageFile).into(binding.albumImageView)
+                Glide.with(this).load(imageFile).into(binding.playlistiv)
             }
         }
 
 
         val bottomSheetContainer = binding.bottomSheet
+        val bottomSheetExtraOptionContainer = binding.bottomSheetExtraOption
 
         val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer).apply {
             state = BottomSheetBehavior.STATE_COLLAPSED
         }
 
-        binding.playlistrv.layoutManager = LinearLayoutManager(requireContext())
+        val bottomSheetExtraOptionBehavior =
+            BottomSheetBehavior.from(bottomSheetExtraOptionContainer).apply {
+                state = BottomSheetBehavior.STATE_HIDDEN
+            }
 
-        var actualTrackList = emptyList<Track>()
+        binding.playlistrv.layoutManager = LinearLayoutManager(requireContext())
 
         viewModel.trackLsitLiveData().observe(viewLifecycleOwner) {
             Log.i("плейлист", it.toString())
-            actualTrackList = it
+            actualTrackList.clear()
+            actualTrackList.addAll(it)
             binding.playlistrv.adapter = recyclerViewInteractor(it, currentPlaylist)
             binding.totalTime.text = getTotalTime(it)
         }
         viewModel.getTrackList(currentPlaylist.trackIdList)
 
         binding.playlistName.text = currentPlaylist.playlistName
+        binding.playlistName.text = currentPlaylist.playlistName
         binding.description.text = currentPlaylist.description
 
-        binding.shareButton.setOnClickListener {
-            val stringTosend: String =
-                "${binding.playlistName.text.toString()}\n" +
-                        "${binding.description.text}\n" +
-                        "${binding.totalTracks.text} " +
-                        "${binding.totalTime.text}\n" +
-                        "${tracklistToString(actualTrackList)}\n"
-            shareIntent(stringTosend)
+        binding.openExpandOptions.setOnClickListener {
+            bottomSheetExtraOptionBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
         }
 
-        binding.totalTracks.text = getTotalNumberOfTracks(currentPlaylist.numberOfTracks)
+        binding.shareButton.setOnClickListener {
+            shareIntent()
+        }
+        binding.shareBottomSheetButton.setOnClickListener {
+            shareIntent()
+        }
+        binding.deletePlaylistButton.setOnClickListener {
+            bottomSheetExtraOptionBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            AlertDialog.Builder(requireContext())
+                .setTitle("Удалить плейлист")
+                .setMessage("Хотите удалить плейлист?")
+                .setPositiveButton("Да") { _, _ ->
+                    viewModel.deleteTracksAndPlaylist(
+                        currentPlaylist.trackIdList,
+                        currentPlaylist.key
+                    )
+                    findNavController().navigateUp()
+                }
+                .setNegativeButton("Нет", null)
+                .show()
+
+
+        }
+        val totalTracks = getTotalNumberOfTracks(currentPlaylist.numberOfTracks)
+        binding.totalTracks.text = totalTracks
+        binding.numberOfTracks.text = totalTracks
 
         binding.backButton.setOnClickListener {
             findNavController().navigateUp()
         }
 
+
         bottomSheetBehavior.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
-                when (newState) {
-                    BottomSheetBehavior.STATE_COLLAPSED -> {
 
-                    }
-
-                    BottomSheetBehavior.STATE_DRAGGING -> {
-
-                    }
-
-                    BottomSheetBehavior.STATE_EXPANDED -> {
-
-                    }
-
-                    BottomSheetBehavior.STATE_HALF_EXPANDED -> {
-
-                    }
-
-                    BottomSheetBehavior.STATE_HIDDEN -> {
-
-                    }
-
-                    BottomSheetBehavior.STATE_SETTLING -> {
-
-                    }
-                }
             }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
 
             }
+        })
+
+        bottomSheetExtraOptionBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+
+            }
+
         })
 
 
@@ -179,8 +199,7 @@ class InspectPlaylistFragment : Fragment() {
 
     private fun deleteTrack(trackToDelete: Track, tracks: List<Track>, playlist: Playlist) {
         if (isAdded) {
-            AlertDialog.Builder(requireContext())
-                .setTitle("Удалить трек")
+            AlertDialog.Builder(requireContext()).setTitle("Удалить трек")
                 .setMessage("Вы уверены, что хотите удалить трек из плейлиста?")
                 .setPositiveButton("Да") { _, _ ->
 
@@ -188,12 +207,18 @@ class InspectPlaylistFragment : Fragment() {
                     updatedList.remove(trackToDelete)
                     val numericOnly = binding.totalTracks.text.replace(Regex("[^0-9]"), "").toInt()
                     val newTotalTracks = numericOnly - 1
-                    binding.totalTracks.text = getTotalNumberOfTracks(newTotalTracks)
+                    Log.i("новая и старая цифра", "${newTotalTracks}, $numericOnly")
+
+                    val totaltrack = getTotalNumberOfTracks(newTotalTracks)
+                    binding.totalTracks.text = totaltrack
+                    binding.numberOfTracks.text = totaltrack
                     binding.totalTime.text = getTotalTime(updatedList)
 
                     binding.playlistrv.adapter = recyclerViewInteractor(updatedList, playlist)
+                    actualTrackList.remove(trackToDelete)
                     //Удаляем трек
                     viewModel.deleteTrack(trackToDelete.trackId, playlistKey = playlist.key)
+
                 }.setNegativeButton("Нет", null).show()
         }
     }
@@ -230,15 +255,18 @@ class InspectPlaylistFragment : Fragment() {
         }
     }
 
-    private fun shareIntent(message: String) {
-        val sendIntent =
-            Intent().apply {
-                action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_TEXT, message)
-                type = "text/plain"
+    private fun shareIntent() {
+        val stringTosend: String =
+            "${binding.playlistName.text}\n" + "${binding.description.text}\n" + "${binding.totalTracks.text} " + "${binding.totalTime.text}\n" + "${
+                tracklistToString(actualTrackList)
+            }\n"
+        val sendIntent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, stringTosend)
+            type = "text/plain"
 
-            }
-        val intent = Intent.createChooser(sendIntent, message)
+        }
+        val intent = Intent.createChooser(sendIntent, stringTosend)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         requireContext().startActivity(intent)
     }
@@ -249,8 +277,7 @@ class InspectPlaylistFragment : Fragment() {
         list.forEach {
             prumaryString += "${counter} - ${it.artistName} - ${it.trackName} (${
                 SimpleDateFormat(
-                    "mm:ss",
-                    Locale.getDefault()
+                    "mm:ss", Locale.getDefault()
                 ).format(it.trackTimeMillis.toLong())
             })\n"
             counter++

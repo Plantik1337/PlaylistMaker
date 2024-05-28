@@ -199,7 +199,7 @@ class CreatePlaylistFragment : Fragment() {
         }
     }
 
-    private fun onBackPressed(){
+    private fun onBackPressed() {
         if (hasImage || hasName || hasDescription) {
             AlertDialog.Builder(requireContext())
                 .setTitle("Завершить создание плейлиста?")
@@ -207,7 +207,8 @@ class CreatePlaylistFragment : Fragment() {
                 .setPositiveButton("Завершить") { _, _ ->
                     // Завершаем Activity при нажатии на "Да"
                     findNavController().navigateUp()
-                }.setNegativeButton("Отмена", null).show()
+                }.setNegativeButton("Отмена", null)
+                .show()
         } else {
             findNavController().navigateUp()
         }

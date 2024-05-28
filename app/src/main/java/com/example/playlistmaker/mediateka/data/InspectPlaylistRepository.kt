@@ -8,4 +8,6 @@ interface InspectPlaylistRepository {
     suspend fun deleteTrack(id: Int, playlistKey: Int)
 
     suspend fun getTrackList(trackList: List<String>): List<Track>
+
+    suspend fun updateNumberofPlaylist(number: Int, playlistKey: Int)
 }

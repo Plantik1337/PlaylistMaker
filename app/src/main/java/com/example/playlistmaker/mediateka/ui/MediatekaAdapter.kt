@@ -19,6 +19,10 @@ class MediatekaAdapter(
     private val clickListener: RecyclerViewClickListener
 ) : RecyclerView.Adapter<MediatekaAdapter.TrackViewHolder>() {
 
+    fun getTrackList(): List<Track>{
+        return track
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.v_track_line, parent, false)
