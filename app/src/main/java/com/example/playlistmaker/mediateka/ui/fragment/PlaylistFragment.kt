@@ -47,7 +47,10 @@ class PlaylistFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.newPlaylistButton.setOnClickListener {
-            findNavController().navigate(R.id.action_mediatekaFragment_to_createPlaylistFragment)
+            findNavController().navigate(
+                R.id.action_mediatekaFragment_to_createPlaylistFragment,
+                CreatePlaylistFragment.createArg(null)
+            )
         }
 
         val recyclerView = binding.rvPlaylists

@@ -10,6 +10,7 @@ class PlaylistConvertor(private val gson: Gson) {
 
     fun map(playlist: Playlist): PlaylistEntity {
         return PlaylistEntity(
+            key = playlist.key,
             playlistName = playlist.playlistName,
             description = if (playlist.description.isNullOrBlank()) {
                 ""

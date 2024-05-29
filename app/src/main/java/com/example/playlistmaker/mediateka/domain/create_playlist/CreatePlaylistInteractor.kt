@@ -4,4 +4,5 @@ import com.example.playlistmaker.mediateka.data.Playlist
 
 interface CreatePlaylistInteractor {
     suspend fun addNewPlaylist(playlist: Playlist)
+    suspend fun updatePlaylist(playlist: Playlist)
 }

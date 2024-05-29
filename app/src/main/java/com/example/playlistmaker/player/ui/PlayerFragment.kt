@@ -20,6 +20,7 @@ import com.example.playlistmaker.search.data.Track
 import com.example.playlistmaker.databinding.FragmentPlayerBinding
 import com.example.playlistmaker.mediateka.data.Playlist
 import com.example.playlistmaker.mediateka.ui.RecyclerViewClickListener
+import com.example.playlistmaker.mediateka.ui.fragment.CreatePlaylistFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -137,7 +138,10 @@ class PlayerFragment : Fragment() {
         }
 
         binding.newPlaylistButton.setOnClickListener {
-            findNavController().navigate(R.id.action_playerFragment_to_createPlaylistFragment)
+            findNavController().navigate(
+                R.id.action_playerFragment_to_createPlaylistFragment,
+                CreatePlaylistFragment.createArg(null)
+            )
         }
 
 

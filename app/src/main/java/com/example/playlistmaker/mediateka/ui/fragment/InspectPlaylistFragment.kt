@@ -73,13 +73,21 @@ class InspectPlaylistFragment : Fragment() {
             @Suppress("DEPRECATION") requireArguments().getParcelable<Playlist>(PLAYLIST)!!
         }
 
-        if (currentPlaylist.imageURI?.isNotBlank() == true) {
-            val imageFile = File(currentPlaylist.imageURI)
-            if (imageFile.exists()) {
-                Glide.with(this).load(imageFile).into(binding.albumImageView)
-                Glide.with(this).load(imageFile).into(binding.playlistiv)
+        viewModel.playlistLiveData().observe(viewLifecycleOwner){newCurrentPlaylist ->
+            if (newCurrentPlaylist.imageURI?.isNotBlank() == true) {
+                val imageFile = File(newCurrentPlaylist.imageURI)
+                if (imageFile.exists()) {
+                    Glide.with(this).load(imageFile).into(binding.albumImageView)
+                    Glide.with(this).load(imageFile).into(binding.playlistiv)
+                }
             }
+            binding.playlistNametv.text = newCurrentPlaylist.playlistName
+            binding.playlistName.text = newCurrentPlaylist.playlistName
+            binding.description.text = newCurrentPlaylist.description
         }
+        viewModel.getPlaylist(currentPlaylist.key)
+
+
 
 
         val bottomSheetContainer = binding.bottomSheet
@@ -105,9 +113,7 @@ class InspectPlaylistFragment : Fragment() {
         }
         viewModel.getTrackList(currentPlaylist.trackIdList)
 
-        binding.playlistName.text = currentPlaylist.playlistName
-        binding.playlistName.text = currentPlaylist.playlistName
-        binding.description.text = currentPlaylist.description
+
 
         binding.openExpandOptions.setOnClickListener {
             bottomSheetExtraOptionBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
@@ -133,8 +139,13 @@ class InspectPlaylistFragment : Fragment() {
                 }
                 .setNegativeButton("Нет", null)
                 .show()
+        }
 
-
+        binding.editPlaylistButton.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_inspectPlaylistFragment_to_createPlaylistFragment,
+                CreatePlaylistFragment.createArg(currentPlaylist)
+            )
         }
         val totalTracks = getTotalNumberOfTracks(currentPlaylist.numberOfTracks)
         binding.totalTracks.text = totalTracks

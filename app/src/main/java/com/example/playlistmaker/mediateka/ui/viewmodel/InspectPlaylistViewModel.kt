@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.mediateka.data.InspectPlaylistRepository
+import com.example.playlistmaker.mediateka.data.Playlist
 import com.example.playlistmaker.search.data.Track
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -14,7 +15,9 @@ import kotlinx.coroutines.withContext
 class InspectPlaylistViewModel(private val repository: InspectPlaylistRepository) : ViewModel() {
 
     var trackListMl = MutableLiveData<List<Track>>()
+    var playlistMl = MutableLiveData<Playlist>()
 
+    fun playlistLiveData(): LiveData<Playlist> = playlistMl
     fun trackLsitLiveData(): LiveData<List<Track>> = trackListMl
     fun getTrackList(trackIdList: List<String>) {
         viewModelScope.launch {
@@ -38,6 +41,12 @@ class InspectPlaylistViewModel(private val repository: InspectPlaylistRepository
                 }
                 repository.deletePlaylist(playlistKey)
             }
+        }
+    }
+
+    fun getPlaylist(key: Int){
+        viewModelScope.launch {
+            playlistMl.postValue(repository.getPlaylist(key))
         }
     }
 }
