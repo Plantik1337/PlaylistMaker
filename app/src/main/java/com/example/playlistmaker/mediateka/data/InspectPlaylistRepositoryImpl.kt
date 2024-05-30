@@ -22,7 +22,6 @@ class InspectPlaylistRepositoryImpl(
         val counter = appDatabase.playlistDao().getAllTrackIdLists()
 
         if (trackCounter(counter.toString(), id) == 1) {
-            //appDatabase.localTrackDao().deleteById(id)
             val currentPlalist =
                 convertFromPlaylistEntity(appDatabase.playlistDao().getPlaylistByKey(playlistKey))
 

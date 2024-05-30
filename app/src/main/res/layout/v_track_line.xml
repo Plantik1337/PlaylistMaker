@@ -29,6 +29,7 @@
             android:padding="8dp">
 
             <TextView
+                android:maxEms="38"
                 android:id="@+id/trackNameTextView"
                 style="@style/songNameTrackListStyle"
                 android:layout_width="wrap_content"

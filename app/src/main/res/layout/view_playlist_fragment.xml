@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -17,13 +18,14 @@
             android:importantForAccessibility="no"
             android:scaleType="centerCrop"
             android:src="@drawable/placeholder"
+            android:backgroundTint="@color/aLittleWhite"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
             android:id="@+id/backButton"
-            style="@style/button_menu"
+            app:tint="@color/DarkFun"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginStart="8dp"
@@ -80,7 +82,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="3dp"
                 android:background="@color/aLittleWhite"
-                android:text="300 минут"
+                android:text="@string/duration"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
 
@@ -155,6 +157,18 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/emptyListMessage"
+            style="@style/songNameTrackListStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="В этом плейлисте нет треков"
+            android:textSize="24sp"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/slideriv" />
 
 
         <androidx.recyclerview.widget.RecyclerView
@@ -236,35 +250,35 @@
             android:insetTop="0dp"
             android:insetBottom="0dp"
             android:outlineProvider="none"
+            android:text="Поделиться"
             android:textAlignment="textStart"
-            android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle"
-            android:text="@string/Share_App" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/editPlaylistButton"
             style="@style/settingsButton"
             android:layout_width="match_parent"
             android:layout_height="61dp"
+            android:gravity="start|center"
             android:insetTop="0dp"
             android:insetBottom="0dp"
             android:outlineProvider="none"
+            android:text="Редактировать информацию"
             android:textAlignment="textStart"
-            android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle"
-            android:gravity="start|center"
-            android:text="Редактировать информацию" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/deletePlaylistButton"
             style="@style/settingsButton"
             android:layout_width="match_parent"
             android:layout_height="61dp"
+            android:gravity="start|center"
             android:insetTop="0dp"
             android:insetBottom="0dp"
             android:outlineProvider="none"
+            android:text="Удалить плейлист"
             android:textAlignment="textStart"
-            android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle"
-            android:gravity="start|center"
-            android:text="Удалить плейлист" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle" />
     </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

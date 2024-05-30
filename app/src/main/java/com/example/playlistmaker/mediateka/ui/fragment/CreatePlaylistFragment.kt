@@ -118,22 +118,20 @@ class CreatePlaylistFragment : Fragment() {
 
 
         binding.PlaylistName.addTextChangedListener(onTextChanged = { s: CharSequence?, _: Int, _: Int, _: Int ->
-            if (s!!.isNotBlank()) {
-                hasPlaylistName(true)
-                canCreate()
-            } else {
+            if (s.isNullOrBlank()) {
                 hasPlaylistName(false)
-                canCreate()
+            } else {
+                hasPlaylistName(true)
             }
+            canCreate()
         })
 
         binding.PlaylistDescription.addTextChangedListener(onTextChanged = { s: CharSequence?, _: Int, _: Int, _: Int ->
-            if (s!!.isNotBlank()) {
-                hasPlaylistDescription(true)
-            } else {
+            if (s.isNullOrBlank()) {
                 hasPlaylistDescription(false)
+            } else {
+                hasPlaylistDescription(true)
             }
-
         })
 
         binding.backButton.setOnClickListener {
@@ -199,8 +197,6 @@ class CreatePlaylistFragment : Fragment() {
 
         binding.createButton.setOnClickListener {
             if (!editMode) {
-
-
                 when (canCreate()) {
                     true -> {
                         viewLifecycleOwner.lifecycleScope.launch {
@@ -238,36 +234,44 @@ class CreatePlaylistFragment : Fragment() {
                     }
                 }
             } else {
-                lifecycleScope.launch {
+                when (canCreate()) {
+                    true -> lifecycleScope.launch {
 
-                    val image = if (selectedImageUri != null) {
-                        selectedImageUri?.let { uri ->
-                            //deleteImageFromInternalStorage(editPlaylist?.imageURI.toString())
-                            saveImageToInternalStorage(requireContext(), uri)
+                        val image = if (selectedImageUri != null) {
+                            selectedImageUri?.let { uri ->
+                                //deleteImageFromInternalStorage(editPlaylist?.imageURI.toString())
+                                saveImageToInternalStorage(requireContext(), uri)
+                            }
+                        } else {
+                            editPlaylist?.imageURI
                         }
-                    } else {
-                        editPlaylist?.imageURI
-                    }
-                    viewModel.updatePlaylist(
-                        Playlist(
-                            key = editPlaylist!!.key,
-                            playlistName = binding.PlaylistName.text.toString(),
-                            description = if (hasDescription) {
-                                binding.PlaylistDescription.text.toString()
-                            } else {
-                                null
-                            },
-                            imageURI = image,
-                            trackIdList = editPlaylist.trackIdList,
-                            numberOfTracks = 0
+                        viewModel.updatePlaylist(
+                            Playlist(
+                                key = editPlaylist!!.key,
+                                playlistName = binding.PlaylistName.text.toString(),
+                                description = if (hasDescription) {
+                                    binding.PlaylistDescription.text.toString()
+                                } else {
+                                    null
+                                },
+                                imageURI = image,
+                                trackIdList = editPlaylist.trackIdList,
+                                numberOfTracks = 0
+                            )
                         )
-                    )
-                    Toast.makeText(
-                        requireContext(),
-                        "Плейлист ${binding.PlaylistName.text} создан",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    findNavController().navigateUp()
+                        Toast.makeText(
+                            requireContext(),
+                            "Плейлист ${binding.PlaylistName.text} создан",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        findNavController().navigateUp()
+                    }
+
+                    false -> {
+                        Toast.makeText(
+                            requireContext(), "Не заполнены обязательные поля", Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             }
         }
@@ -284,7 +288,6 @@ class CreatePlaylistFragment : Fragment() {
         binding.PlaylistDescription.isSelected = hasDescriptionText
         binding.descriptionLittleText.isVisible = hasDescriptionText
     }
-
 
     private fun onBackPressed() {
         if (hasImage || hasName || hasDescription) {

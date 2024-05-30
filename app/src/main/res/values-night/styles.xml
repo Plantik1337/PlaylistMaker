@@ -149,4 +149,10 @@
     <style name="botomSheetRectangleStyle">
         <item name="android:background">@color/DarkFun</item>
     </style>
+
+    <style name="bottomNavStyle">
+        <item name="itemBackground">@android:color/transparent</item>
+        <item name="itemIconTint">@color/white</item>
+        <item name="itemTextColor">@color/white</item>
+    </style>
 </resources>

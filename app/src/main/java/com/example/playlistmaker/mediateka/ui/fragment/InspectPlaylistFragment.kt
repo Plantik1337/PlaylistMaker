@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.core.view.get
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -46,6 +47,9 @@ class InspectPlaylistFragment : Fragment() {
 
     companion object {
         const val PLAYLIST = "PLAYLIST"
+
+        var canShare = false
+
         fun createArgs(playlist: Playlist): Bundle = bundleOf(
             PLAYLIST to playlist
         )
@@ -73,8 +77,17 @@ class InspectPlaylistFragment : Fragment() {
             @Suppress("DEPRECATION") requireArguments().getParcelable<Playlist>(PLAYLIST)!!
         }
 
-        viewModel.playlistLiveData().observe(viewLifecycleOwner){newCurrentPlaylist ->
+        viewModel.playlistLiveData().observe(viewLifecycleOwner) { newCurrentPlaylist ->
             if (newCurrentPlaylist.imageURI?.isNotBlank() == true) {
+                if (newCurrentPlaylist.numberOfTracks > 0) {
+                    canShare = true
+                    binding.playlistrv.isVisible = true
+                    binding.emptyListMessage.isVisible = false
+                } else {
+                    canShare = false
+                    binding.playlistrv.isVisible = false
+                    binding.emptyListMessage.isVisible = true
+                }
                 val imageFile = File(newCurrentPlaylist.imageURI)
                 if (imageFile.exists()) {
                     Glide.with(this).load(imageFile).into(binding.albumImageView)
@@ -86,8 +99,6 @@ class InspectPlaylistFragment : Fragment() {
             binding.description.text = newCurrentPlaylist.description
         }
         viewModel.getPlaylist(currentPlaylist.key)
-
-
 
 
         val bottomSheetContainer = binding.bottomSheet
@@ -124,21 +135,17 @@ class InspectPlaylistFragment : Fragment() {
         }
         binding.shareBottomSheetButton.setOnClickListener {
             shareIntent()
+            bottomSheetExtraOptionBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
         binding.deletePlaylistButton.setOnClickListener {
             bottomSheetExtraOptionBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-            AlertDialog.Builder(requireContext())
-                .setTitle("Удалить плейлист")
-                .setMessage("Хотите удалить плейлист?")
-                .setPositiveButton("Да") { _, _ ->
+            AlertDialog.Builder(requireContext()).setTitle("Удалить плейлист")
+                .setMessage("Хотите удалить плейлист?").setPositiveButton("Да") { _, _ ->
                     viewModel.deleteTracksAndPlaylist(
-                        currentPlaylist.trackIdList,
-                        currentPlaylist.key
+                        currentPlaylist.trackIdList, currentPlaylist.key
                     )
                     findNavController().navigateUp()
-                }
-                .setNegativeButton("Нет", null)
-                .show()
+                }.setNegativeButton("Нет", null).show()
         }
 
         binding.editPlaylistButton.setOnClickListener {
@@ -267,19 +274,27 @@ class InspectPlaylistFragment : Fragment() {
     }
 
     private fun shareIntent() {
-        val stringTosend: String =
-            "${binding.playlistName.text}\n" + "${binding.description.text}\n" + "${binding.totalTracks.text} " + "${binding.totalTime.text}\n" + "${
-                tracklistToString(actualTrackList)
-            }\n"
-        val sendIntent = Intent().apply {
-            action = Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_TEXT, stringTosend)
-            type = "text/plain"
+        if (canShare) {
+            val stringTosend: String =
+                "${binding.playlistName.text}\n" + "${binding.description.text}\n" + "${binding.totalTracks.text} " + "${binding.totalTime.text}\n" + "${
+                    tracklistToString(actualTrackList)
+                }\n"
+            val sendIntent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, stringTosend)
+                type = "text/plain"
 
+            }
+            val intent = Intent.createChooser(sendIntent, stringTosend)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            requireContext().startActivity(intent)
+        } else {
+            Toast.makeText(
+                requireContext(),
+                "Вы не можете поделиться пустым плейлистом",
+                Toast.LENGTH_SHORT
+            ).show()
         }
-        val intent = Intent.createChooser(sendIntent, stringTosend)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        requireContext().startActivity(intent)
     }
 
     private fun tracklistToString(list: List<Track>): String {
