@@ -58,11 +58,8 @@ class Adapter(
 
         fun bind(track: Track) {
             val maxSymbols = 30
-            if (track.trackName.length > maxSymbols) {
-                trackName.text = track.trackName.substring(0, maxSymbols) + "..."
-            } else {
                 trackName.text = track.trackName
-            }
+
             Glide.with(itemView)
                 .load(track.artworkUrl100)
                 .placeholder(R.drawable.placeholder)

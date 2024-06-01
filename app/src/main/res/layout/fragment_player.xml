@@ -69,8 +69,10 @@
                 android:maxEms="28"
                 android:id="@+id/songNamePlayer"
                 style="@style/playerDataText"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="23dp"
+                android:layout_marginEnd="32dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/app_name"
                 android:textAppearance="@font/ys_display_medium"
@@ -110,8 +112,7 @@
                 android:src="@drawable/button_add"
                 app:layout_constraintEnd_toStartOf="@+id/playPauseButton"
                 app:layout_constraintStart_toEndOf="@id/left_guideline"
-                app:layout_constraintTop_toBottomOf="@id/autorName"
-                app:tint="@color/grey" />
+                app:layout_constraintTop_toBottomOf="@id/autorName" />
 
             <ImageView
                 android:id="@+id/likeButton"
@@ -119,11 +120,10 @@
                 android:layout_height="48dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="38dp"
-                android:src="@drawable/button_like"
+                android:src="@drawable/ic_heart_selector"
                 app:layout_constraintEnd_toStartOf="@+id/right_guideline"
                 app:layout_constraintStart_toEndOf="@+id/playPauseButton"
-                app:layout_constraintTop_toBottomOf="@id/autorName"
-                app:tint="@color/grey" />
+                app:layout_constraintTop_toBottomOf="@id/autorName" />
 
             <TextView
                 android:id="@+id/trackTimeView"
@@ -139,7 +139,7 @@
                 android:id="@+id/playerSongDurationTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
+                android:layout_marginTop="20dp"
                 android:text="@string/duration"
                 android:textColor="@color/grey"
                 app:layout_constraintStart_toEndOf="@id/left_guideline"

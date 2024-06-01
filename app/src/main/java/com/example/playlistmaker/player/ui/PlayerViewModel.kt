@@ -130,7 +130,7 @@ class PlayerViewModel(track: Track, previewUrl: String, private val player: Play
                     Log.i("Нажатие", "добавляем трек")
                 }
             }
-
+            getPlaylistList()
         }
     }
 

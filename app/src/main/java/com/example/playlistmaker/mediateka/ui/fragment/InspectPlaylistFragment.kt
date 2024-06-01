@@ -81,12 +81,10 @@ class InspectPlaylistFragment : Fragment() {
             if (newCurrentPlaylist.imageURI?.isNotBlank() == true) {
                 if (newCurrentPlaylist.numberOfTracks > 0) {
                     canShare = true
-                    binding.playlistrv.isVisible = true
-                    binding.emptyListMessage.isVisible = false
+
                 } else {
                     canShare = false
-                    binding.playlistrv.isVisible = false
-                    binding.emptyListMessage.isVisible = true
+
                 }
                 val imageFile = File(newCurrentPlaylist.imageURI)
                 if (imageFile.exists()) {
@@ -121,6 +119,13 @@ class InspectPlaylistFragment : Fragment() {
             actualTrackList.addAll(it)
             binding.playlistrv.adapter = recyclerViewInteractor(it, currentPlaylist)
             binding.totalTime.text = getTotalTime(it)
+            if (it.isEmpty()) {
+                binding.playlistrv.isVisible = false
+                binding.emptyListMessage.isVisible = true
+            } else {
+                binding.playlistrv.isVisible = true
+                binding.emptyListMessage.isVisible = false
+            }
         }
         viewModel.getTrackList(currentPlaylist.trackIdList)
 
@@ -236,6 +241,7 @@ class InspectPlaylistFragment : Fragment() {
                     actualTrackList.remove(trackToDelete)
                     //Удаляем трек
                     viewModel.deleteTrack(trackToDelete.trackId, playlistKey = playlist.key)
+                    viewModel.getTrackList(playlist.trackIdList)
 
                 }.setNegativeButton("Нет", null).show()
         }

@@ -65,13 +65,12 @@
             <ImageView
                 android:id="@+id/cancelInputSearchEditText"
                 style="@style/cancleInputButton"
-                android:layout_width="38dp"
-                android:layout_height="38dp"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
                 android:background="@android:color/transparent"
                 android:layout_gravity="end"
                 android:contentDescription="@string/search"
-                android:paddingStart="0dp"
-                android:paddingTop="8dp"
+                android:paddingStart="5dp"
                 android:paddingEnd="10dp"
                 android:src="@drawable/ic_cancel"
                 android:visibility="gone" />

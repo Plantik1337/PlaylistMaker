@@ -19,7 +19,7 @@ class MediatekaAdapter(
     private val clickListener: RecyclerViewClickListener
 ) : RecyclerView.Adapter<MediatekaAdapter.TrackViewHolder>() {
 
-    fun getTrackList(): List<Track>{
+    fun getTrackList(): List<Track> {
         return track
     }
 
@@ -54,6 +54,7 @@ class MediatekaAdapter(
                 clickListener.onItemClick(position)
             }
         }
+
         override fun onLongClick(p0: View?): Boolean {
             val position = adapterPosition
             return if (position != RecyclerView.NO_POSITION) {
@@ -62,13 +63,12 @@ class MediatekaAdapter(
                 false
             }
         }
+
         fun bind(track: Track) {
             val maxSymbols = 30
-            if (track.trackName.length > maxSymbols) {
-                trackName.text = track.trackName.substring(0, maxSymbols) + "..."
-            } else {
-                trackName.text = track.trackName
-            }
+
+            trackName.text = track.trackName
+
             Glide.with(itemView)
                 .load(track.artworkUrl100)
                 .placeholder(R.drawable.placeholder)

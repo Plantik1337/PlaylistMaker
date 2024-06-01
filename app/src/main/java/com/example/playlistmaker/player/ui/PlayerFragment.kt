@@ -106,29 +106,10 @@ class PlayerFragment : Fragment() {
             return adapter
         }
 
-        viewModel.isTrackLiked().observe(viewLifecycleOwner) {
-            when (it) {
-                true -> {
-                    //ContextCompat.getDrawable(requireContext(), android.R.color.transparent)
-                    Log.i("Нажатие", "Обсервер нашёлся, должен быть красным")
-                    binding.likeButton.drawable.setTint(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.heartRed
-                        )
-                    )
-                }
-
-                false -> {
-                    Log.i("Нажатие", "Обсервер нашёлся, должен быть серым")
-                    binding.likeButton.drawable.setTint(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.grey
-                        )
-                    )
-                }
-            }
+        viewModel.isTrackLiked().observe(viewLifecycleOwner) { isLiked ->
+            binding.likeButton.setImageResource(
+                if (isLiked) R.drawable.button_like else R.drawable.button_like_inactive
+            )
         }
 
         viewModel.isExistInPlaylistLiveData().observe(viewLifecycleOwner) {
@@ -215,7 +196,6 @@ class PlayerFragment : Fragment() {
         }
 
         binding.likeButton.setOnClickListener {
-            //Log.i("Click", "Лайк")
             viewModel.likeClickInteractor(track = currentContent)
 
         }
