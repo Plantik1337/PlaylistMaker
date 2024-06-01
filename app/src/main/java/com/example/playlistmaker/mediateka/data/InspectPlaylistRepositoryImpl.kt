@@ -51,6 +51,8 @@ class InspectPlaylistRepositoryImpl(
                     )
                 ), playlistKey
             )
+            appDatabase.playlistDao()
+                .updateNumberOfTracks(currentPlalist.numberOfTracks - 1, playlistKey)
         }
     }
 

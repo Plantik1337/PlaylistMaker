@@ -3,7 +3,6 @@ package com.example.playlistmaker.mediateka.ui.fragment
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.os.Message
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +10,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
-import androidx.core.view.get
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -27,14 +25,10 @@ import com.example.playlistmaker.mediateka.ui.viewmodel.InspectPlaylistViewModel
 import com.example.playlistmaker.player.ui.PlayerFragment
 import com.example.playlistmaker.search.data.Track
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.dialog.MaterialDialogs
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.definition.indexKey
 import org.koin.core.parameter.parametersOf
 import java.io.File
 import java.text.SimpleDateFormat
@@ -44,6 +38,8 @@ class InspectPlaylistFragment : Fragment() {
     private lateinit var binding: ViewPlaylistFragmentBinding
 
     private lateinit var actualTrackList: MutableList<Track>
+
+    private lateinit var actualPlaylist: Playlist
 
     companion object {
         const val PLAYLIST = "PLAYLIST"
@@ -77,7 +73,11 @@ class InspectPlaylistFragment : Fragment() {
             @Suppress("DEPRECATION") requireArguments().getParcelable<Playlist>(PLAYLIST)!!
         }
 
+        actualPlaylist = currentPlaylist
+
         viewModel.playlistLiveData().observe(viewLifecycleOwner) { newCurrentPlaylist ->
+            actualPlaylist = newCurrentPlaylist
+            Log.i("Actual Playlist", actualPlaylist.trackIdList.toString())
             if (newCurrentPlaylist.imageURI?.isNotBlank() == true) {
                 if (newCurrentPlaylist.numberOfTracks > 0) {
                     canShare = true
@@ -95,6 +95,7 @@ class InspectPlaylistFragment : Fragment() {
             binding.playlistNametv.text = newCurrentPlaylist.playlistName
             binding.playlistName.text = newCurrentPlaylist.playlistName
             binding.description.text = newCurrentPlaylist.description
+            viewModel.getTrackList(actualPlaylist.trackIdList)
         }
         viewModel.getPlaylist(currentPlaylist.key)
 
@@ -117,7 +118,7 @@ class InspectPlaylistFragment : Fragment() {
             Log.i("плейлист", it.toString())
             actualTrackList.clear()
             actualTrackList.addAll(it)
-            binding.playlistrv.adapter = recyclerViewInteractor(it, currentPlaylist)
+            binding.playlistrv.adapter = recyclerViewInteractor(it, actualPlaylist)
             binding.totalTime.text = getTotalTime(it)
             if (it.isEmpty()) {
                 binding.playlistrv.isVisible = false
@@ -147,7 +148,7 @@ class InspectPlaylistFragment : Fragment() {
             AlertDialog.Builder(requireContext()).setTitle("Удалить плейлист")
                 .setMessage("Хотите удалить плейлист?").setPositiveButton("Да") { _, _ ->
                     viewModel.deleteTracksAndPlaylist(
-                        currentPlaylist.trackIdList, currentPlaylist.key
+                        actualPlaylist.trackIdList, currentPlaylist.key
                     )
                     findNavController().navigateUp()
                 }.setNegativeButton("Нет", null).show()
@@ -156,10 +157,10 @@ class InspectPlaylistFragment : Fragment() {
         binding.editPlaylistButton.setOnClickListener {
             findNavController().navigate(
                 R.id.action_inspectPlaylistFragment_to_createPlaylistFragment,
-                CreatePlaylistFragment.createArg(currentPlaylist)
+                CreatePlaylistFragment.createArg(actualPlaylist)
             )
         }
-        val totalTracks = getTotalNumberOfTracks(currentPlaylist.numberOfTracks)
+        val totalTracks = getTotalNumberOfTracks(actualPlaylist.numberOfTracks)
         binding.totalTracks.text = totalTracks
         binding.numberOfTracks.text = totalTracks
 
@@ -229,22 +230,35 @@ class InspectPlaylistFragment : Fragment() {
                     val updatedList = tracks.toMutableList()
                     updatedList.remove(trackToDelete)
                     val numericOnly = binding.totalTracks.text.replace(Regex("[^0-9]"), "").toInt()
-                    val newTotalTracks = numericOnly - 1
+                    val newTotalTracks = if (numericOnly == 0) {
+                        numericOnly
+                    } else {
+                        numericOnly - 1
+                    }
                     Log.i("новая и старая цифра", "${newTotalTracks}, $numericOnly")
+                    val newStingList = mutableListOf<String>()
+                    updatedList.forEach {
+                        newStingList.add(it.trackId.toString())
+                    }
+                    Log.i("новая строка", newStingList.toString())
+                    viewModel.getTrackList(newStingList)
 
                     val totaltrack = getTotalNumberOfTracks(newTotalTracks)
                     binding.totalTracks.text = totaltrack
                     binding.numberOfTracks.text = totaltrack
                     binding.totalTime.text = getTotalTime(updatedList)
-
-                    binding.playlistrv.adapter = recyclerViewInteractor(updatedList, playlist)
                     actualTrackList.remove(trackToDelete)
+
                     //Удаляем трек
-                    viewModel.deleteTrack(trackToDelete.trackId, playlistKey = playlist.key)
-                    viewModel.getTrackList(playlist.trackIdList)
+                    lifecycleScope.launch {
+                        withContext(Dispatchers.IO) {
+                            viewModel.deleteTrack(trackToDelete.trackId, playlistKey = playlist.key)
+                        }
+                    }
 
                 }.setNegativeButton("Нет", null).show()
         }
+        viewModel.getPlaylist(playlist.key)
     }
 
     private fun getTotalTime(tracks: List<Track>): String {
@@ -296,9 +310,7 @@ class InspectPlaylistFragment : Fragment() {
             requireContext().startActivity(intent)
         } else {
             Toast.makeText(
-                requireContext(),
-                "Вы не можете поделиться пустым плейлистом",
-                Toast.LENGTH_SHORT
+                requireContext(), "Вы не можете поделиться пустым плейлистом", Toast.LENGTH_SHORT
             ).show()
         }
     }
