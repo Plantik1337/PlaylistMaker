@@ -14,11 +14,13 @@ interface PlaylistDao {
 
     @Query("SELECT * FROM playlists_table")
     suspend fun getPlaylists(): List<PlaylistEntity>
+
     @Query("SELECT * FROM playlists_table WHERE `key` =:key")
     suspend fun getPlaylistByKey(key: Int): PlaylistEntity
 
     @Query("DELETE FROM playlists_table WHERE `key` =:playlistId")
     suspend fun deletPlaylistByKey(playlistId: Int)
+
     @Update(entity = PlaylistEntity::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun updatePlaylistInfo(playlist: PlaylistEntity)
 
