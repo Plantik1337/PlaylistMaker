@@ -121,9 +121,11 @@ class InspectPlaylistFragment : Fragment() {
             binding.playlistrv.adapter = recyclerViewInteractor(it, actualPlaylist)
             binding.totalTime.text = getTotalTime(it)
             if (it.isEmpty()) {
+                canShare = false
                 binding.playlistrv.isVisible = false
                 binding.emptyListMessage.isVisible = true
             } else {
+                canShare = true
                 binding.playlistrv.isVisible = true
                 binding.emptyListMessage.isVisible = false
             }
