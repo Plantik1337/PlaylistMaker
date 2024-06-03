@@ -6,13 +6,13 @@
         <item name="colorPrimaryVariant">@color/DarkFun</item>
         <item name="colorOnPrimary">@color/DarkFun</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/white</item>
+        <item name="colorSecondary">@color/blue</item>
         <item name="colorSecondaryVariant">@color/teal_200</item>
         <item name="colorOnSecondary">@color/DarkFun</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
-        <item name="android:background">@color/DarkFun</item>
+        <item name="android:background">@android:color/transparent</item>
     </style>
 
     <style name="Theme.mainMenu" parent="Theme.MaterialComponents.DayNight.NoActionBar">

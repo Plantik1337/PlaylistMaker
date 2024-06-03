@@ -1,7 +1,6 @@
 package com.example.playlistmaker.mediateka.ui.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -48,7 +47,10 @@ class PlaylistFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.newPlaylistButton.setOnClickListener {
-            findNavController().navigate(R.id.action_mediatekaFragment_to_createPlaylistFragment)
+            findNavController().navigate(
+                R.id.action_mediatekaFragment_to_createPlaylistFragment,
+                CreatePlaylistFragment.createArg(null)
+            )
         }
 
         val recyclerView = binding.rvPlaylists
@@ -77,7 +79,14 @@ class PlaylistFragment : Fragment() {
     private fun recyclerViewInteractor(playlists: List<Playlist>): PlaylistAdapter {
         val adapter = PlaylistAdapter(playlists, object : RecyclerViewClickListener {
             override fun onItemClick(position: Int) {
-                //ничего не делает
+                findNavController().navigate(
+                    R.id.action_mediatekaFragment_to_inspectPlaylistFragment,
+                    InspectPlaylistFragment.createArgs(playlists[position])
+                )
+            }
+
+            override fun onItemLongClick(position: Int): Boolean {
+                return true
             }
         })
         return adapter

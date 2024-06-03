@@ -5,12 +5,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.isEmpty
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FavoriteFragmentBinding
 import com.example.playlistmaker.mediateka.ui.MediatekaAdapter
@@ -68,6 +70,7 @@ class FavoriteFragment : Fragment() {
                 binding.favoriteFragmentRV.adapter = recyclerViewInteractor(trackList)
             }
         }
+
     }
 
     private fun recyclerViewInteractor(tracks: List<Track>): MediatekaAdapter {
@@ -90,6 +93,13 @@ class FavoriteFragment : Fragment() {
                     binding.favoriteFragmentRV.isEnabled = true
                     Log.i("Статус нажатия", "Можешь нажимать")
                 }
+            }
+
+            override fun onItemLongClick(position: Int): Boolean {
+                binding.favoriteFragmentRV.isEnabled = true
+                Toast.makeText(requireContext(), tracks[position].trackName, Toast.LENGTH_SHORT)
+                    .show()
+                return true
             }
         })
         return adapter

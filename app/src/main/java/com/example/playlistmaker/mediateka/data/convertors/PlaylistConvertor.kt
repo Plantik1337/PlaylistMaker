@@ -1,7 +1,8 @@
 package com.example.playlistmaker.mediateka.data.convertors
 
 import com.example.playlistmaker.mediateka.data.Playlist
-import com.example.playlistmaker.mediateka.data.PlaylistEntity
+import com.example.playlistmaker.mediateka.data.dataBase.PlaylistEntity
+import com.example.playlistmaker.search.data.Track
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -9,6 +10,7 @@ class PlaylistConvertor(private val gson: Gson) {
 
     fun map(playlist: Playlist): PlaylistEntity {
         return PlaylistEntity(
+            key = playlist.key,
             playlistName = playlist.playlistName,
             description = if (playlist.description.isNullOrBlank()) {
                 ""

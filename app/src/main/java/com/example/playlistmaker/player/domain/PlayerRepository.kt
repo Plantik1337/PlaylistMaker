@@ -33,6 +33,8 @@ interface PlayerRepository {
     suspend fun isTrackExistInPlaylist(
         playlistId: Int,
         playlistName: String,
-        trackId: String
+        track: Track
     ): String
+
+    suspend fun insertTrackToLocal(track: Track)
 }

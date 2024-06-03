@@ -1,4 +1,4 @@
-package com.example.playlistmaker.mediateka.data
+package com.example.playlistmaker.mediateka.data.dataBase
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "playlists_table")
 data class PlaylistEntity(
     @PrimaryKey(autoGenerate = true)
-    val key: Int = 0,
+    val key: Int,
     val playlistName: String,
     val description: String,
     val imageURI: String,

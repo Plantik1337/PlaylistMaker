@@ -2,6 +2,7 @@ package com.example.playlistmaker.mediateka.data
 
 import com.example.playlistmaker.mediateka.data.convertors.PlaylistConvertor
 import com.example.playlistmaker.mediateka.data.dataBase.AppDatabase
+import com.example.playlistmaker.mediateka.data.dataBase.PlaylistEntity
 
 class PlaylistRepositoryImpl(
     private val appDatabase: AppDatabase,

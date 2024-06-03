@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.playlistmaker.mediateka.domain.FavoriteInteractor
+import com.example.playlistmaker.mediateka.domain.favorite.FavoriteInteractor
 import com.example.playlistmaker.search.data.Track
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

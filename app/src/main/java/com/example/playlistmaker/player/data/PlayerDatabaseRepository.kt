@@ -17,4 +17,6 @@ interface PlayerDatabaseRepository {
     suspend fun updateTrackList(playlistId: Int, newTrackList: List<String>)
 
     suspend fun updateNumberOfTrack(newNumber: Int, playlistId: Int)
+
+    suspend fun insertTrackToLocal(track: Track)
 }

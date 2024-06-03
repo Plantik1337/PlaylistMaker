@@ -22,6 +22,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:layout_marginTop="3dp"
         style="@style/playlistListTextStyle"
         android:textSize="12sp"
         android:id="@+id/playlistName"

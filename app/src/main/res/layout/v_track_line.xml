@@ -6,7 +6,7 @@
     android:layout_height="@dimen/trackBlockHeight"
     android:foreground="?attr/selectableItemBackground">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         style="@style/trackListStyle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -19,19 +19,28 @@
             android:layout_height="@dimen/squareImage"
             android:layout_gravity="center|start"
             android:scaleType="centerCrop"
-            android:src="@drawable/placeholder" />
+            android:src="@drawable/placeholder"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginStart="48dp"
+            android:layout_marginEnd="35dp"
             android:orientation="vertical"
-            android:padding="8dp">
+            android:padding="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/imageView"
+            app:layout_constraintStart_toEndOf="@+id/albumImageView"
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:id="@+id/trackNameTextView"
                 style="@style/songNameTrackListStyle"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
@@ -76,14 +85,20 @@
             </LinearLayout>
 
         </LinearLayout>
-    </LinearLayout>
 
-    <ImageView
-        style="@style/arrowTrackListStyle"
-        android:layout_width="@dimen/arrowTrackListSize"
-        android:layout_height="@dimen/arrowTrackListSize"
-        android:layout_gravity="end|center"
-        android:layout_marginEnd="@dimen/dotSize"
-        android:src="@drawable/arrow_forward" />
+        <ImageView
+            android:id="@+id/imageView"
+            style="@style/arrowTrackListStyle"
+            android:layout_width="@dimen/arrowTrackListSize"
+            android:layout_height="@dimen/arrowTrackListSize"
+            android:layout_gravity="end|center"
+            android:layout_marginEnd="15dp"
+            android:src="@drawable/arrow_forward"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
 </FrameLayout>

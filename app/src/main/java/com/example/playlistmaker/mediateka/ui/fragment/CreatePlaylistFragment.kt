@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Outline
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,16 +18,17 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.CreatePlaylistFragmentBinding
 import com.example.playlistmaker.mediateka.data.Playlist
 import com.example.playlistmaker.mediateka.ui.viewmodel.CreatePlaylistViewModel
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
@@ -39,6 +41,14 @@ class CreatePlaylistFragment : Fragment() {
         var hasImage = false
         var hasName = false
         var hasDescription = false
+
+        var editMode = false
+
+        const val PLAYLIST = "PLAYLIST"
+
+        fun createArg(playlist: Playlist?): Bundle = bundleOf(
+            PLAYLIST to playlist
+        )
     }
 
     private val viewModel by viewModel<CreatePlaylistViewModel>()
@@ -54,7 +64,13 @@ class CreatePlaylistFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        BottomNavigationView.GONE
+
+        val editPlaylist: Playlist? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requireArguments().getParcelable(PLAYLIST, Playlist::class.java)
+        } else {
+            @Suppress("DEPRECATION") requireArguments().getParcelable<Playlist>(PLAYLIST)
+        }
+
 
         fun canCreate(): Boolean {
             when (hasName) {
@@ -70,31 +86,52 @@ class CreatePlaylistFragment : Fragment() {
             }
         }
 
-        binding.PlaylistName.addTextChangedListener(onTextChanged = { s: CharSequence?, _: Int, _: Int, _: Int ->
-            if (s!!.isNotBlank()) {
-                hasName = true
-                canCreate()
-                binding.PlaylistName.isSelected = true
-                binding.PlaylistNameLittleText.isVisible = true
-            } else {
-                hasName = false
-                canCreate()
-                binding.PlaylistName.isSelected = false
-                binding.PlaylistNameLittleText.isVisible = false
+
+        editMode = when (editPlaylist) {
+            null -> {
+                false
             }
+
+            else -> {
+                true
+            }
+        }
+
+        if (editMode) {
+            binding.createButton.text = "Сохранить"
+
+            if (editPlaylist?.imageURI != null && editPlaylist.imageURI.isNotBlank()) {
+                Glide.with(this).load(editPlaylist.imageURI).into(binding.imageButton)
+                hasImage = true
+            }
+            binding.PlaylistName.setText(editPlaylist?.playlistName)
+            hasPlaylistName(true)
+            if (editPlaylist?.description.isNullOrEmpty()) {
+                hasPlaylistDescription(false)
+            } else {
+                binding.PlaylistDescription.setText(editPlaylist?.description)
+                hasPlaylistDescription(true)
+            }
+            canCreate()
+        }
+        Log.i("Is EditMode", "${editMode}, ${editPlaylist}")
+
+
+        binding.PlaylistName.addTextChangedListener(onTextChanged = { s: CharSequence?, _: Int, _: Int, _: Int ->
+            if (s.isNullOrBlank()) {
+                hasPlaylistName(false)
+            } else {
+                hasPlaylistName(true)
+            }
+            canCreate()
         })
 
         binding.PlaylistDescription.addTextChangedListener(onTextChanged = { s: CharSequence?, _: Int, _: Int, _: Int ->
-            if (s!!.isNotBlank()) {
-                hasDescription = true
-                binding.PlaylistDescription.isSelected = true
-                binding.descriptionLittleText.isVisible = true
+            if (s.isNullOrBlank()) {
+                hasPlaylistDescription(false)
             } else {
-                hasDescription = false
-                binding.PlaylistDescription.isSelected = false
-                binding.descriptionLittleText.isVisible = false
+                hasPlaylistDescription(true)
             }
-
         })
 
         binding.backButton.setOnClickListener {
@@ -134,21 +171,9 @@ class CreatePlaylistFragment : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-//                    if (hasImage || hasName || hasDescription) {
-//                        AlertDialog.Builder(requireContext())
-//                            .setTitle("Завершить создание плейлиста?")
-//                            .setMessage("Все несохраненные данные будут потеряны!")
-//                            .setPositiveButton("Заввершить") { _, _ ->
-//                                // Завершаем Activity при нажатии на "Да"
-//                                findNavController().navigateUp()
-//                            }.setNegativeButton("Отмена", null).show()
-//                    } else {
-//                        findNavController().navigateUp()
-//                    }
                     onBackPressed()
                 }
-            }
-        )
+            })
 
         fun saveImageToInternalStorage(context: Context, uri: Uri): String? {
             return try {
@@ -171,24 +196,67 @@ class CreatePlaylistFragment : Fragment() {
         }
 
         binding.createButton.setOnClickListener {
-            when (canCreate()) {
-                true -> {
-                    viewLifecycleOwner.lifecycleScope.launch {
-                        val imagePath = selectedImageUri?.let { uri ->
-                            saveImageToInternalStorage(requireContext(), uri)
+            if (!editMode) {
+                when (canCreate()) {
+                    true -> {
+                        viewLifecycleOwner.lifecycleScope.launch {
+                            val imagePath = selectedImageUri?.let { uri ->
+                                saveImageToInternalStorage(requireContext(), uri)
+                            }
+                            viewModel.createPlaylist(
+                                playlist = Playlist(
+                                    playlistName = binding.PlaylistName.text.toString(),
+                                    description = if (hasDescription) {
+                                        binding.PlaylistDescription.text.toString()
+                                    } else {
+                                        null
+                                    },
+                                    imageURI = imagePath ?: "",
+                                    trackIdList = emptyList(),
+                                    numberOfTracks = 0,
+                                    key = 0
+                                )
+                            )
+                            Toast.makeText(
+                                requireContext(),
+                                "Плейлист ${binding.PlaylistName.text} создан",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            findNavController().navigateUp()
                         }
-                        viewModel.createPlaylist(
-                            playlist = Playlist(
+
+                    }
+
+                    false -> {
+                        Toast.makeText(
+                            requireContext(), "Не заполнены обязательные поля", Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            } else {
+                when (canCreate()) {
+                    true -> lifecycleScope.launch {
+
+                        val image = if (selectedImageUri != null) {
+                            selectedImageUri?.let { uri ->
+                                //deleteImageFromInternalStorage(editPlaylist?.imageURI.toString())
+                                saveImageToInternalStorage(requireContext(), uri)
+                            }
+                        } else {
+                            editPlaylist?.imageURI
+                        }
+                        viewModel.updatePlaylist(
+                            Playlist(
+                                key = editPlaylist!!.key,
                                 playlistName = binding.PlaylistName.text.toString(),
                                 description = if (hasDescription) {
                                     binding.PlaylistDescription.text.toString()
                                 } else {
                                     null
                                 },
-                                imageURI = imagePath ?: "",
-                                trackIdList = emptyList(),
-                                numberOfTracks = 0,
-                                key = 0
+                                imageURI = image,
+                                trackIdList = editPlaylist.trackIdList,
+                                numberOfTracks = 0
                             )
                         )
                         Toast.makeText(
@@ -199,21 +267,31 @@ class CreatePlaylistFragment : Fragment() {
                         findNavController().navigateUp()
                     }
 
-                }
-
-                false -> {
-                    Toast.makeText(
-                        requireContext(), "Не заполнены обязательные поля", Toast.LENGTH_SHORT
-                    ).show()
+                    false -> {
+                        Toast.makeText(
+                            requireContext(), "Не заполнены обязательные поля", Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             }
         }
     }
 
-    private fun onBackPressed(){
+    fun hasPlaylistName(hasPlaylistName: Boolean) {
+        hasName = hasPlaylistName
+        binding.PlaylistName.isSelected = hasPlaylistName
+        binding.PlaylistNameLittleText.isVisible = hasPlaylistName
+    }
+
+    fun hasPlaylistDescription(hasDescriptionText: Boolean) {
+        hasDescription = hasDescriptionText
+        binding.PlaylistDescription.isSelected = hasDescriptionText
+        binding.descriptionLittleText.isVisible = hasDescriptionText
+    }
+
+    private fun onBackPressed() {
         if (hasImage || hasName || hasDescription) {
-            AlertDialog.Builder(requireContext())
-                .setTitle("Завершить создание плейлиста?")
+            AlertDialog.Builder(requireContext()).setTitle("Завершить создание плейлиста?")
                 .setMessage("Все несохраненные данные будут потеряны!")
                 .setPositiveButton("Завершить") { _, _ ->
                     // Завершаем Activity при нажатии на "Да"

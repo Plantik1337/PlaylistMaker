@@ -20,6 +20,7 @@ import com.example.playlistmaker.search.data.Track
 import com.example.playlistmaker.databinding.FragmentPlayerBinding
 import com.example.playlistmaker.mediateka.data.Playlist
 import com.example.playlistmaker.mediateka.ui.RecyclerViewClickListener
+import com.example.playlistmaker.mediateka.ui.fragment.CreatePlaylistFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -51,7 +52,7 @@ class PlayerFragment : Fragment() {
             requireArguments().getParcelable(TRACK_KEY) as Track?
         }
         track?.let {
-            parametersOf(it.trackId, it.previewUrl)
+            parametersOf(it, it.previewUrl)
         } ?: throw IllegalArgumentException("Track cannot be null")
     }
 
@@ -94,36 +95,21 @@ class PlayerFragment : Fragment() {
                     viewModel.isExistsInPlaylist(
                         playlists[position].key,
                         plalistName = playlists[position].playlistName,
-                        trackId = currentContent.trackId.toString()
+                        track = currentContent
                     )
+                }
+
+                override fun onItemLongClick(position: Int): Boolean {
+                    return true
                 }
             })
             return adapter
         }
 
-        viewModel.isTrackLiked().observe(viewLifecycleOwner) {
-            when (it) {
-                true -> {
-                    //ContextCompat.getDrawable(requireContext(), android.R.color.transparent)
-                    Log.i("Нажатие", "Обсервер нашёлся, должен быть красным")
-                    binding.likeButton.drawable.setTint(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.heartRed
-                        )
-                    )
-                }
-
-                false -> {
-                    Log.i("Нажатие", "Обсервер нашёлся, должен быть серым")
-                    binding.likeButton.drawable.setTint(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.grey
-                        )
-                    )
-                }
-            }
+        viewModel.isTrackLiked().observe(viewLifecycleOwner) { isLiked ->
+            binding.likeButton.setImageResource(
+                if (isLiked) R.drawable.button_like else R.drawable.button_like_inactive
+            )
         }
 
         viewModel.isExistInPlaylistLiveData().observe(viewLifecycleOwner) {
@@ -133,7 +119,10 @@ class PlayerFragment : Fragment() {
         }
 
         binding.newPlaylistButton.setOnClickListener {
-            findNavController().navigate(R.id.action_playerFragment_to_createPlaylistFragment)
+            findNavController().navigate(
+                R.id.action_playerFragment_to_createPlaylistFragment,
+                CreatePlaylistFragment.createArg(null)
+            )
         }
 
 
@@ -207,7 +196,6 @@ class PlayerFragment : Fragment() {
         }
 
         binding.likeButton.setOnClickListener {
-            //Log.i("Click", "Лайк")
             viewModel.likeClickInteractor(track = currentContent)
 
         }

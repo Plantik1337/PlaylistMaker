@@ -19,6 +19,10 @@ class MediatekaAdapter(
     private val clickListener: RecyclerViewClickListener
 ) : RecyclerView.Adapter<MediatekaAdapter.TrackViewHolder>() {
 
+    fun getTrackList(): List<Track> {
+        return track
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.v_track_line, parent, false)
@@ -33,7 +37,7 @@ class MediatekaAdapter(
 
     class TrackViewHolder(itemView: View, private val clickListener: RecyclerViewClickListener) :
         RecyclerView.ViewHolder(itemView),
-        View.OnClickListener {
+        View.OnClickListener, View.OnLongClickListener {
         private val albumImage: ImageView = itemView.findViewById(R.id.albumImageView)
         private val trackName: TextView = itemView.findViewById(R.id.trackNameTextView)
         private val artistName: TextView = itemView.findViewById(R.id.artistNameTextView)
@@ -41,6 +45,7 @@ class MediatekaAdapter(
 
         init {
             itemView.setOnClickListener(this)
+            itemView.setOnLongClickListener(this)
         }
 
         override fun onClick(v: View) {
@@ -50,13 +55,20 @@ class MediatekaAdapter(
             }
         }
 
+        override fun onLongClick(p0: View?): Boolean {
+            val position = adapterPosition
+            return if (position != RecyclerView.NO_POSITION) {
+                clickListener.onItemLongClick(position)
+            } else {
+                false
+            }
+        }
+
         fun bind(track: Track) {
             val maxSymbols = 30
-            if (track.trackName.length > maxSymbols) {
-                trackName.text = track.trackName.substring(0, maxSymbols) + "..."
-            } else {
-                trackName.text = track.trackName
-            }
+
+            trackName.text = track.trackName
+
             Glide.with(itemView)
                 .load(track.artworkUrl100)
                 .placeholder(R.drawable.placeholder)
@@ -84,5 +96,7 @@ class MediatekaAdapter(
             ).format(track.trackTimeMillis.toLong())
 
         }
+
+
     }
 }
