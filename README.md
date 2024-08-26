@@ -1,6 +1,6 @@
 <h1 align="center">PlaylistMaker</h1>
 <p>Данное приложение использовалось как pet-проект для освоения технологий разработки Android-приложений.
-Gредставляет собой клиент-серверное приложение для поиска музыки (демоверсий) постредством <a href="https://developer.apple.com/documentation/AppleMusicAPI">AppleMusic_api</a></p>
+Представляет собой клиент-серверное приложение для поиска музыки (демоверсий) постредством <a href="https://developer.apple.com/documentation/AppleMusicAPI">AppleMusic_api</a></p>
 <h2>Содержание</h2>
 <ul>
   <li><a href="#tech">Технологии</a></li>
@@ -13,11 +13,12 @@ Gредставляет собой клиент-серверное прилож�
   <li>Glide</li>
   <li>Retrofit</li>
   <li>Gson</li>
+  <li>Coroutines</li>
 </ul>
 <h2 id="begin">Как использовать</h2>
 <ol>
   <li>Системные требования:</li>
-  <a href="https://developer.android.com/about/versions/10?hl=ru">Android 10 (Level 29 Quince Tart)</a>
+  <p><a href="https://developer.android.com/about/versions/10?hl=ru">Android 10 (Level 29 Quince Tart)</a></p>
   <p>20 мегабайт памяти + для сохранения обложек (зависит от размера изобраения)</p>
   <p>Доступ в интернет для сетевых операций</p>
   <li>Как получить приложени:</li>
