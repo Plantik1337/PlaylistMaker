@@ -1,4 +1,4 @@
-<h1 align="center">PlaylistMaker</h1>
+<h1>PlaylistMaker</h1>
 <p>Данное приложение использовалось как pet-проект для освоения технологий разработки Android-приложений.
 Представляет собой клиент-серверное приложение для поиска музыки (демоверсий) посредством <a href="https://developer.apple.com/documentation/AppleMusicAPI">AppleMusic_api</a></p>
 <h2>Содержание</h2>
